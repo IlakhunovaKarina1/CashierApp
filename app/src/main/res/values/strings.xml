@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Cashier</string>
+
+    <string name="auth_forgot_password">Forgot your password?</string>
+
+    <string name="outlet_selecting">Selecting a retail outlet</string>
+    <string name="outlet_checkout">Checkout selection</string>
+
+    <string name="title_price_with_currency">%1$s ₸</string>
+    <string name="title_basket_count">%1$s pc</string>
+
+    <string name="title_sales">Sales</string>
+    <string name="title_products">Products</string>
+    <string name="tittle_acceptance">Acceptance</string>
+
+    <string name="title_empty"></string>
+</resources>

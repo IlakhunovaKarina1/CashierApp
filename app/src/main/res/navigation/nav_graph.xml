@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/authFragment">
+
+    <fragment
+        android:id="@+id/authFragment"
+        android:name="com.grappim.cashier.ui.auth.AuthFragment"
+        android:label="fragment_auth"
+        tools:layout="@layout/fragment_auth">
+        <action
+            android:id="@+id/action_authFragment_to_selectOutletFragment"
+            app:destination="@id/selectOutletFragment"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/pop_enter_from_left"
+            app:popExitAnim="@anim/pop_exit_to_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/selectOutletFragment"
+        android:name="com.grappim.cashier.ui.selectinfo.outlet.SelectOutletFragment"
+        android:label="fragment_select_outlet"
+        tools:layout="@layout/fragment_select_outlet_cashier">
+        <action
+            android:id="@+id/action_selectOutletFragment_to_selectCashierFragment"
+            app:destination="@id/selectCashierFragment"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/pop_enter_from_left"
+            app:popExitAnim="@anim/pop_exit_to_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/selectCashierFragment"
+        android:name="com.grappim.cashier.ui.selectinfo.cashier.SelectCashierFragment"
+        tools:layout="@layout/fragment_select_outlet_cashier">
+        <action
+            android:id="@+id/action_selectCashierFragment_to_menuFragment"
+            app:destination="@id/menuFragment"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/pop_enter_from_left"
+            app:popExitAnim="@anim/pop_exit_to_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/productsFragment"
+        android:name="com.grappim.cashier.ui.products.ProductsFragment"
+        android:label="fragment_products"
+        tools:layout="@layout/fragment_products" />
+
+    <fragment
+        android:id="@+id/menuFragment"
+        android:name="com.grappim.cashier.ui.menu.MenuFragment"
+        android:label="fragment_menu"
+        tools:layout="@layout/fragment_menu">
+        <action
+            android:id="@+id/action_menuFragment_to_productsFragment"
+            app:destination="@+id/productsFragment"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/pop_enter_from_left"
+            app:popExitAnim="@anim/pop_exit_to_right" />
+        <action
+            android:id="@+id/action_menuFragment_to_salesFragment"
+            app:destination="@id/salesFragment"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/pop_enter_from_left"
+            app:popExitAnim="@anim/pop_exit_to_right" />
+        <action
+            android:id="@+id/action_menuFragment_to_acceptanceFragment"
+            app:destination="@id/acceptanceFragment"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/pop_enter_from_left"
+            app:popExitAnim="@anim/pop_exit_to_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/salesFragment"
+        android:name="com.grappim.cashier.ui.sales.SalesFragment"
+        android:label="fragment_sales"
+        tools:layout="@layout/fragment_sales" />
+
+    <fragment
+        android:id="@+id/acceptanceFragment"
+        android:name="com.grappim.cashier.ui.acceptance.AcceptanceFragment"
+        android:label="fragment_acceptance"
+        tools:layout="@layout/fragment_acceptance" />
+
+</navigation>
