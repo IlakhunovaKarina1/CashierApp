@@ -1,4 +1,4 @@
-package com.grappim.cashier.ui.selectinfo.outlet
+package com.grappim.cashier.ui.selectinfo.outlet.vm
 
 import com.grappim.cashier.core.domain.Outlet
 import com.grappim.cashier.data.repository.GeneralRepository

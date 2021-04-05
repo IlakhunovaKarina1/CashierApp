@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:text="Menu"
+        android:text="@string/title_menu"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -20,7 +20,7 @@
         android:id="@+id/textLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sales"
+        android:text="@string/title_sales"
         android:textColor="@color/cashier_black"
         android:textSize="17sp"
         app:layout_constraintBottom_toBottomOf="@+id/buttonMenu"
@@ -45,7 +45,7 @@
             android:id="@+id/editSearchProducts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Search"
+            android:hint="@string/action_search"
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:textColor="@color/cashier_search" />

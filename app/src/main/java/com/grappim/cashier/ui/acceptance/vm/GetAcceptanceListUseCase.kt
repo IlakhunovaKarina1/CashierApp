@@ -1,4 +1,4 @@
-package com.grappim.cashier.ui.acceptance
+package com.grappim.cashier.ui.acceptance.vm
 
 import com.grappim.cashier.core.domain.Acceptance
 import com.grappim.cashier.data.repository.GeneralRepository

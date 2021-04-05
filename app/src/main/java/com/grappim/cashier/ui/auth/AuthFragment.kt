@@ -5,7 +5,7 @@ import android.text.SpannableString
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.textfield.TextInputLayout
@@ -17,13 +17,18 @@ import com.grappim.cashier.core.extensions.underline
 import com.grappim.cashier.databinding.FragmentAuthBinding
 import com.redmadrobot.inputmask.MaskedTextChangedListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_auth.editPassword
+import kotlinx.android.synthetic.main.fragment_auth.editPhoneNumber
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import reactivecircus.flowbinding.android.widget.textChangeEvents
 import timber.log.Timber
 
 @AndroidEntryPoint
 class AuthFragment : Fragment(R.layout.fragment_auth) {
 
     private val binding: FragmentAuthBinding by viewBinding(FragmentAuthBinding::bind)
-    private val viewModel by viewModels<AuthViewModel>()
+    private var phoneNumberEntered: Boolean = false
 
     private val phoneMaskedTextChangedListener by lazy {
         MaskedTextChangedListener.installOn(
@@ -36,6 +41,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
                     formattedValue: String
                 ) {
                     Timber.d("masked: $maskFilled, $extractedValue | $formattedValue")
+                    phoneNumberEntered = maskFilled
                     if (maskFilled) {
                         binding.tilPhoneNumber.endIconMode = TextInputLayout.END_ICON_CUSTOM
                         binding.tilPhoneNumber.endIconDrawable = ContextCompat.getDrawable(
@@ -45,6 +51,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
                     } else {
                         binding.tilPhoneNumber.endIconMode = TextInputLayout.END_ICON_NONE
                     }
+                    checkDataToContinue()
                 }
             }
         )
@@ -68,6 +75,15 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
             findNavController().navigate(R.id.action_authFragment_to_selectOutletFragment)
         }
 
-        viewModel.prePopulateDb()
+        lifecycleScope.launch {
+            binding.editPassword.textChangeEvents().collect {
+                checkDataToContinue()
+            }
+        }
+    }
+
+    private fun checkDataToContinue() {
+        val hasPasswordText = editPassword.text.toString().isNotBlank()
+        binding.buttonSignIn.isEnabled = hasPasswordText && phoneNumberEntered
     }
 }

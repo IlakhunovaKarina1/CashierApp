@@ -2,17 +2,21 @@ package com.grappim.cashier.ui.acceptance
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.grappim.cashier.R
 import com.grappim.cashier.core.domain.Acceptance
-import com.grappim.cashier.core.extensions.hide
+import com.grappim.cashier.core.extensions.bigDecimalZero
 import com.grappim.cashier.core.extensions.inflate
 import com.grappim.cashier.core.extensions.setSafeOnClickListener
 import com.grappim.cashier.databinding.ItemAcceptanceBinding
+import com.grappim.cashier.ui.acceptance.vm.AcceptanceStatus
+import java.text.DecimalFormat
 
 class AcceptanceAdapter(
-    private val listener: AcceptanceClickListener
+    private val listener: AcceptanceClickListener,
+    private val dfSimple: DecimalFormat
 ) : RecyclerView.Adapter<AcceptanceAdapter.AcceptanceViewHolder>() {
 
     private val items = mutableListOf<Acceptance>()
@@ -25,7 +29,31 @@ class AcceptanceAdapter(
             val item = items[bindingAdapterPosition]
             viewBinding.textVendor.text = item.vendorName
             viewBinding.textDateTime.text = item.date
-            viewBinding.textStatus.hide()
+            viewBinding.textPaidSum.text = itemView.context.getString(
+                R.string.title_price_with_currency,
+                dfSimple.format(item.paidSum ?: bigDecimalZero())
+            )
+            viewBinding.textToPay.text = itemView.context.getString(
+                R.string.title_price_with_currency,
+                dfSimple.format(item.toPay ?: bigDecimalZero())
+            )
+            when (item.status) {
+                AcceptanceStatus.STANDARD -> {
+                    viewBinding.textStatus.background = ContextCompat.getDrawable(
+                        itemView.context,
+                        R.drawable.shape_blue_round_15
+                    )
+                    viewBinding.textStatus.text = "Проведено"
+                }
+                AcceptanceStatus.PAID -> {
+                    viewBinding.textStatus.background = ContextCompat.getDrawable(
+                        itemView.context,
+                        R.drawable.shape_green_round_15
+                    )
+                    viewBinding.textStatus.text = "Оплачено"
+                }
+            }
+
             itemView.setSafeOnClickListener {
                 listener.onAcceptanceClick(item)
             }

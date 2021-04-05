@@ -1,10 +1,11 @@
-package com.grappim.cashier.ui.menu
+package com.grappim.cashier.ui.menu.vm
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.grappim.cashier.core.storage.GeneralPrefsDataStore
+import com.grappim.cashier.ui.menu.MenuItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

@@ -1,6 +1,7 @@
-package com.grappim.cashier.ui.menu
+package com.grappim.cashier.ui.menu.vm
 
 import com.grappim.cashier.data.repository.GeneralRepository
+import com.grappim.cashier.ui.menu.MenuItem
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

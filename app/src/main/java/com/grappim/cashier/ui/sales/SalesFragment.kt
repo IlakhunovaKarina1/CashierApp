@@ -11,6 +11,7 @@ import com.grappim.cashier.core.extensions.setSafeOnClickListener
 import com.grappim.cashier.data.db.entity.Product
 import com.grappim.cashier.databinding.FragmentSalesBinding
 import com.grappim.cashier.di.modules.DecimalFormatSimple
+import com.grappim.cashier.ui.sales.vm.SalesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import kotlinx.coroutines.flow.collect

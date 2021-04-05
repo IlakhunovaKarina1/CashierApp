@@ -1,4 +1,4 @@
-package com.grappim.cashier.ui.selectinfo.outlet
+package com.grappim.cashier.ui.selectinfo.outlet.vm
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,6 +9,7 @@ import com.grappim.cashier.core.domain.Outlet
 import com.grappim.cashier.core.functional.Resource
 import com.grappim.cashier.core.functional.onFailure
 import com.grappim.cashier.core.functional.onSuccess
+import com.grappim.cashier.ui.selectinfo.outlet.OutletProgressItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

@@ -1,4 +1,4 @@
-package com.grappim.cashier.ui.sales
+package com.grappim.cashier.ui.sales.vm
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

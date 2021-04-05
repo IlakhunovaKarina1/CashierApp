@@ -12,7 +12,11 @@ class AuthViewModel @Inject constructor(
     private val generalRepository: GeneralRepository
 ) : ViewModel() {
 
-    fun prePopulateDb() {
+    init {
+        prePopulateDb()
+    }
+
+    private fun prePopulateDb() {
         viewModelScope.launch {
             generalRepository.prePopulateDb()
         }

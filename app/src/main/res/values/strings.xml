@@ -12,6 +12,18 @@
     <string name="title_sales">Sales</string>
     <string name="title_products">Products</string>
     <string name="tittle_acceptance">Acceptance</string>
+    <string name="title_menu">Menu</string>
+    <string name="title_phone_number">Phone number</string>
+    <string name="title_password">Password</string>
+
+    <string name="auth_number_hint">Enter your phone number and password to sign in into your account</string>
+
+    <string name="action_search_by_date">Search by date</string>
+    <string name="action_sign_in">Sign In</string>
+    <string name="action_back">Back</string>
+    <string name="action_search">Search</string>
+    <string name="action_create_product">Create Product</string>
+    <string name="action_next">Next</string>
 
     <string name="title_empty"></string>
 </resources>

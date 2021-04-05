@@ -14,6 +14,7 @@ import com.grappim.cashier.data.db.dao.ProductsDao
 import com.grappim.cashier.data.db.entity.BasketProduct
 import com.grappim.cashier.data.db.entity.Category
 import com.grappim.cashier.data.db.entity.Product
+import com.grappim.cashier.ui.acceptance.vm.AcceptanceStatus
 import com.grappim.cashier.ui.menu.MenuItem
 import com.grappim.cashier.ui.menu.MenuItemType
 import kotlinx.coroutines.Dispatchers
@@ -124,21 +125,26 @@ class GeneralRepositoryImpl @Inject constructor(
     }
 
     override fun getAcceptanceList(): Flow<List<Acceptance>> = flow {
-        withContext(Dispatchers.IO) {
-            val list = mutableListOf<Acceptance>()
-            (0..20).forEach {
-                list.add(
-                    Acceptance(
-                        id = UUID.randomUUID().toString(),
-                        vendorName = "Vendor Name $it",
-                        date = "30.04.21 22:32",
-                        status = "standard"
-                    )
+        val list = mutableListOf<Acceptance>()
+        (0..20).forEach {
+            list.add(
+                Acceptance(
+                    id = UUID.randomUUID().toString(),
+                    vendorName = "Vendor Name $it",
+                    date = "30.04.21 22:32",
+                    status = getRandomAcceptanceStatus(),
+                    toPay = BigDecimal("${Random.nextInt(50, 400)}"),
+                    paidSum = BigDecimal("${Random.nextInt(50, 400)}")
                 )
-            }
-            emit(list)
+            )
         }
+        emit(list)
     }.flowOn(Dispatchers.IO)
+
+    private fun getRandomAcceptanceStatus(): AcceptanceStatus = listOf(
+        AcceptanceStatus.PAID,
+        AcceptanceStatus.STANDARD
+    ).random()
 
     override suspend fun saveCashier(cashier: Cashier) = withContext(Dispatchers.IO) {
         generalPrefsDataStore.setCashierInfo(cashier)

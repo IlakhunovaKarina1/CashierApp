@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:text="Menu"
+        android:text="@string/title_menu"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -19,7 +19,7 @@
         android:id="@+id/textLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Acceptance"
+        android:text="@string/tittle_acceptance"
         android:textColor="@color/cashier_black"
         android:textSize="17sp"
         app:layout_constraintBottom_toBottomOf="@+id/buttonMenu"
@@ -44,7 +44,7 @@
             android:id="@+id/editSearchProducts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Search by date"
+            android:hint="@string/action_search_by_date"
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:textColor="@color/cashier_search" />

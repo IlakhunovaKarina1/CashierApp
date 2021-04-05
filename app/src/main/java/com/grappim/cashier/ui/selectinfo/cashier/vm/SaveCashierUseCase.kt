@@ -1,4 +1,4 @@
-package com.grappim.cashier.ui.selectinfo.cashier
+package com.grappim.cashier.ui.selectinfo.cashier.vm
 
 import com.grappim.cashier.core.domain.Cashier
 import com.grappim.cashier.data.repository.GeneralRepository
