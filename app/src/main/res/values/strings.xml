@@ -24,6 +24,7 @@
     <string name="action_search">Search</string>
     <string name="action_create_product">Create Product</string>
     <string name="action_next">Next</string>
+    <string name="action_create_acceptance">Create Acceptance</string>
 
     <string name="title_empty"></string>
 </resources>
