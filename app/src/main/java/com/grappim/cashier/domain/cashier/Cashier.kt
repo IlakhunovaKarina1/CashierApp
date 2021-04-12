@@ -1,4 +1,4 @@
-package com.grappim.cashier.core.domain
+package com.grappim.cashier.domain.cashier
 
 data class Cashier(
     val id: String,

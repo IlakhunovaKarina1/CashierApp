@@ -1,4 +1,4 @@
-package com.grappim.cashier.ui.sales.vm
+package com.grappim.cashier.domain.sales
 
 import com.grappim.cashier.data.db.entity.BasketProduct
 import com.grappim.cashier.data.repository.GeneralRepository

@@ -7,7 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.grappim.cashier.R
-import com.grappim.cashier.core.domain.Acceptance
+import com.grappim.cashier.domain.acceptance.Acceptance
 import com.grappim.cashier.core.extensions.setSafeOnClickListener
 import com.grappim.cashier.databinding.FragmentAcceptanceBinding
 import com.grappim.cashier.di.modules.DecimalFormatSimple

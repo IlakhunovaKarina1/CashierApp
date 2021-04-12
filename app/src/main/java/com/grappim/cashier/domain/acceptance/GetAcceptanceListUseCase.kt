@@ -1,6 +1,6 @@
-package com.grappim.cashier.ui.acceptance.vm
+package com.grappim.cashier.domain.acceptance
 
-import com.grappim.cashier.core.domain.Acceptance
+import com.grappim.cashier.domain.acceptance.Acceptance
 import com.grappim.cashier.data.repository.GeneralRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

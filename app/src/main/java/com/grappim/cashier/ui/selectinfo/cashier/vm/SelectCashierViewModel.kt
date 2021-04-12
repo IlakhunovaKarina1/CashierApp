@@ -2,17 +2,16 @@ package com.grappim.cashier.ui.selectinfo.cashier.vm
 
 import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.grappim.cashier.R
-import com.grappim.cashier.core.domain.Cashier
+import com.grappim.cashier.domain.cashier.Cashier
 import com.grappim.cashier.core.functional.Resource
 import com.grappim.cashier.core.functional.onFailure
 import com.grappim.cashier.core.functional.onSuccess
 import com.grappim.cashier.core.platform.SingleLiveEvent
-import com.grappim.cashier.ui.selectinfo.cashier.vm.GetCashiersUseCase
-import com.grappim.cashier.ui.selectinfo.cashier.vm.SaveCashierUseCase
+import com.grappim.cashier.domain.cashier.GetCashiersUseCase
+import com.grappim.cashier.domain.cashier.SaveCashierUseCase
 import com.grappim.cashier.ui.selectinfo.outlet.OutletProgressItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

@@ -1,4 +1,4 @@
-package com.grappim.cashier.core.domain
+package com.grappim.cashier.domain.outlet
 
 data class Outlet(
     val name: String

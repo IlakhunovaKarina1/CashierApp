@@ -6,7 +6,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.grappim.cashier.R
-import com.grappim.cashier.core.domain.Acceptance
+import com.grappim.cashier.domain.acceptance.Acceptance
 import com.grappim.cashier.core.extensions.bigDecimalZero
 import com.grappim.cashier.core.extensions.inflate
 import com.grappim.cashier.core.extensions.setSafeOnClickListener

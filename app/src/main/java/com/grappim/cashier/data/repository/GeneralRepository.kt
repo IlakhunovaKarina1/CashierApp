@@ -2,14 +2,13 @@ package com.grappim.cashier.data.repository
 
 import com.grappim.cashier.R
 import com.grappim.cashier.api.CashierApi
-import com.grappim.cashier.core.domain.Acceptance
-import com.grappim.cashier.core.domain.Cashier
-import com.grappim.cashier.core.domain.Outlet
+import com.grappim.cashier.domain.acceptance.Acceptance
+import com.grappim.cashier.domain.cashier.Cashier
+import com.grappim.cashier.domain.outlet.Outlet
 import com.grappim.cashier.core.extensions.bigDecimalZero
 import com.grappim.cashier.core.extensions.getStringForDbQuery
 import com.grappim.cashier.core.functional.Either
 import com.grappim.cashier.core.functional.map
-import com.grappim.cashier.core.functional.onSuccess
 import com.grappim.cashier.core.storage.GeneralPrefsDataStore
 import com.grappim.cashier.data.db.dao.BasketDao
 import com.grappim.cashier.data.db.dao.CategoryDao

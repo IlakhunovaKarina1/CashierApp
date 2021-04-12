@@ -1,6 +1,6 @@
-package com.grappim.cashier.ui.selectinfo.cashier.vm
+package com.grappim.cashier.domain.cashier
 
-import com.grappim.cashier.core.domain.Cashier
+import com.grappim.cashier.domain.cashier.Cashier
 import com.grappim.cashier.data.repository.GeneralRepository
 import javax.inject.Inject
 

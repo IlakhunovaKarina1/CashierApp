@@ -1,4 +1,4 @@
-package com.grappim.cashier.ui.products.vm
+package com.grappim.cashier.domain.products
 
 import com.grappim.cashier.data.db.entity.Category
 import com.grappim.cashier.data.db.entity.Product

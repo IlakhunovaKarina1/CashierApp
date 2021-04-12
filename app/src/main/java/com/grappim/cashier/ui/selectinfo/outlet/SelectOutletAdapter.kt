@@ -4,7 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.grappim.cashier.R
-import com.grappim.cashier.core.domain.Outlet
+import com.grappim.cashier.domain.outlet.Outlet
 import com.grappim.cashier.core.extensions.inflate
 import com.grappim.cashier.core.extensions.showOrGone
 import kotlinx.android.synthetic.main.item_select_info.view.imageChecked

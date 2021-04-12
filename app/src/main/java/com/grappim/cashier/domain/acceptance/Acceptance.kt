@@ -1,4 +1,4 @@
-package com.grappim.cashier.core.domain
+package com.grappim.cashier.domain.acceptance
 
 import com.grappim.cashier.ui.acceptance.vm.AcceptanceStatus
 import java.math.BigDecimal

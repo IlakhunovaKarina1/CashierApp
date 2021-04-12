@@ -8,6 +8,9 @@ import com.grappim.cashier.data.db.entity.Category
 import com.grappim.cashier.core.functional.onFailure
 import com.grappim.cashier.core.functional.onSuccess
 import com.grappim.cashier.data.db.entity.Product
+import com.grappim.cashier.domain.products.GetCategoryListUseCase
+import com.grappim.cashier.domain.products.GetProductsUseCase
+import com.grappim.cashier.domain.products.SearchProductsByCategoryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,7 +36,7 @@ class ProductsViewModel @Inject constructor(
 
     fun getCategories() {
         viewModelScope.launch {
-            getCategoryListUseCase()
+            getCategoryListUseCase.invoke()
                 .onFailure {
 
                 }.onSuccess {

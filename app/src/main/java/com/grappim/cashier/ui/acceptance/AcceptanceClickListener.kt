@@ -1,6 +1,6 @@
 package com.grappim.cashier.ui.acceptance
 
-import com.grappim.cashier.core.domain.Acceptance
+import com.grappim.cashier.domain.acceptance.Acceptance
 
 interface AcceptanceClickListener {
 

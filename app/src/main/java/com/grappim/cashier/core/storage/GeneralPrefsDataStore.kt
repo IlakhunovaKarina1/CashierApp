@@ -6,8 +6,8 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.grappim.cashier.core.domain.Cashier
-import com.grappim.cashier.core.domain.Outlet
+import com.grappim.cashier.domain.cashier.Cashier
+import com.grappim.cashier.domain.outlet.Outlet
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
