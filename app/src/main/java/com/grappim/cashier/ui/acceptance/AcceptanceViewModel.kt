@@ -1,4 +1,4 @@
-package com.grappim.cashier.ui.acceptance.vm
+package com.grappim.cashier.ui.acceptance
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel

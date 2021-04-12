@@ -1,6 +1,6 @@
 package com.grappim.cashier.domain.acceptance
 
-import com.grappim.cashier.ui.acceptance.vm.AcceptanceStatus
+import com.grappim.cashier.ui.acceptance.AcceptanceStatus
 import java.math.BigDecimal
 
 data class Acceptance(

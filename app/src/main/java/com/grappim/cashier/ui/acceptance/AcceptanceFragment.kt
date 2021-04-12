@@ -11,7 +11,6 @@ import com.grappim.cashier.domain.acceptance.Acceptance
 import com.grappim.cashier.core.extensions.setSafeOnClickListener
 import com.grappim.cashier.databinding.FragmentAcceptanceBinding
 import com.grappim.cashier.di.modules.DecimalFormatSimple
-import com.grappim.cashier.ui.acceptance.vm.AcceptanceViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import java.text.DecimalFormat

@@ -1,4 +1,4 @@
-package com.grappim.cashier.ui.sales.vm
+package com.grappim.cashier.ui.sales
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,6 +16,7 @@ import com.grappim.cashier.domain.sales.RemoveProductUseCase
 import com.grappim.cashier.domain.sales.SearchProductsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.math.BigDecimal
 import javax.inject.Inject
 

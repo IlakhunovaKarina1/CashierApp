@@ -1,5 +1,6 @@
 package com.grappim.cashier.data.repository
 
+import androidx.sqlite.db.SimpleSQLiteQuery
 import com.grappim.cashier.R
 import com.grappim.cashier.api.CashierApi
 import com.grappim.cashier.core.extensions.bigDecimalZero
@@ -19,7 +20,7 @@ import com.grappim.cashier.domain.login.LoginRequest
 import com.grappim.cashier.domain.login.LoginUseCase
 import com.grappim.cashier.domain.outlet.Mapper.toDomain
 import com.grappim.cashier.domain.outlet.Outlet
-import com.grappim.cashier.ui.acceptance.vm.AcceptanceStatus
+import com.grappim.cashier.ui.acceptance.AcceptanceStatus
 import com.grappim.cashier.ui.menu.MenuItem
 import com.grappim.cashier.ui.menu.MenuItemType
 import kotlinx.coroutines.Dispatchers
@@ -59,6 +60,11 @@ interface GeneralRepository {
     suspend fun searchProducts(query: String): List<Product>
 
     suspend fun prePopulateDb()
+
+    fun getProductsByQuery(
+        category: Category?,
+        query: String
+    ): Flow<List<Product>>
 
 }
 
@@ -105,7 +111,7 @@ class GeneralRepositoryImpl @Inject constructor(
 
     override suspend fun getProductsByCategory(category: Category): List<Product> =
         withContext(Dispatchers.IO) {
-            if (category.uid == "0") {
+            if (category.isDefault) {
                 productsDao.getAllProducts()
             } else {
                 productsDao.searchProductsByCategoryId(category.uid)
@@ -181,6 +187,40 @@ class GeneralRepositoryImpl @Inject constructor(
 
     override suspend fun saveOutlet(outlet: Outlet) = withContext(Dispatchers.IO) {
         generalStorage.setOutletInfo(outlet)
+    }
+
+    override fun getProductsByQuery(category: Category?, query: String): Flow<List<Product>> {
+        val roomQuery = StringBuilder("SELECT * FROM product ")
+            .append(
+                if (query.isNotBlank() || (category != null && !category.isDefault)
+                ) {
+                    "WHERE "
+                } else {
+                    ""
+                }
+            )
+            .append(
+                if (query.isNotBlank()) {
+                    "name LIKE '${query.getStringForDbQuery()}' "
+                } else {
+                    ""
+                }
+            )
+            .append(
+                if (category == null || category.isDefault) {
+                    ""
+                } else {
+                    val andQuery = if (query.isBlank()) {
+                        ""
+                    } else {
+                        "AND "
+                    }
+                    "${andQuery}categoryId = ${category.uid}"
+                }
+            )
+        return productsDao.getProductsFlow(
+            SimpleSQLiteQuery(roomQuery.toString())
+        )
     }
 
     override suspend fun searchProducts(query: String): List<Product> =

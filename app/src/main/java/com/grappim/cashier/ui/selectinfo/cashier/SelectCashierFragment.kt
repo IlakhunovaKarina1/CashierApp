@@ -11,7 +11,6 @@ import com.grappim.cashier.R
 import com.grappim.cashier.core.extensions.setSafeOnClickListener
 import com.grappim.cashier.core.functional.Resource
 import com.grappim.cashier.databinding.FragmentSelectOutletCashierBinding
-import com.grappim.cashier.ui.selectinfo.cashier.vm.SelectCashierViewModel
 import com.grappim.cashier.ui.selectinfo.outlet.SelectInfoProgressAdapter
 import dagger.hilt.android.AndroidEntryPoint
 

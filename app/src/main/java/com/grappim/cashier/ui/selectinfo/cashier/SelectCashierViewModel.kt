@@ -1,4 +1,4 @@
-package com.grappim.cashier.ui.selectinfo.cashier.vm
+package com.grappim.cashier.ui.selectinfo.cashier
 
 import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData

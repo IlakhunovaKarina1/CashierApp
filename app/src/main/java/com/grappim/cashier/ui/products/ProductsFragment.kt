@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.tabs.TabLayout
 import com.grappim.cashier.R
@@ -12,10 +13,12 @@ import com.grappim.cashier.data.db.entity.Category
 import com.grappim.cashier.data.db.entity.Product
 import com.grappim.cashier.databinding.FragmentProductsBinding
 import com.grappim.cashier.di.modules.DecimalFormatSimple
-import com.grappim.cashier.ui.products.vm.ProductsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import kotlinx.android.synthetic.main.fragment_products.tabsCategories
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import reactivecircus.flowbinding.android.widget.textChanges
 import java.text.DecimalFormat
 import javax.inject.Inject
 
@@ -50,8 +53,7 @@ class ProductsFragment : Fragment(R.layout.fragment_products),
             recyclerProducts.adapter = ScaleInAnimationAdapter(productsAdapter)
             tabsCategories.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab?) {
-//                    viewModel.setCategory(tab?.tag as Category)
-                    viewModel.getProductsByCategory(tab?.tag as Category)
+                    viewModel.setCategory(tab?.tag as Category)
                 }
 
                 override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -61,6 +63,14 @@ class ProductsFragment : Fragment(R.layout.fragment_products),
                 }
 
             })
+
+            lifecycleScope.launch {
+                editSearchProducts
+                    .textChanges()
+                    .collect {
+                        viewModel.searchProducts(it.toString())
+                    }
+            }
         }
     }
 

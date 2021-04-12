@@ -11,7 +11,6 @@ import com.grappim.cashier.core.extensions.bigDecimalZero
 import com.grappim.cashier.core.extensions.inflate
 import com.grappim.cashier.core.extensions.setSafeOnClickListener
 import com.grappim.cashier.databinding.ItemAcceptanceBinding
-import com.grappim.cashier.ui.acceptance.vm.AcceptanceStatus
 import java.text.DecimalFormat
 
 class AcceptanceAdapter(
