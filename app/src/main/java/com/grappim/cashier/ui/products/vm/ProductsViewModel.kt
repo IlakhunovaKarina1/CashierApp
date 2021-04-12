@@ -1,9 +1,12 @@
 package com.grappim.cashier.ui.products.vm
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.grappim.cashier.core.functional.Resource
 import com.grappim.cashier.data.db.entity.Category
 import com.grappim.cashier.core.functional.onFailure
 import com.grappim.cashier.core.functional.onSuccess
@@ -30,7 +33,22 @@ class ProductsViewModel @Inject constructor(
     val products: LiveData<List<Product>>
         get() = _products
 
+    private val strategyTrigger = MutableLiveData<LoadStrategy>().apply {
+        value = LoadStrategy.ListStrategy
+    }
+
+    private val _selectedCategory = MutableLiveData<Category>()
+    val selectedCategory: LiveData<Category>
+        get() = _selectedCategory
+
     init {
+//        _products = Transformations.switchMap(strategyTrigger){
+//            if (it is LoadStrategy.ListStrategy){
+//                getProductsUseCase.invoke()
+//            }else{
+//                getProductsUseCase.invoke()
+//            }
+//        }
         getCategories()
     }
 
@@ -57,9 +75,28 @@ class ProductsViewModel @Inject constructor(
         }
     }
 
+    fun setQuery(query:String){
+
+    }
+
+    fun setCategory(category: Category) {
+
+        viewModelScope.launch {
+            _selectedCategory.value = category
+        }
+    }
+
     fun getProductsByCategory(category: Category) {
         viewModelScope.launch {
             _products.value = searchProductsByCategoryUseCase.invoke(category)
         }
+    }
+
+    sealed class LoadStrategy {
+        object ListStrategy : LoadStrategy()
+        data class SearchQueryStrategy(
+            val searchQuery: String,
+            val category: Category
+        ) : LoadStrategy()
     }
 }

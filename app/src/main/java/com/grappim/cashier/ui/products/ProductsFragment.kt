@@ -50,6 +50,7 @@ class ProductsFragment : Fragment(R.layout.fragment_products),
             recyclerProducts.adapter = ScaleInAnimationAdapter(productsAdapter)
             tabsCategories.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab?) {
+//                    viewModel.setCategory(tab?.tag as Category)
                     viewModel.getProductsByCategory(tab?.tag as Category)
                 }
 

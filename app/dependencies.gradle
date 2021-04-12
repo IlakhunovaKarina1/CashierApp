@@ -11,7 +11,7 @@ dependencies {
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
-    //Java8 time and other
+//    Java8 time and other
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
 
 //    Navigation
@@ -21,9 +21,6 @@ dependencies {
 
 //    Startup
     implementation "androidx.startup:startup-runtime:$versions.startup"
-
-    //DataStore
-    implementation "androidx.datastore:datastore-preferences:$versions.dataStorePrefs"
 
 //    Lifecycle
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$versions.lifecycle"

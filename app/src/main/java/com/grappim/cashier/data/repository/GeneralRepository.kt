@@ -2,22 +2,23 @@ package com.grappim.cashier.data.repository
 
 import com.grappim.cashier.R
 import com.grappim.cashier.api.CashierApi
-import com.grappim.cashier.domain.acceptance.Acceptance
-import com.grappim.cashier.domain.cashier.Cashier
-import com.grappim.cashier.domain.outlet.Outlet
 import com.grappim.cashier.core.extensions.bigDecimalZero
 import com.grappim.cashier.core.extensions.getStringForDbQuery
 import com.grappim.cashier.core.functional.Either
 import com.grappim.cashier.core.functional.map
-import com.grappim.cashier.core.storage.GeneralPrefsDataStore
+import com.grappim.cashier.core.storage.GeneralStorage
 import com.grappim.cashier.data.db.dao.BasketDao
 import com.grappim.cashier.data.db.dao.CategoryDao
 import com.grappim.cashier.data.db.dao.ProductsDao
 import com.grappim.cashier.data.db.entity.BasketProduct
 import com.grappim.cashier.data.db.entity.Category
 import com.grappim.cashier.data.db.entity.Product
+import com.grappim.cashier.domain.acceptance.Acceptance
+import com.grappim.cashier.domain.cashier.Cashier
 import com.grappim.cashier.domain.login.LoginRequest
 import com.grappim.cashier.domain.login.LoginUseCase
+import com.grappim.cashier.domain.outlet.Mapper.toDomain
+import com.grappim.cashier.domain.outlet.Outlet
 import com.grappim.cashier.ui.acceptance.vm.AcceptanceStatus
 import com.grappim.cashier.ui.menu.MenuItem
 import com.grappim.cashier.ui.menu.MenuItemType
@@ -66,8 +67,8 @@ class GeneralRepositoryImpl @Inject constructor(
     private val cashierApi: CashierApi,
     private val basketDao: BasketDao,
     private val productsDao: ProductsDao,
-    private val categoryDao: CategoryDao,
-    private val generalPrefsDataStore: GeneralPrefsDataStore
+    private val generalStorage: GeneralStorage,
+    private val categoryDao: CategoryDao
 ) : GeneralRepository, BaseRepository() {
 
     override suspend fun login(loginRequestData: LoginUseCase.LoginRequestData): Either<Throwable, Unit> =
@@ -79,12 +80,19 @@ class GeneralRepositoryImpl @Inject constructor(
                 )
             )
         }.map {
-            generalPrefsDataStore.setMerchantId(it.merchantId)
-            generalPrefsDataStore.setAuthToken(it.token)
+            generalStorage.setMerchantId(it.merchantId)
+            generalStorage.setAuthToken(it.token)
         }
 
     override suspend fun getOutlets(): Either<Throwable, List<Outlet>> =
-        Either.Right(getOutletList())
+        apiCall {
+            val merchantId = generalStorage.getMerchantId()
+            cashierApi.getStocks(merchantId)
+        }.map {
+            withContext(Dispatchers.IO) {
+                it.stocks.toDomain()
+            }
+        }
 
     override suspend fun getCashiers(): Either<Throwable, List<Cashier>> =
         Either.Right(getCashierList())
@@ -167,12 +175,12 @@ class GeneralRepositoryImpl @Inject constructor(
     ).random()
 
     override suspend fun saveCashier(cashier: Cashier) = withContext(Dispatchers.IO) {
-        generalPrefsDataStore.setCashierInfo(cashier)
-        delay(50)
+        generalStorage.setCashierInfo(cashier)
+        delay(100)
     }
 
     override suspend fun saveOutlet(outlet: Outlet) = withContext(Dispatchers.IO) {
-        generalPrefsDataStore.setOutletInfo(outlet)
+        generalStorage.setOutletInfo(outlet)
     }
 
     override suspend fun searchProducts(query: String): List<Product> =
@@ -217,7 +225,8 @@ class GeneralRepositoryImpl @Inject constructor(
         categories.add(
             Category(
                 uid = "0",
-                name = "All"
+                name = "All",
+                isDefault = true
             )
         )
         (1..11).forEach {
@@ -231,13 +240,13 @@ class GeneralRepositoryImpl @Inject constructor(
         categoryDao.insert(categories)
     }
 
-    private fun getOutletList(): List<Outlet> {
-        val outlets = mutableListOf<Outlet>()
-        (0..10).forEach {
-            outlets.add(Outlet("Outlet $it"))
-        }
-        return outlets.toList()
-    }
+//    private fun getOutletList(): List<Outlet> {
+//        val outlets = mutableListOf<Outlet>()
+//        (0..10).forEach {
+//            outlets.add(Outlet("Outlet $it"))
+//        }
+//        return outlets.toList()
+//    }
 
     private fun getCashierList(): List<Cashier> {
         val cashiers = mutableListOf<Cashier>()

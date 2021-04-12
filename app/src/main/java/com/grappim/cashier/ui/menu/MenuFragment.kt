@@ -8,12 +8,17 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.grappim.cashier.R
 import com.grappim.cashier.core.extensions.setSafeOnClickListener
+import com.grappim.cashier.core.storage.GeneralStorage
 import com.grappim.cashier.databinding.FragmentMenuBinding
 import com.grappim.cashier.ui.menu.vm.MenuViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MenuFragment : Fragment(R.layout.fragment_menu), MenuItemClickListener {
+
+    @Inject
+    lateinit var generalStorage: GeneralStorage
 
     private val viewModel by viewModels<MenuViewModel>()
     private val menuItemsAdapter: MenuAdapter by lazy {
@@ -33,15 +38,13 @@ class MenuFragment : Fragment(R.layout.fragment_menu), MenuItemClickListener {
             buttonBack.setSafeOnClickListener {
                 requireActivity().onBackPressed()
             }
+            textCashier.text = generalStorage.getCashierName()
         }
     }
 
     private fun observeViewModel() {
         viewModel.menuItems.observe(viewLifecycleOwner) {
             menuItemsAdapter.setItems(it)
-        }
-        viewModel.cashierName.observe(viewLifecycleOwner) {
-            viewBinding.textCashier.text = it
         }
     }
 

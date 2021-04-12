@@ -6,7 +6,9 @@ import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.chuckerteam.chucker.api.RetentionManager
 import com.google.gson.Gson
 import com.grappim.cashier.BuildConfig
+import com.grappim.cashier.core.network.AuthTokenInterceptor
 import com.grappim.cashier.core.network.ErrorMappingInterceptor
+import com.grappim.cashier.core.network.TokenAuthenticator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -56,12 +58,16 @@ object NetworkModule {
     fun provideOkHttpClient(
         loggingInterceptor: HttpLoggingInterceptor,
         errorMappingInterceptor: ErrorMappingInterceptor,
-        chuckerInterceptor: ChuckerInterceptor
+        chuckerInterceptor: ChuckerInterceptor,
+        authTokenInterceptor: AuthTokenInterceptor,
+        tokenAuthenticator: TokenAuthenticator
     ): OkHttpClient =
         OkHttpClient.Builder()
             .connectTimeout(30L, TimeUnit.SECONDS)
             .readTimeout(30L, TimeUnit.SECONDS)
             .addInterceptor(errorMappingInterceptor)
+            .addInterceptor(authTokenInterceptor)
+            .authenticator(tokenAuthenticator)
             .apply {
                 if (BuildConfig.DEBUG) {
                     addInterceptor(loggingInterceptor)

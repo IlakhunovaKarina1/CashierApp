@@ -1,5 +1,6 @@
 package com.grappim.cashier.domain.products
 
+import androidx.lifecycle.LiveData
 import com.grappim.cashier.core.functional.Either
 import com.grappim.cashier.data.db.entity.BasketProduct
 import com.grappim.cashier.data.db.entity.Product
