@@ -5,20 +5,24 @@ import android.text.SpannableString
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.textfield.TextInputLayout
 import com.grappim.cashier.R
 import com.grappim.cashier.core.extensions.color
+import com.grappim.cashier.core.extensions.getErrorMessage
 import com.grappim.cashier.core.extensions.hideKeyboard2
 import com.grappim.cashier.core.extensions.setSafeOnClickListener
+import com.grappim.cashier.core.extensions.showToast
 import com.grappim.cashier.core.extensions.underline
+import com.grappim.cashier.core.functional.Resource
+import com.grappim.cashier.core.view.CashierLoaderDialog
 import com.grappim.cashier.databinding.FragmentAuthBinding
 import com.redmadrobot.inputmask.MaskedTextChangedListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_auth.editPassword
-import kotlinx.android.synthetic.main.fragment_auth.editPhoneNumber
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import reactivecircus.flowbinding.android.widget.textChangeEvents
@@ -28,7 +32,12 @@ import timber.log.Timber
 class AuthFragment : Fragment(R.layout.fragment_auth) {
 
     private val binding: FragmentAuthBinding by viewBinding(FragmentAuthBinding::bind)
-    private var phoneNumberEntered: Boolean = false
+    private var isPhoneNumberEntered: Boolean = false
+    private var enteredPhoneNumber: String = ""
+    private val loader: CashierLoaderDialog by lazy {
+        CashierLoaderDialog(requireContext())
+    }
+    private val viewModel: AuthViewModel by viewModels()
 
     private val phoneMaskedTextChangedListener by lazy {
         MaskedTextChangedListener.installOn(
@@ -41,7 +50,8 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
                     formattedValue: String
                 ) {
                     Timber.d("masked: $maskFilled, $extractedValue | $formattedValue")
-                    phoneNumberEntered = maskFilled
+                    isPhoneNumberEntered = maskFilled
+                    enteredPhoneNumber = extractedValue
                     if (maskFilled) {
                         binding.tilPhoneNumber.endIconMode = TextInputLayout.END_ICON_CUSTOM
                         binding.tilPhoneNumber.endIconDrawable = ContextCompat.getDrawable(
@@ -59,6 +69,25 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initViews()
+        observeViewModel()
+    }
+
+    private fun observeViewModel() {
+        viewModel.loginStatus.observe(viewLifecycleOwner) {
+            loader.showOrHide(it is Resource.Loading)
+            when (it) {
+                is Resource.Success -> {
+                    findNavController().navigate(R.id.action_authFragment_to_selectOutletFragment)
+                }
+                is Resource.Error -> {
+                    showToast(getErrorMessage(it.exception))
+                }
+            }
+        }
+    }
+
+    private fun initViews() {
         binding.editPhoneNumber.hint = phoneMaskedTextChangedListener.placeholder()
         val textForForgotPass = SpannableString(
             getString(R.string.auth_forgot_password)
@@ -72,7 +101,10 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
 
         binding.buttonSignIn.setSafeOnClickListener {
             hideKeyboard2()
-            findNavController().navigate(R.id.action_authFragment_to_selectOutletFragment)
+            viewModel.login(
+                mobile = enteredPhoneNumber,
+                password = editPassword.text.toString()
+            )
         }
 
         lifecycleScope.launch {
@@ -84,6 +116,6 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
 
     private fun checkDataToContinue() {
         val hasPasswordText = editPassword.text.toString().isNotBlank()
-        binding.buttonSignIn.isEnabled = hasPasswordText && phoneNumberEntered
+        binding.buttonSignIn.isEnabled = hasPasswordText && isPhoneNumberEntered
     }
 }

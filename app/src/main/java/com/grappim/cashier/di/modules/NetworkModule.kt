@@ -38,7 +38,7 @@ object NetworkModule {
         builder: Retrofit.Builder,
         okHttpClient: OkHttpClient
     ): Retrofit =
-        builder.baseUrl(BuildConfig.CASHIER_URL)
+        builder.baseUrl(BuildConfig.CASHIER_API)
             .client(okHttpClient)
             .build()
 

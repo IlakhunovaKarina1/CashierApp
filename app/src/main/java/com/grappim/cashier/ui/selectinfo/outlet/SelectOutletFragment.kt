@@ -8,7 +8,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.grappim.cashier.R
+import com.grappim.cashier.core.extensions.getErrorMessage
 import com.grappim.cashier.core.extensions.setSafeOnClickListener
+import com.grappim.cashier.core.extensions.showToast
 import com.grappim.cashier.core.functional.Resource
 import com.grappim.cashier.databinding.FragmentSelectOutletCashierBinding
 import com.grappim.cashier.ui.selectinfo.outlet.vm.SelectOutletViewModel
@@ -47,7 +49,7 @@ class SelectOutletFragment : Fragment(R.layout.fragment_select_outlet_cashier),
                 viewModel.getOutlets()
             }
             buttonBack.setSafeOnClickListener {
-                requireActivity().onBackPressed()
+                findNavController().popBackStack()
             }
 
             recyclerItems.adapter = outletAdapter
@@ -67,7 +69,7 @@ class SelectOutletFragment : Fragment(R.layout.fragment_select_outlet_cashier),
             binding.swipeRefresh.isRefreshing = it is Resource.Loading
             when (it) {
                 is Resource.Error -> {
-
+                    showToast(getErrorMessage(it.exception))
                 }
                 is Resource.Success -> {
                     outletAdapter.addItems(it.data)

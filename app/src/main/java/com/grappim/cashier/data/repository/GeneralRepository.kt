@@ -1,12 +1,15 @@
 package com.grappim.cashier.data.repository
 
 import com.grappim.cashier.R
+import com.grappim.cashier.api.CashierApi
 import com.grappim.cashier.core.domain.Acceptance
 import com.grappim.cashier.core.domain.Cashier
 import com.grappim.cashier.core.domain.Outlet
 import com.grappim.cashier.core.extensions.bigDecimalZero
 import com.grappim.cashier.core.extensions.getStringForDbQuery
 import com.grappim.cashier.core.functional.Either
+import com.grappim.cashier.core.functional.map
+import com.grappim.cashier.core.functional.onSuccess
 import com.grappim.cashier.core.storage.GeneralPrefsDataStore
 import com.grappim.cashier.data.db.dao.BasketDao
 import com.grappim.cashier.data.db.dao.CategoryDao
@@ -14,6 +17,8 @@ import com.grappim.cashier.data.db.dao.ProductsDao
 import com.grappim.cashier.data.db.entity.BasketProduct
 import com.grappim.cashier.data.db.entity.Category
 import com.grappim.cashier.data.db.entity.Product
+import com.grappim.cashier.domain.login.LoginRequest
+import com.grappim.cashier.domain.login.LoginUseCase
 import com.grappim.cashier.ui.acceptance.vm.AcceptanceStatus
 import com.grappim.cashier.ui.menu.MenuItem
 import com.grappim.cashier.ui.menu.MenuItemType
@@ -30,6 +35,8 @@ import javax.inject.Singleton
 import kotlin.random.Random
 
 interface GeneralRepository {
+
+    suspend fun login(loginRequestData: LoginUseCase.LoginRequestData): Either<Throwable, Unit>
 
     suspend fun getOutlets(): Either<Throwable, List<Outlet>>
     suspend fun getCashiers(): Either<Throwable, List<Cashier>>
@@ -57,11 +64,25 @@ interface GeneralRepository {
 
 @Singleton
 class GeneralRepositoryImpl @Inject constructor(
+    private val cashierApi: CashierApi,
     private val basketDao: BasketDao,
     private val productsDao: ProductsDao,
     private val categoryDao: CategoryDao,
     private val generalPrefsDataStore: GeneralPrefsDataStore
 ) : GeneralRepository, BaseRepository() {
+
+    override suspend fun login(loginRequestData: LoginUseCase.LoginRequestData): Either<Throwable, Unit> =
+        apiCall {
+            cashierApi.login(
+                LoginRequest(
+                    mobile = loginRequestData.mobile,
+                    password = loginRequestData.password
+                )
+            )
+        }.map {
+            generalPrefsDataStore.setMerchantId(it.merchantId)
+            generalPrefsDataStore.setAuthToken(it.token)
+        }
 
     override suspend fun getOutlets(): Either<Throwable, List<Outlet>> =
         Either.Right(getOutletList())

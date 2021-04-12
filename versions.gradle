@@ -15,7 +15,7 @@ ext {
             room               : '2.2.6',
             workManager        : '2.5.0',
 
-            navigation         : '2.3.4',
+            navigation         : '2.3.5',
             lifecycle          : '2.3.1',
 
             kotlin             : '1.4.32',
@@ -27,7 +27,6 @@ ext {
 
             hilt               : '2.33-beta',
             hiltAndroidX       : '1.0.0-beta01',
-            assistedInject     : '0.6.0',
 
             dagger2            : '2.33',
 

@@ -1,5 +1,6 @@
 package com.grappim.cashier.ui.selectinfo.cashier.vm
 
+import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,7 @@ import com.grappim.cashier.core.domain.Cashier
 import com.grappim.cashier.core.functional.Resource
 import com.grappim.cashier.core.functional.onFailure
 import com.grappim.cashier.core.functional.onSuccess
+import com.grappim.cashier.core.platform.SingleLiveEvent
 import com.grappim.cashier.ui.selectinfo.cashier.vm.GetCashiersUseCase
 import com.grappim.cashier.ui.selectinfo.cashier.vm.SaveCashierUseCase
 import com.grappim.cashier.ui.selectinfo.outlet.OutletProgressItem
@@ -22,7 +24,7 @@ class SelectCashierViewModel @Inject constructor(
     private val saveCashierUseCase: SaveCashierUseCase
 ) : ViewModel() {
 
-    private val _cashiers: MutableLiveData<Resource<List<Cashier>>> = MutableLiveData()
+    private val _cashiers: SingleLiveEvent<Resource<List<Cashier>>> = SingleLiveEvent()
     val cashiers: LiveData<Resource<List<Cashier>>>
         get() = _cashiers
 
@@ -38,6 +40,7 @@ class SelectCashierViewModel @Inject constructor(
         }
     }
 
+    @MainThread
     fun getCashiers() {
         viewModelScope.launch {
             _cashiers.value = Resource.Loading

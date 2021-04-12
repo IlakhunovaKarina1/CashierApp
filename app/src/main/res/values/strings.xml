@@ -27,4 +27,14 @@
     <string name="action_create_acceptance">Create Acceptance</string>
 
     <string name="title_empty"></string>
+
+    <!--    Errors-->
+    <string name="error_something_has_gone_wrong">Что-то пошло не так</string>
+    <string name="error_no_internet_connection">Отсутствует интернет-соединение</string>
+    <string name="error_host_not_found">Хост не найден</string>
+    <string name="error_server_error">В данный момент наблюдаются неполадки с сервером</string>
+    <string name="request_failed">Запрос завершился с ошибкой</string>
+    <string name="connection_failed">Ошибка соединения</string>
+    <string name="timeout_exceeded">Превышен лимит ожидания</string>
+    <string name="auth_error_refresh_token_not_passed">В целях безопасности ваша сессия была закрыта.</string>
 </resources>

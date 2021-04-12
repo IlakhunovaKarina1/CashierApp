@@ -19,7 +19,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "CASHIER_URL", '"https://example.com"')
+        buildConfigField("String", "CASHIER_API", '"https://quiet-shore-01215.herokuapp.com/"')
     }
 
     lintOptions {

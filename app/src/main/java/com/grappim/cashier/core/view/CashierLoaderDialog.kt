@@ -5,13 +5,14 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.widget.ProgressBar
 import com.grappim.cashier.R
+import com.mikhaellopez.circularprogressbar.CircularProgressBar
 
 class CashierLoaderDialog(
     context: Context,
     cancelable: Boolean = false
 ) {
     private var dialog: Dialog = Dialog(context, R.style.Dialog_Transparent)
-    private var progressBar: ProgressBar
+    private var progressBar: CircularProgressBar
 
     init {
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_cashier_loader_dialog, null)

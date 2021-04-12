@@ -1,5 +1,7 @@
 package com.grappim.cashier.core.functional
 
+import com.grappim.cashier.core.functional.Either.Left
+import com.grappim.cashier.core.functional.Either.Right
 import timber.log.Timber
 
 /**
@@ -63,3 +65,19 @@ inline fun <L, R> Either<L, R>.onFailure(action: (L) -> Unit): Either<L, R> {
     }
     return this
 }
+
+inline fun <L, R, Z> Either<L, R>.zipWith(fn: (R) -> Either<L, Z>): Either<L, Pair<R, Z>> =
+    when (this) {
+        is Either.Left -> Either.Left(a)
+        is Either.Right -> {
+            fn(b).flatMap {
+                Either.Right(Pair(b, it))
+            }
+        }
+    }
+
+inline fun <T, L, R> Either<L, R>.onFailureResumeNext(failure: (L) -> Either<T, R>): Either<T, R> =
+    when (this) {
+        is Either.Left -> failure(a)
+        is Either.Right -> Either.Right(b)
+    }

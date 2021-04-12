@@ -28,6 +28,9 @@ class GeneralPrefsDataStore @Inject constructor(
         private const val CASHIER_ID = "cashier_id"
 
         private const val OUTLET_NAME = "outlet_name"
+
+        private const val MERCHANT_ID = "merchant_id"
+        private const val AUTH_TOKEN = "auth_token"
     }
 
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
@@ -43,6 +46,12 @@ class GeneralPrefsDataStore @Inject constructor(
     private val outletNameKey: Preferences.Key<String> =
         stringPreferencesKey(OUTLET_NAME)
 
+    private val merchantIdKey: Preferences.Key<String> =
+        stringPreferencesKey(MERCHANT_ID)
+
+    private val authTokenKey: Preferences.Key<String> =
+        stringPreferencesKey(AUTH_TOKEN)
+
     val cashierName: Flow<String> = context.dataStore.data.map {
         it.getPreference(cashierNameKey)
     }
@@ -53,6 +62,22 @@ class GeneralPrefsDataStore @Inject constructor(
 
     val outletName: Flow<String> = context.dataStore.data.map {
         it.getPreference(outletNameKey)
+    }
+
+    val merchantId: Flow<String> = context.dataStore.data.map {
+        it.getPreference(merchantIdKey)
+    }
+
+    val authToken: Flow<String> = context.dataStore.data.map {
+        it.getPreference(authTokenKey)
+    }
+
+    suspend fun setMerchantId(merchantId: String) {
+        setValue(merchantIdKey, merchantId)
+    }
+
+    suspend fun setAuthToken(authToken: String) {
+        setValue(authTokenKey, authToken)
     }
 
     suspend fun setOutletInfo(outlet: Outlet) {

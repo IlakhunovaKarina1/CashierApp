@@ -1,5 +1,6 @@
 package com.grappim.cashier.ui.selectinfo.outlet.vm
 
+import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,7 @@ import com.grappim.cashier.core.domain.Outlet
 import com.grappim.cashier.core.functional.Resource
 import com.grappim.cashier.core.functional.onFailure
 import com.grappim.cashier.core.functional.onSuccess
+import com.grappim.cashier.core.platform.SingleLiveEvent
 import com.grappim.cashier.ui.selectinfo.outlet.OutletProgressItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -20,7 +22,7 @@ class SelectOutletViewModel @Inject constructor(
     private val saveOutletInfoUseCase: SaveOutletInfoUseCase
 ) : ViewModel() {
 
-    private val _outlets: MutableLiveData<Resource<List<Outlet>>> = MutableLiveData()
+    private val _outlets: SingleLiveEvent<Resource<List<Outlet>>> = SingleLiveEvent()
     val outlets: LiveData<Resource<List<Outlet>>>
         get() = _outlets
 
@@ -30,6 +32,7 @@ class SelectOutletViewModel @Inject constructor(
         getOutlets()
     }
 
+    @MainThread
     fun getOutlets() {
         viewModelScope.launch {
             _outlets.value = Resource.Loading
