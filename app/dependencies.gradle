@@ -85,6 +85,8 @@ dependencies {
     implementation "com.redmadrobot:input-mask-android:6.0.0"
     implementation "com.github.vipulasri:timelineview:1.1.5"
 
+    implementation 'com.github.Zhuinden:livedata-combinetuple-kt:1.2.1'
+
     implementation "io.github.reactivecircus.flowbinding:flowbinding-android:${versions.flowbinding}"
     implementation "io.github.reactivecircus.flowbinding:flowbinding-material:${versions.flowbinding}"
 

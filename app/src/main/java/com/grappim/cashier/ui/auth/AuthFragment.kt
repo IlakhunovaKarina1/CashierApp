@@ -18,13 +18,15 @@ import com.grappim.cashier.core.extensions.setSafeOnClickListener
 import com.grappim.cashier.core.extensions.showToast
 import com.grappim.cashier.core.extensions.underline
 import com.grappim.cashier.core.functional.Resource
+import com.grappim.cashier.core.utils.PHONE_NUMBER_FORMAT
 import com.grappim.cashier.core.view.CashierLoaderDialog
 import com.grappim.cashier.databinding.FragmentAuthBinding
 import com.redmadrobot.inputmask.MaskedTextChangedListener
+import com.zhuinden.livedatacombinetuplekt.combineTuple
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_auth.editPassword
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import reactivecircus.flowbinding.android.widget.textChangeEvents
 import timber.log.Timber
 
@@ -32,40 +34,13 @@ import timber.log.Timber
 class AuthFragment : Fragment(R.layout.fragment_auth) {
 
     private val binding: FragmentAuthBinding by viewBinding(FragmentAuthBinding::bind)
-    private var isPhoneNumberEntered: Boolean = false
-    private var enteredPhoneNumber: String = ""
+
     private val loader: CashierLoaderDialog by lazy {
         CashierLoaderDialog(requireContext())
     }
     private val viewModel: AuthViewModel by viewModels()
 
-    private val phoneMaskedTextChangedListener by lazy {
-        MaskedTextChangedListener.installOn(
-            binding.editPhoneNumber,
-            "7 [000] [000] [00] [00]",
-            object : MaskedTextChangedListener.ValueListener {
-                override fun onTextChanged(
-                    maskFilled: Boolean,
-                    extractedValue: String,
-                    formattedValue: String
-                ) {
-                    Timber.d("masked: $maskFilled, $extractedValue | $formattedValue")
-                    isPhoneNumberEntered = maskFilled
-                    enteredPhoneNumber = extractedValue
-                    if (maskFilled) {
-                        binding.tilPhoneNumber.endIconMode = TextInputLayout.END_ICON_CUSTOM
-                        binding.tilPhoneNumber.endIconDrawable = ContextCompat.getDrawable(
-                            requireContext(),
-                            R.drawable.ic_check_circle_green
-                        )
-                    } else {
-                        binding.tilPhoneNumber.endIconMode = TextInputLayout.END_ICON_NONE
-                    }
-                    checkDataToContinue()
-                }
-            }
-        )
-    }
+    private lateinit var phoneMaskedTextChangedListener: MaskedTextChangedListener
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -74,6 +49,22 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
     }
 
     private fun observeViewModel() {
+        combineTuple(viewModel.isPasswordNotBlank, viewModel.isFullPhoneNumberEntered)
+            .observe(viewLifecycleOwner) { (isPasswordNotBlank, phoneFullyEntered) ->
+                if (phoneFullyEntered == true) {
+                    binding.tilPhoneNumber.endIconMode = TextInputLayout.END_ICON_CUSTOM
+                    binding.tilPhoneNumber.endIconDrawable = ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_check_circle_green
+                    )
+                } else {
+                    binding.tilPhoneNumber.endIconMode = TextInputLayout.END_ICON_NONE
+                }
+
+                binding.buttonSignIn.isEnabled = isPasswordNotBlank == true &&
+                    phoneFullyEntered == true
+            }
+
         viewModel.loginStatus.observe(viewLifecycleOwner) {
             loader.showOrHide(it is Resource.Loading)
             when (it) {
@@ -88,7 +79,24 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
     }
 
     private fun initViews() {
+        phoneMaskedTextChangedListener = MaskedTextChangedListener.installOn(
+            binding.editPhoneNumber,
+            PHONE_NUMBER_FORMAT,
+            object : MaskedTextChangedListener.ValueListener {
+                override fun onTextChanged(
+                    maskFilled: Boolean,
+                    extractedValue: String,
+                    formattedValue: String
+                ) {
+                    Timber.d("masked: $maskFilled, $extractedValue | $formattedValue")
+
+                    viewModel.onPhoneNumberEntered(maskFilled)
+                    viewModel.setPhoneNumber(extractedValue)
+                }
+            }
+        )
         binding.editPhoneNumber.hint = phoneMaskedTextChangedListener.placeholder()
+
         val textForForgotPass = SpannableString(
             getString(R.string.auth_forgot_password)
         )
@@ -102,20 +110,14 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         binding.buttonSignIn.setSafeOnClickListener {
             hideKeyboard2()
             viewModel.login(
-                mobile = enteredPhoneNumber,
+                mobile = viewModel.phoneNumber.value!!,
                 password = editPassword.text.toString()
             )
         }
 
-        lifecycleScope.launch {
-            binding.editPassword.textChangeEvents().collect {
-                checkDataToContinue()
-            }
-        }
+        binding.editPassword.textChangeEvents().onEach {
+            viewModel.onPasswordEntered(it.text.toString())
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
-    private fun checkDataToContinue() {
-        val hasPasswordText = editPassword.text.toString().isNotBlank()
-        binding.buttonSignIn.isEnabled = hasPasswordText && isPhoneNumberEntered
-    }
 }

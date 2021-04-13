@@ -6,14 +6,13 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.grappim.cashier.core.extensions.combineTuple
 import com.grappim.cashier.core.functional.onFailure
 import com.grappim.cashier.core.functional.onSuccess
 import com.grappim.cashier.data.db.entity.Category
 import com.grappim.cashier.data.db.entity.Product
-import com.grappim.cashier.data.repository.GeneralRepository
 import com.grappim.cashier.domain.products.GetCategoryListUseCase
 import com.grappim.cashier.domain.products.GetProductsByQueryUseCase
+import com.zhuinden.livedatacombinetuplekt.combineTuple
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

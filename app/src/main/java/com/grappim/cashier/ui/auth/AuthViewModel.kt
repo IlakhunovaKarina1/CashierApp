@@ -3,6 +3,7 @@ package com.grappim.cashier.ui.auth
 import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.grappim.cashier.core.functional.Resource
@@ -25,14 +26,37 @@ class AuthViewModel @Inject constructor(
         prePopulateDb()
     }
 
+    private val _password = MutableLiveData<String>()
+    val isPasswordNotBlank: LiveData<Boolean>
+        get() = Transformations.map(_password) {
+            it.isNotBlank()
+        }
+
+    private val _isFullPhoneNumberEntered = MutableLiveData<Boolean>()
+    val isFullPhoneNumberEntered: LiveData<Boolean>
+        get() = _isFullPhoneNumberEntered
+
     private val _loginStatus = SingleLiveEvent<Resource<Unit>>()
     val loginStatus: LiveData<Resource<Unit>>
         get() = _loginStatus
 
-    private fun prePopulateDb() {
-        viewModelScope.launch {
-            generalRepository.prePopulateDb()
-        }
+    private val _phoneNumber = MutableLiveData<String>()
+    val phoneNumber: LiveData<String>
+        get() = _phoneNumber
+
+    @MainThread
+    fun onPasswordEntered(password: String) {
+        _password.value = password
+    }
+
+    @MainThread
+    fun onPhoneNumberEntered(value: Boolean) {
+        _isFullPhoneNumberEntered.value = value
+    }
+
+    @MainThread
+    fun setPhoneNumber(value: String) {
+        _phoneNumber.value = value
     }
 
     @MainThread
@@ -48,6 +72,12 @@ class AuthViewModel @Inject constructor(
                 }.onSuccess {
                     _loginStatus.value = Resource.Success(it)
                 }
+        }
+    }
+
+    private fun prePopulateDb() {
+        viewModelScope.launch {
+            generalRepository.prePopulateDb()
         }
     }
 

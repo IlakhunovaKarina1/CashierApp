@@ -1,4 +1,4 @@
-package com.grappim.cashier.ui.menu.vm
+package com.grappim.cashier.domain.menu
 
 import com.grappim.cashier.data.repository.GeneralRepository
 import com.grappim.cashier.ui.menu.MenuItem
