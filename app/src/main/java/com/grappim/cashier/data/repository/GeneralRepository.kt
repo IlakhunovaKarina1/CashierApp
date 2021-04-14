@@ -1,20 +1,29 @@
 package com.grappim.cashier.data.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.grappim.cashier.R
 import com.grappim.cashier.api.CashierApi
 import com.grappim.cashier.core.extensions.bigDecimalZero
+import com.grappim.cashier.core.extensions.getEpochMilli
 import com.grappim.cashier.core.extensions.getStringForDbQuery
 import com.grappim.cashier.core.functional.Either
 import com.grappim.cashier.core.functional.map
 import com.grappim.cashier.core.storage.GeneralStorage
+import com.grappim.cashier.core.utils.DateTimeUtils
+import com.grappim.cashier.data.db.dao.AcceptanceDao
 import com.grappim.cashier.data.db.dao.BasketDao
 import com.grappim.cashier.data.db.dao.CategoryDao
 import com.grappim.cashier.data.db.dao.ProductsDao
+import com.grappim.cashier.data.db.entity.AcceptanceDB
 import com.grappim.cashier.data.db.entity.BasketProduct
 import com.grappim.cashier.data.db.entity.Category
 import com.grappim.cashier.data.db.entity.Product
 import com.grappim.cashier.domain.acceptance.Acceptance
+import com.grappim.cashier.domain.acceptance.Mapper.toDomain
 import com.grappim.cashier.domain.cashier.Cashier
 import com.grappim.cashier.domain.login.LoginRequest
 import com.grappim.cashier.domain.login.LoginUseCase
@@ -27,10 +36,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
+import java.time.Instant
 import java.util.*
+import java.util.concurrent.ThreadLocalRandom
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.random.Random
@@ -52,7 +63,8 @@ interface GeneralRepository {
     fun getAllBasketProducts(): Flow<List<BasketProduct>>
 
     fun getMenuItems(): Flow<List<MenuItem>>
-    fun getAcceptanceList(): Flow<List<Acceptance>>
+
+    fun getAcceptanceListPaging(): Flow<PagingData<Acceptance>>
 
     suspend fun saveCashier(cashier: Cashier)
     suspend fun saveOutlet(outlet: Outlet)
@@ -74,7 +86,8 @@ class GeneralRepositoryImpl @Inject constructor(
     private val basketDao: BasketDao,
     private val productsDao: ProductsDao,
     private val generalStorage: GeneralStorage,
-    private val categoryDao: CategoryDao
+    private val categoryDao: CategoryDao,
+    private val acceptanceDao: AcceptanceDao
 ) : GeneralRepository, BaseRepository() {
 
     override suspend fun login(loginRequestData: LoginUseCase.LoginRequestData): Either<Throwable, Unit> =
@@ -158,22 +171,20 @@ class GeneralRepositoryImpl @Inject constructor(
         )
     }
 
-    override fun getAcceptanceList(): Flow<List<Acceptance>> = flow {
-        val list = mutableListOf<Acceptance>()
-        (0..20).forEach {
-            list.add(
-                Acceptance(
-                    id = UUID.randomUUID().toString(),
-                    vendorName = "Vendor Name $it",
-                    date = "30.04.21 22:32",
-                    status = getRandomAcceptanceStatus(),
-                    toPay = BigDecimal("${Random.nextInt(50, 400)}"),
-                    paidSum = BigDecimal("${Random.nextInt(50, 400)}")
-                )
+    override fun getAcceptanceListPaging(): Flow<PagingData<Acceptance>> =
+        Pager(
+            config = PagingConfig(
+                pageSize = 30,
+                enablePlaceholders = false,
+                initialLoadSize = 10
             )
+        ) {
+            acceptanceDao.getAcceptanceListPaging()
+        }.flow.map {
+            it.map { acceptanceDb ->
+                acceptanceDb.toDomain()
+            }
         }
-        emit(list)
-    }.flowOn(Dispatchers.IO)
 
     private fun getRandomAcceptanceStatus(): AcceptanceStatus = listOf(
         AcceptanceStatus.PAID,
@@ -278,15 +289,34 @@ class GeneralRepositoryImpl @Inject constructor(
             )
         }
         categoryDao.insert(categories)
+
+        val list = mutableListOf<AcceptanceDB>()
+        (0..20).forEach {
+            val randomDateInstant = getRandomDate()
+            val dateString = randomDateInstant.atOffset(DateTimeUtils.getZoneOffset(false))
+            list.add(
+                AcceptanceDB(
+                    id = "$it",
+                    vendorName = "Vendor Name $it",
+                    date = DateTimeUtils.getDateTimePatternStandard().format(dateString),
+                    dateMillis = randomDateInstant.toEpochMilli(),
+                    status = getRandomAcceptanceStatus(),
+                    toPay = BigDecimal("${Random.nextInt(50, 400)}"),
+                    paidSum = BigDecimal("${Random.nextInt(50, 400)}")
+                )
+            )
+        }
+        acceptanceDao.insert(list)
     }
 
-//    private fun getOutletList(): List<Outlet> {
-//        val outlets = mutableListOf<Outlet>()
-//        (0..10).forEach {
-//            outlets.add(Outlet("Outlet $it"))
-//        }
-//        return outlets.toList()
-//    }
+    private fun getRandomDate(): Instant {
+        val start: Long = DateTimeUtils.getNowOffsetDateTime().minusWeeks(1).getEpochMilli()
+        val end: Long = DateTimeUtils.getNowOffsetDateTime().getEpochMilli()
+        val randomTime: Long = ThreadLocalRandom
+            .current()
+            .nextLong(start, end)
+        return Instant.ofEpochMilli(randomTime)
+    }
 
     private fun getCashierList(): List<Cashier> {
         val cashiers = mutableListOf<Cashier>()
@@ -321,17 +351,6 @@ class GeneralRepositoryImpl @Inject constructor(
 
     fun Product.toBasketProduct(): BasketProduct =
         BasketProduct(
-            uid = this.uid,
-            name = this.name,
-            basketCount = this.basketCount,
-            imageUrl = this.imageUrl,
-            price = this.price,
-            categoryId = this.categoryId,
-            stockCount = this.stockCount
-        )
-
-    fun BasketProduct.toProduct(): Product =
-        Product(
             uid = this.uid,
             name = this.name,
             basketCount = this.basketCount,

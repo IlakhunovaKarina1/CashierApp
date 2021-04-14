@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.grappim.cashier.BuildConfig
 import com.grappim.cashier.data.db.CashierDatabase
+import com.grappim.cashier.data.db.dao.AcceptanceDao
 import com.grappim.cashier.data.db.dao.BasketDao
 import com.grappim.cashier.data.db.dao.CategoryDao
 import com.grappim.cashier.data.db.dao.ProductsDao
@@ -49,4 +50,10 @@ object DatabaseModule {
     fun provideCategoryDao(
         cashierDatabase: CashierDatabase
     ): CategoryDao = cashierDatabase.categoryDao()
+
+    @Provides
+    @Singleton
+    fun provideAcceptanceDao(
+        cashierDatabase: CashierDatabase
+    ): AcceptanceDao = cashierDatabase.acceptanceDao()
 }

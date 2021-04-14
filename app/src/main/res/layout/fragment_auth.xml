@@ -70,7 +70,7 @@
                 app:layout_constraintEnd_toEndOf="@+id/textHint"
                 app:layout_constraintStart_toStartOf="@+id/textHint"
                 app:layout_constraintTop_toBottomOf="@+id/textHint"
-                app:startIconDrawable="@drawable/ic_baseline_local_phone_24"
+                app:startIconDrawable="@drawable/ic_local_phone_24"
                 app:startIconTint="@color/cashier_blue">
 
                 <com.google.android.material.textfield.TextInputEditText

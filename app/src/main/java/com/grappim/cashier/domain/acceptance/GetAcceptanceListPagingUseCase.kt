@@ -1,13 +1,14 @@
 package com.grappim.cashier.domain.acceptance
 
-import com.grappim.cashier.domain.acceptance.Acceptance
+import androidx.paging.PagingData
 import com.grappim.cashier.data.repository.GeneralRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetAcceptanceListUseCase @Inject constructor(
+class GetAcceptanceListPagingUseCase @Inject constructor(
     private val generalRepository: GeneralRepository
 ) {
 
-    operator fun invoke(): Flow<List<Acceptance>> = generalRepository.getAcceptanceList()
+    operator fun invoke(): Flow<PagingData<Acceptance>> =
+        generalRepository.getAcceptanceListPaging()
 }

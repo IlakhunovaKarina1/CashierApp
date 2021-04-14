@@ -4,15 +4,16 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.grappim.cashier.R
-import com.grappim.cashier.domain.acceptance.Acceptance
 import com.grappim.cashier.core.extensions.setSafeOnClickListener
 import com.grappim.cashier.databinding.FragmentAcceptanceBinding
 import com.grappim.cashier.di.modules.DecimalFormatSimple
+import com.grappim.cashier.domain.acceptance.Acceptance
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
+import kotlinx.coroutines.flow.collectLatest
 import java.text.DecimalFormat
 import javax.inject.Inject
 
@@ -25,8 +26,9 @@ class AcceptanceFragment : Fragment(R.layout.fragment_acceptance), AcceptanceCli
 
     private val viewModel: AcceptanceViewModel by viewModels()
     private val viewBinding: FragmentAcceptanceBinding by viewBinding(FragmentAcceptanceBinding::bind)
-    private val acceptanceAdapter: AcceptanceAdapter by lazy {
-        AcceptanceAdapter(this, dfSimple)
+
+    private val acceptancePagingAdapter: AcceptancePagingAdapter by lazy {
+        AcceptancePagingAdapter(this, dfSimple)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,19 +42,15 @@ class AcceptanceFragment : Fragment(R.layout.fragment_acceptance), AcceptanceCli
             buttonMenu.setSafeOnClickListener {
                 requireActivity().onBackPressed()
             }
-            recyclerAcceptance.adapter = ScaleInAnimationAdapter(acceptanceAdapter)
-            recyclerAcceptance.addItemDecoration(
-                DividerItemDecoration(
-                    requireContext(),
-                    DividerItemDecoration.VERTICAL
-                )
-            )
+            recyclerAcceptance.adapter = ScaleInAnimationAdapter(acceptancePagingAdapter)
         }
     }
 
     private fun observeViewModel() {
-        viewModel.acceptanceList.observe(viewLifecycleOwner) {
-            acceptanceAdapter.setItems(it)
+        lifecycleScope.launchWhenCreated {
+            viewModel.acceptances.collectLatest {
+                acceptancePagingAdapter.submitData(it)
+            }
         }
     }
 
