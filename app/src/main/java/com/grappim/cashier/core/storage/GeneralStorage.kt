@@ -2,7 +2,7 @@ package com.grappim.cashier.core.storage
 
 import android.content.Context
 import com.grappim.cashier.domain.cashier.Cashier
-import com.grappim.cashier.domain.outlet.Outlet
+import com.grappim.cashier.domain.outlet.Stock
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -18,9 +18,12 @@ class GeneralStorage @Inject constructor(
         private const val CASHIER_NAME = "cashier_name"
         private const val CASHIER_ID = "cashier_id"
 
-        private const val OUTLET_NAME = "outlet_name"
+        private const val STOCK_NAME = "stock_name"
+        private const val STOCK_ID = "stock_id"
 
         private const val MERCHANT_ID = "merchant_id"
+        private const val MERCHANT_NAME = "merchant_name"
+
         private const val AUTH_TOKEN = "auth_token"
     }
 
@@ -39,9 +42,10 @@ class GeneralStorage @Inject constructor(
             .apply()
     }
 
-    fun setOutletInfo(outlet: Outlet) {
+    fun setStockInfo(stock: Stock) {
         editor
-            .putString(OUTLET_NAME, outlet.name)
+            .putString(STOCK_NAME, stock.name)
+            .putString(STOCK_ID, stock.stockId)
             .apply()
     }
 
@@ -51,9 +55,10 @@ class GeneralStorage @Inject constructor(
             .apply()
     }
 
-    fun setMerchantId(merchantId: String) {
+    fun setMerchantInfo(merchantId: String, merchantName: String) {
         editor
             .putString(MERCHANT_ID, merchantId)
+            .putString(MERCHANT_NAME, merchantName)
             .apply()
     }
 
@@ -61,9 +66,13 @@ class GeneralStorage @Inject constructor(
 
     fun getCashierId(): String = getStringValue(CASHIER_ID)
 
-    fun getOutletName(): String = getStringValue(OUTLET_NAME)
+    fun getOutletName(): String = getStringValue(STOCK_NAME)
 
     fun getMerchantId(): String = getStringValue(MERCHANT_ID)
+
+    fun getMerchantName(): String = getStringValue(MERCHANT_NAME)
+
+    fun getStockId(): String = getStringValue(STOCK_ID)
 
     fun getToken(): String = getStringValue(AUTH_TOKEN)
 

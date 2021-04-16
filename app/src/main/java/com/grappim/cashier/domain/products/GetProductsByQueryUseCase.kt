@@ -2,7 +2,7 @@ package com.grappim.cashier.domain.products
 
 import com.grappim.cashier.data.db.entity.CategoryEntity
 import com.grappim.cashier.data.db.entity.ProductEntity
-import com.grappim.cashier.data.repository.GeneralRepository
+import com.grappim.cashier.domain.repository.GeneralRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

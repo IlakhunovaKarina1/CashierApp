@@ -3,7 +3,9 @@ package com.grappim.cashier.data.db.entity
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.grappim.cashier.core.annotation.LocalField
 import com.grappim.cashier.core.extensions.bigDecimalZero
+import com.grappim.cashier.core.utils.ProductUnit
 import kotlinx.android.parcel.Parcelize
 import java.math.BigDecimal
 
@@ -16,9 +18,17 @@ data class ProductEntity(
     val id: Long,
     val barcode: String,
     val name: String,
-    val imageUrl: String,
-    val price: BigDecimal,
-    val stockCount: BigDecimal,
-    var basketCount: BigDecimal = bigDecimalZero(),
-    val categoryId: String? = null
+    val sellingPrice: BigDecimal,
+    val purchasePrice: BigDecimal,
+    val amount: BigDecimal,
+    val stockId: String,
+    val unit: ProductUnit,
+    val merchantId: String,
+
+    val createdOn: String,
+    val updatedOn: String,
+
+    val categoryId: String? = null,
+
+    var basketCount: BigDecimal = bigDecimalZero()
 ) : Parcelable

@@ -36,13 +36,13 @@ class SalesAdapter(
                     binding.textName.text = product.name
                     binding.textPrice.text = itemView.context.getString(
                         R.string.title_price_with_currency,
-                        dfSimple.format(product.price)
+                        dfSimple.format(product.sellingPrice)
                     )
                     binding.textBasketCount.text = itemView.context.getString(
                         R.string.title_basket_count,
                         dfSimple.format(product.basketCount)
                     )
-                    binding.imageProduct.load(product.imageUrl) {
+                    binding.imageProduct.load("") {
                         setStandardSettings()
                     }
                     if (product.basketCount <= bigDecimalZero()) {

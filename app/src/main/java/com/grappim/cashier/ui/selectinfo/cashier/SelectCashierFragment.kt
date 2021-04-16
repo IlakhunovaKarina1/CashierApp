@@ -10,19 +10,19 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.grappim.cashier.R
 import com.grappim.cashier.core.extensions.setSafeOnClickListener
 import com.grappim.cashier.core.functional.Resource
-import com.grappim.cashier.databinding.FragmentSelectOutletCashierBinding
-import com.grappim.cashier.ui.selectinfo.outlet.SelectInfoProgressAdapter
+import com.grappim.cashier.databinding.FragmentSelectStockCashierBinding
+import com.grappim.cashier.ui.selectinfo.stock.SelectInfoProgressAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SelectCashierFragment : Fragment(R.layout.fragment_select_outlet_cashier),
+class SelectCashierFragment : Fragment(R.layout.fragment_select_stock_cashier),
     CashierListClickListener {
 
     private val cashierAdapter: SelectCashierAdapter by lazy {
         SelectCashierAdapter(this)
     }
-    private val binding: FragmentSelectOutletCashierBinding by viewBinding(
-        FragmentSelectOutletCashierBinding::bind
+    private val binding: FragmentSelectStockCashierBinding by viewBinding(
+        FragmentSelectStockCashierBinding::bind
     )
     private val selectInfoProgressAdapter: SelectInfoProgressAdapter by lazy {
         SelectInfoProgressAdapter()
@@ -73,7 +73,7 @@ class SelectCashierFragment : Fragment(R.layout.fragment_select_outlet_cashier),
                 }
             }
         }
-        selectInfoProgressAdapter.setItems(viewModel.outletProgress)
+        selectInfoProgressAdapter.setItems(viewModel.stockProgresses)
     }
 
     override fun onCashierClick() {

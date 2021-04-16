@@ -10,9 +10,9 @@ import com.grappim.cashier.core.functional.Resource
 import com.grappim.cashier.core.functional.onFailure
 import com.grappim.cashier.core.functional.onSuccess
 import com.grappim.cashier.core.platform.SingleLiveEvent
-import com.grappim.cashier.core.workers.WorkerHelper
-import com.grappim.cashier.data.repository.GeneralRepository
+import com.grappim.cashier.data.workers.WorkerHelper
 import com.grappim.cashier.domain.login.LoginUseCase
+import com.grappim.cashier.domain.repository.GeneralRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

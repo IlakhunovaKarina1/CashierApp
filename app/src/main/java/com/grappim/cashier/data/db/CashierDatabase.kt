@@ -8,6 +8,7 @@ import com.grappim.cashier.data.db.entity.CategoryEntity
 import com.grappim.cashier.data.db.entity.ProductEntity
 import com.grappim.cashier.data.db.converter.BaseListsConverter
 import com.grappim.cashier.data.db.converter.BigDecimalConverter
+import com.grappim.cashier.data.db.converter.ProductUnitConverter
 import com.grappim.cashier.data.db.dao.AcceptanceDao
 import com.grappim.cashier.data.db.dao.BasketDao
 import com.grappim.cashier.data.db.dao.CategoryDao
@@ -28,7 +29,8 @@ import com.grappim.cashier.data.db.entity.BasketProductEntity
 @TypeConverters(
     BigDecimalConverter::class,
     BaseListsConverter::class,
-    AcceptanceStatusConverter::class
+    AcceptanceStatusConverter::class,
+    ProductUnitConverter::class
 )
 abstract class CashierDatabase : RoomDatabase() {
     abstract fun productsDao(): ProductsDao

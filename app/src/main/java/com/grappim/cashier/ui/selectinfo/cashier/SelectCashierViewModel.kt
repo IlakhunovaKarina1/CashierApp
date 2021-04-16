@@ -12,7 +12,7 @@ import com.grappim.cashier.core.functional.onSuccess
 import com.grappim.cashier.core.platform.SingleLiveEvent
 import com.grappim.cashier.domain.cashier.GetCashiersUseCase
 import com.grappim.cashier.domain.cashier.SaveCashierUseCase
-import com.grappim.cashier.ui.selectinfo.outlet.OutletProgressItem
+import com.grappim.cashier.ui.selectinfo.stock.StockProgressItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,7 +27,7 @@ class SelectCashierViewModel @Inject constructor(
     val cashiers: LiveData<Resource<List<Cashier>>>
         get() = _cashiers
 
-    val outletProgress: List<OutletProgressItem> = getOutletProgressItems()
+    val stockProgresses: List<StockProgressItem> = getOutletProgressItems()
 
     init {
         getCashiers()
@@ -52,10 +52,10 @@ class SelectCashierViewModel @Inject constructor(
         }
     }
 
-    private fun getOutletProgressItems(): List<OutletProgressItem> =
+    private fun getOutletProgressItems(): List<StockProgressItem> =
         listOf(
-            OutletProgressItem(R.string.outlet_selecting, true),
-            OutletProgressItem(R.string.outlet_checkout, true),
-            OutletProgressItem(R.string.title_empty, true)
+            StockProgressItem(R.string.outlet_selecting, true),
+            StockProgressItem(R.string.outlet_checkout, true),
+            StockProgressItem(R.string.title_empty, true)
         )
 }

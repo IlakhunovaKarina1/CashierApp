@@ -1,9 +1,11 @@
 package com.grappim.cashier.di.modules
 
-import com.grappim.cashier.data.repository.GeneralRepository
+import com.grappim.cashier.data.repository.AuthRepositoryImpl
 import com.grappim.cashier.data.repository.GeneralRepositoryImpl
-import com.grappim.cashier.data.repository.SelectInfoRepository
 import com.grappim.cashier.data.repository.SelectInfoRepositoryImpl
+import com.grappim.cashier.domain.repository.AuthRepository
+import com.grappim.cashier.domain.repository.GeneralRepository
+import com.grappim.cashier.domain.repository.SelectInfoRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -22,4 +24,9 @@ abstract class RepositoryModule {
     abstract fun bindSelectInfoRepository(
         selectInfoRepositoryImpl: SelectInfoRepositoryImpl
     ): SelectInfoRepository
+
+    @Binds
+    abstract fun bindAuthRepository(
+        authRepositoryImpl: AuthRepositoryImpl
+    ): AuthRepository
 }

@@ -1,6 +1,6 @@
 package com.grappim.cashier.domain.cashier
 
-import com.grappim.cashier.data.repository.SelectInfoRepository
+import com.grappim.cashier.domain.repository.SelectInfoRepository
 import javax.inject.Inject
 
 class SaveCashierUseCase @Inject constructor(

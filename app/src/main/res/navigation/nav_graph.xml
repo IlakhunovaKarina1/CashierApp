@@ -21,9 +21,9 @@
 
     <fragment
         android:id="@+id/selectOutletFragment"
-        android:name="com.grappim.cashier.ui.selectinfo.outlet.SelectOutletFragment"
+        android:name="com.grappim.cashier.ui.selectinfo.stock.SelectStockFragment"
         android:label="fragment_select_outlet"
-        tools:layout="@layout/fragment_select_outlet_cashier">
+        tools:layout="@layout/fragment_select_stock_cashier">
         <action
             android:id="@+id/action_selectOutletFragment_to_selectCashierFragment"
             app:destination="@id/selectCashierFragment"
@@ -36,7 +36,7 @@
     <fragment
         android:id="@+id/selectCashierFragment"
         android:name="com.grappim.cashier.ui.selectinfo.cashier.SelectCashierFragment"
-        tools:layout="@layout/fragment_select_outlet_cashier">
+        tools:layout="@layout/fragment_select_stock_cashier">
         <action
             android:id="@+id/action_selectCashierFragment_to_menuFragment"
             app:destination="@id/menuFragment"
@@ -50,7 +50,17 @@
         android:id="@+id/productsFragment"
         android:name="com.grappim.cashier.ui.products.ProductsFragment"
         android:label="fragment_products"
-        tools:layout="@layout/fragment_products" />
+        tools:layout="@layout/fragment_products">
+        <action
+            android:id="@+id/action_products_to_createProduct"
+            app:destination="@id/createProductFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/createProductFragment"
+        android:name="com.grappim.cashier.ui.products.create.CreateProductFragment"
+        android:label="fragment_create_product"
+        tools:layout="@layout/fragment_create_product" />
 
     <fragment
         android:id="@+id/menuFragment"

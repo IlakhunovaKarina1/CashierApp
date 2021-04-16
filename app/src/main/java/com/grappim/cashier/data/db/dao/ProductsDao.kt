@@ -11,10 +11,7 @@ import com.grappim.cashier.data.db.entity.productEntityTableName
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface ProductsDao {
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(productEntities: List<ProductEntity>)
+interface ProductsDao : BaseDao<ProductEntity> {
 
     @Query("DELETE FROM $productEntityTableName")
     suspend fun clearProducts()

@@ -11,6 +11,7 @@
 
     <string name="title_sales">Sales</string>
     <string name="title_products">Products</string>
+    <string name="title_create_product">Create product</string>
     <string name="tittle_acceptance">Acceptance</string>
     <string name="title_menu">Menu</string>
     <string name="title_phone_number">Phone number</string>

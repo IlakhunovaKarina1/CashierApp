@@ -33,14 +33,14 @@ class ProductsAdapter(
             viewBinding.textName.text = product.name
             viewBinding.textPrice.text = itemView.context.getString(
                 R.string.title_price_with_currency,
-                dfSimple.format(product.price)
+                dfSimple.format(product.sellingPrice)
             )
-            viewBinding.imageProduct.load(product.imageUrl) {
+            viewBinding.imageProduct.load("") {
                 setStandardSettings()
             }
             viewBinding.textCountAndUnit.text = itemView.context.getString(
                 R.string.title_basket_count,
-                dfSimple.format(product.stockCount)
+                dfSimple.format(product.amount)
             )
 
             itemView.setSafeOnClickListener {

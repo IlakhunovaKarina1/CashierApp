@@ -1,13 +1,14 @@
 package com.grappim.cashier.api
 
 import com.grappim.cashier.core.network.RequestWithAuthToken
-import com.grappim.cashier.domain.login.LoginDTO
-import com.grappim.cashier.domain.login.LoginRequest
-import com.grappim.cashier.domain.login.SendTokenToRefreshRequest
-import com.grappim.cashier.domain.outlet.GetOutletResponse
-import com.grappim.cashier.domain.products.ProductDTO
-import com.grappim.cashier.domain.products.create.ProductChange
-import com.grappim.cashier.domain.products.create.ProductIdResponse
+import com.grappim.cashier.data.remote.model.login.LoginResponseDTO
+import com.grappim.cashier.data.remote.model.login.LoginRequestDTO
+import com.grappim.cashier.data.remote.model.login.SendTokenToRefreshRequestDTO
+import com.grappim.cashier.data.remote.model.outlet.GetOutletsResponseDTO
+import com.grappim.cashier.data.remote.model.product.ProductDTO
+import com.grappim.cashier.data.remote.model.product.CreateProductRequestDTO
+import com.grappim.cashier.data.remote.model.product.UpdateProductResponseDTO
+import com.grappim.cashier.data.remote.model.product.ProductIdResponseDTO
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -19,19 +20,19 @@ interface CashierApi {
 
     @POST("merch/refresh")
     suspend fun refreshToken(
-        @Body request: SendTokenToRefreshRequest
-    ): SendTokenToRefreshRequest
+        @Body request: SendTokenToRefreshRequestDTO
+    ): SendTokenToRefreshRequestDTO
 
     @POST("merch/login")
     suspend fun login(
-        @Body loginRequest: LoginRequest
-    ): LoginDTO
+        @Body loginRequest: LoginRequestDTO
+    ): LoginResponseDTO
 
     @GET("stocks/list/{merchantId}")
     @RequestWithAuthToken
     suspend fun getStocks(
         @Path("merchantId") merchantId: String
-    ): GetOutletResponse
+    ): GetOutletsResponseDTO
 
     @GET("product/{productId}")
     @RequestWithAuthToken
@@ -42,17 +43,18 @@ interface CashierApi {
     @POST("product/")
     @RequestWithAuthToken
     suspend fun createProduct(
-        @Body product: ProductChange
-    ): ProductIdResponse
+        @Body createProduct: CreateProductRequestDTO
+    ): ProductIdResponseDTO
 
     @PUT("product/")
     @RequestWithAuthToken
     suspend fun updateProduct(
         @Body product: ProductDTO
-    ): ProductChange
+    ): UpdateProductResponseDTO
 
     @DELETE("product/{productId}")
+    @RequestWithAuthToken
     suspend fun deleteProduct(
         @Path("productId") id: String
-    ): ProductIdResponse
+    ): ProductIdResponseDTO
 }
