@@ -6,37 +6,38 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.grappim.cashier.data.db.entity.BasketProduct
+import com.grappim.cashier.data.db.entity.BasketProductEntity
+import com.grappim.cashier.data.db.entity.basketEntityTableName
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BasketDao {
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateBasketProduct(basketProduct: BasketProduct)
+    suspend fun updateBasketProduct(basketProductEntity: BasketProductEntity)
 
-    @Query("DELETE FROM basketproduct")
+    @Query("DELETE FROM $basketEntityTableName")
     suspend fun clearBasket()
 
-    @Query("SELECT * FROM basketproduct WHERE uid IN (:uids)")
-    suspend fun getProductsByUids(uids: List<String>): List<BasketProduct>
+    @Query("SELECT * FROM $basketEntityTableName WHERE id IN (:ids)")
+    suspend fun getProductsByUids(ids: List<Long>): List<BasketProductEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(basketProduct: BasketProduct): Long
+    suspend fun insert(basketProductEntity: BasketProductEntity): Long
 
-    @Query("UPDATE basketproduct SET basketCount = basketCount + 1 WHERE uid=:uid")
-    suspend fun incBasketProduct(uid: String)
+    @Query("UPDATE $basketEntityTableName SET basketCount = basketCount + 1 WHERE id=:id")
+    suspend fun incBasketProduct(id: Long)
 
     @Transaction
-    suspend fun insertOrUpdate(basketProduct: BasketProduct) {
-        val id = insert(basketProduct)
-        if (id == -1L) incBasketProduct(basketProduct.uid)
+    suspend fun insertOrUpdate(basketProductEntity: BasketProductEntity) {
+        val id = insert(basketProductEntity)
+        if (id == -1L) incBasketProduct(basketProductEntity.id)
     }
 
-    @Query("DELETE FROM basketproduct WHERE uid=:uid")
-    suspend fun removeProductByUid(uid: String)
+    @Query("DELETE FROM $basketEntityTableName WHERE id=:id")
+    suspend fun removeProductByUid(id: Long)
 
-    @Query("SELECT * FROM basketproduct")
-    fun getAllBasketProducts(): Flow<List<BasketProduct>>
+    @Query("SELECT * FROM $basketEntityTableName")
+    fun getAllBasketProducts(): Flow<List<BasketProductEntity>>
 
 }

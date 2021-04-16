@@ -6,28 +6,29 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.sqlite.db.SimpleSQLiteQuery
-import com.grappim.cashier.data.db.entity.Product
+import com.grappim.cashier.data.db.entity.ProductEntity
+import com.grappim.cashier.data.db.entity.productEntityTableName
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ProductsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(products: List<Product>)
+    suspend fun insert(productEntities: List<ProductEntity>)
 
-    @Query("DELETE FROM product")
+    @Query("DELETE FROM $productEntityTableName")
     suspend fun clearProducts()
 
-    @Query("SELECT * FROM product")
-    suspend fun getAllProducts(): List<Product>
+    @Query("SELECT * FROM $productEntityTableName")
+    suspend fun getAllProducts(): List<ProductEntity>
 
-    @Query("SELECT * FROM product WHERE name LIKE :query")
-    suspend fun searchProducts(query: String): List<Product>
+    @Query("SELECT * FROM $productEntityTableName WHERE name LIKE :query")
+    suspend fun searchProducts(query: String): List<ProductEntity>
 
-    @Query("SELECT * FROM product WHERE categoryId=:categoryId")
-    suspend fun searchProductsByCategoryId(categoryId: String): List<Product>
+    @Query("SELECT * FROM $productEntityTableName WHERE categoryId=:categoryId")
+    suspend fun searchProductsByCategoryId(categoryId: String): List<ProductEntity>
 
-    @RawQuery(observedEntities = [Product::class])
-    fun getProductsFlow(query: SimpleSQLiteQuery): Flow<List<Product>>
+    @RawQuery(observedEntities = [ProductEntity::class])
+    fun getProductsFlow(query: SimpleSQLiteQuery): Flow<List<ProductEntity>>
 
 }

@@ -20,6 +20,7 @@ import com.grappim.cashier.core.extensions.underline
 import com.grappim.cashier.core.functional.Resource
 import com.grappim.cashier.core.utils.PHONE_NUMBER_FORMAT
 import com.grappim.cashier.core.view.CashierLoaderDialog
+import com.grappim.cashier.core.workers.startTokenRefresher
 import com.grappim.cashier.databinding.FragmentAuthBinding
 import com.redmadrobot.inputmask.MaskedTextChangedListener
 import com.zhuinden.livedatacombinetuplekt.combineTuple

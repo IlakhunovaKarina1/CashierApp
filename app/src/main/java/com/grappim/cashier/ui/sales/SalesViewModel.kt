@@ -8,7 +8,7 @@ import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.grappim.cashier.core.functional.onFailure
 import com.grappim.cashier.core.functional.onSuccess
-import com.grappim.cashier.data.db.entity.Product
+import com.grappim.cashier.data.db.entity.ProductEntity
 import com.grappim.cashier.domain.products.GetProductsUseCase
 import com.grappim.cashier.domain.sales.AddProductToBasketUseCase
 import com.grappim.cashier.domain.sales.GetAllBasketProductsUseCase
@@ -16,7 +16,6 @@ import com.grappim.cashier.domain.sales.RemoveProductUseCase
 import com.grappim.cashier.domain.sales.SearchProductsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -29,8 +28,8 @@ class SalesViewModel @Inject constructor(
     getAllBasketProductsUseCase: GetAllBasketProductsUseCase
 ) : ViewModel() {
 
-    private val _products: MutableLiveData<List<Product>> = MutableLiveData()
-    val products: LiveData<List<Product>>
+    private val _products: MutableLiveData<List<ProductEntity>> = MutableLiveData()
+    val products: LiveData<List<ProductEntity>>
         get() = _products
 
     private val _basketCount = getAllBasketProductsUseCase.invoke()
@@ -47,15 +46,15 @@ class SalesViewModel @Inject constructor(
         getProducts()
     }
 
-    fun addProductToBasket(basketProduct: Product) {
+    fun addProductToBasket(basketProductEntity: ProductEntity) {
         viewModelScope.launch {
-            addProductToBasketUseCase.invoke(basketProduct)
+            addProductToBasketUseCase.invoke(basketProductEntity)
         }
     }
 
-    fun removeProductFromBasket(basketProduct: Product) {
+    fun removeProductFromBasket(basketProductEntity: ProductEntity) {
         viewModelScope.launch {
-            removeProductUseCase.invoke(basketProduct)
+            removeProductUseCase.invoke(basketProductEntity)
         }
     }
 

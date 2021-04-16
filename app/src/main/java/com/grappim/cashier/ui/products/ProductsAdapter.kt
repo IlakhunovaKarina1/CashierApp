@@ -9,8 +9,7 @@ import com.grappim.cashier.R
 import com.grappim.cashier.core.extensions.inflate
 import com.grappim.cashier.core.extensions.setSafeOnClickListener
 import com.grappim.cashier.core.extensions.setStandardSettings
-import com.grappim.cashier.data.db.entity.BasketProduct
-import com.grappim.cashier.data.db.entity.Product
+import com.grappim.cashier.data.db.entity.ProductEntity
 import com.grappim.cashier.databinding.ItemProductBinding
 import java.text.DecimalFormat
 
@@ -19,7 +18,7 @@ class ProductsAdapter(
     private val clickListener: ProductsClickListener
 ) : RecyclerView.Adapter<ProductsAdapter.ProductViewHolder>() {
 
-    private val products: MutableList<Product> = mutableListOf()
+    private val productEntities: MutableList<ProductEntity> = mutableListOf()
 
     inner class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val viewBinding by viewBinding(ItemProductBinding::bind)
@@ -30,7 +29,7 @@ class ProductsAdapter(
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         with(holder) {
-            val product = products[holder.bindingAdapterPosition]
+            val product = productEntities[holder.bindingAdapterPosition]
             viewBinding.textName.text = product.name
             viewBinding.textPrice.text = itemView.context.getString(
                 R.string.title_price_with_currency,
@@ -50,11 +49,11 @@ class ProductsAdapter(
         }
     }
 
-    fun updateProducts(newProducts: List<Product>) {
-        products.clear()
-        products.addAll(newProducts)
+    fun updateProducts(newProductEntities: List<ProductEntity>) {
+        productEntities.clear()
+        productEntities.addAll(newProductEntities)
         notifyDataSetChanged()
     }
 
-    override fun getItemCount(): Int = products.size
+    override fun getItemCount(): Int = productEntities.size
 }

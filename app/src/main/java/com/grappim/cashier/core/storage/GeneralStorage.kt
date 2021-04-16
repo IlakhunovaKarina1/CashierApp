@@ -65,10 +65,12 @@ class GeneralStorage @Inject constructor(
 
     fun getMerchantId(): String = getStringValue(MERCHANT_ID)
 
+    fun getToken(): String = getStringValue(AUTH_TOKEN)
+
     fun getBearerAuthToken(): String =
         "Bearer ${getStringValue(AUTH_TOKEN)}"
 
-    fun clearData(){
+    fun clearData() {
         editor.clear().apply()
     }
 

@@ -8,8 +8,8 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.grappim.cashier.core.functional.onFailure
 import com.grappim.cashier.core.functional.onSuccess
-import com.grappim.cashier.data.db.entity.Category
-import com.grappim.cashier.data.db.entity.Product
+import com.grappim.cashier.data.db.entity.CategoryEntity
+import com.grappim.cashier.data.db.entity.ProductEntity
 import com.grappim.cashier.domain.products.GetCategoryListUseCase
 import com.grappim.cashier.domain.products.GetProductsByQueryUseCase
 import com.zhuinden.livedatacombinetuplekt.combineTuple
@@ -23,15 +23,15 @@ class ProductsViewModel @Inject constructor(
     private val getCategoryListUseCase: GetCategoryListUseCase
 ) : ViewModel() {
 
-    private val _categories: MutableLiveData<List<Category>> = MutableLiveData()
-    val categories: LiveData<List<Category>>
+    private val _categories: MutableLiveData<List<CategoryEntity>> = MutableLiveData()
+    val categories: LiveData<List<CategoryEntity>>
         get() = _categories
 
     private val _query = MutableLiveData<String>()
 
-    private val _selectedCategory = MutableLiveData<Category>()
+    private val _selectedCategory = MutableLiveData<CategoryEntity>()
 
-    val products: LiveData<List<Product>> = Transformations.switchMap(
+    val products: LiveData<List<ProductEntity>> = Transformations.switchMap(
         combineTuple(
             _query,
             _selectedCategory
@@ -62,9 +62,9 @@ class ProductsViewModel @Inject constructor(
         }
     }
 
-    fun setCategory(category: Category) {
+    fun setCategory(categoryEntity: CategoryEntity) {
         viewModelScope.launch {
-            _selectedCategory.value = category
+            _selectedCategory.value = categoryEntity
         }
     }
 

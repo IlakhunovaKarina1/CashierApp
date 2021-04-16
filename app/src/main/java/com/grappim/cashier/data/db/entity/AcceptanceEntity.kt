@@ -5,12 +5,12 @@ import androidx.room.PrimaryKey
 import com.grappim.cashier.ui.acceptance.AcceptanceStatus
 import java.math.BigDecimal
 
-const val acceptanceTable = "acceptance_table"
+const val acceptanceTableName = "acceptance_table"
 
 @Entity(
-    tableName = acceptanceTable
+    tableName = acceptanceTableName
 )
-data class AcceptanceDB(
+data class AcceptanceEntity(
     @PrimaryKey
     val id: String,
     val vendorName: String,

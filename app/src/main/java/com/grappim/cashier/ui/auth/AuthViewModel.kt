@@ -10,6 +10,7 @@ import com.grappim.cashier.core.functional.Resource
 import com.grappim.cashier.core.functional.onFailure
 import com.grappim.cashier.core.functional.onSuccess
 import com.grappim.cashier.core.platform.SingleLiveEvent
+import com.grappim.cashier.core.workers.WorkerHelper
 import com.grappim.cashier.data.repository.GeneralRepository
 import com.grappim.cashier.domain.login.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    private val generalRepository: GeneralRepository
+    private val generalRepository: GeneralRepository,
+    private val workerHelper: WorkerHelper
 ) : ViewModel() {
 
     init {
@@ -69,7 +71,7 @@ class AuthViewModel @Inject constructor(
             loginUseCase.invoke(mobile, password)
                 .onFailure {
                     _loginStatus.value = Resource.Error(it)
-                }.onSuccess {
+                }.onSuccess {workerHelper.startTokenRefresherWorker()
                     _loginStatus.value = Resource.Success(it)
                 }
         }

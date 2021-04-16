@@ -1,10 +1,10 @@
 package com.grappim.cashier.domain.acceptance
 
-import com.grappim.cashier.data.db.entity.AcceptanceDB
+import com.grappim.cashier.data.db.entity.AcceptanceEntity
 
 object Mapper {
 
-    fun AcceptanceDB.toDomain(): Acceptance =
+    fun AcceptanceEntity.toDomain(): Acceptance =
         Acceptance(
             id = this.id,
             vendorName = this.vendorName,

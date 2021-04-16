@@ -3,19 +3,23 @@ package com.grappim.cashier.data.db.entity
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.grappim.cashier.core.extensions.bigDecimalZero
 import kotlinx.android.parcel.Parcelize
 import java.math.BigDecimal
 
-@Entity
+const val basketEntityTableName = "basket_table"
+
+@Entity(
+    tableName = basketEntityTableName
+)
 @Parcelize
-data class Product(
+data class BasketProductEntity(
     @PrimaryKey
-    val uid: String,
+    val id: Long,
     val name: String,
+    val barcode: String,
+    var basketCount: BigDecimal,
+    val stockCount: BigDecimal,
     val imageUrl: String,
     val price: BigDecimal,
-    val stockCount: BigDecimal,
-    var basketCount: BigDecimal = bigDecimalZero(),
     val categoryId: String? = null
 ) : Parcelable

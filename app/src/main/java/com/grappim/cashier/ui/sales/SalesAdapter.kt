@@ -14,7 +14,7 @@ import com.grappim.cashier.core.extensions.getWhite
 import com.grappim.cashier.core.extensions.inflate
 import com.grappim.cashier.core.extensions.setSafeOnClickListener
 import com.grappim.cashier.core.extensions.setStandardSettings
-import com.grappim.cashier.data.db.entity.Product
+import com.grappim.cashier.data.db.entity.ProductEntity
 import com.grappim.cashier.databinding.ItemSalesProductBinding
 import java.text.DecimalFormat
 
@@ -23,7 +23,7 @@ class SalesAdapter(
     private val clickListener: BasketProductClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val products: MutableList<Product> = mutableListOf()
+    private val productEntities: MutableList<ProductEntity> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         SaleProductViewHolder(parent.inflate(R.layout.item_sales_product))
@@ -32,7 +32,7 @@ class SalesAdapter(
         when (holder) {
             is SaleProductViewHolder -> {
                 with(holder) {
-                    val product = products[holder.bindingAdapterPosition]
+                    val product = productEntities[holder.bindingAdapterPosition]
                     binding.textName.text = product.name
                     binding.textPrice.text = itemView.context.getString(
                         R.string.title_price_with_currency,
@@ -70,35 +70,35 @@ class SalesAdapter(
         }
     }
 
-    private fun onBasketClick(product: Product, position: Int) {
-        if (product.basketCount <= bigDecimalZero()) {
-            addProduct(product, position)
+    private fun onBasketClick(productEntity: ProductEntity, position: Int) {
+        if (productEntity.basketCount <= bigDecimalZero()) {
+            addProduct(productEntity, position)
         }
     }
 
-    private fun addProduct(product: Product, position: Int) {
-        product.basketCount = product.basketCount + bigDecimalOne()
-        clickListener.addProduct(product)
-        notifyItemChanged(position, product)
+    private fun addProduct(productEntity: ProductEntity, position: Int) {
+        productEntity.basketCount = productEntity.basketCount + bigDecimalOne()
+        clickListener.addProduct(productEntity)
+        notifyItemChanged(position, productEntity)
     }
 
-    private fun minusProduct(product: Product, position: Int) {
-        if (product.basketCount <= bigDecimalOne()) {
-            product.basketCount = bigDecimalZero()
-            clickListener.removeProduct(product)
-            notifyItemChanged(position, product)
+    private fun minusProduct(productEntity: ProductEntity, position: Int) {
+        if (productEntity.basketCount <= bigDecimalOne()) {
+            productEntity.basketCount = bigDecimalZero()
+            clickListener.removeProduct(productEntity)
+            notifyItemChanged(position, productEntity)
         } else {
-            product.basketCount = product.basketCount - bigDecimalOne()
-            clickListener.removeProduct(product)
-            notifyItemChanged(position, product)
+            productEntity.basketCount = productEntity.basketCount - bigDecimalOne()
+            clickListener.removeProduct(productEntity)
+            notifyItemChanged(position, productEntity)
         }
     }
 
-    override fun getItemCount(): Int = products.size
+    override fun getItemCount(): Int = productEntities.size
 
-    fun updateProducts(newProducts: List<Product>) {
-        products.clear()
-        products.addAll(newProducts)
+    fun updateProducts(newProductEntities: List<ProductEntity>) {
+        productEntities.clear()
+        productEntities.addAll(newProductEntities)
         notifyDataSetChanged()
     }
 

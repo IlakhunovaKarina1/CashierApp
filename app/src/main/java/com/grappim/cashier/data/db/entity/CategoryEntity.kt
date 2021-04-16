@@ -5,9 +5,13 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 
-@Entity
+const val categoryEntityTableName = "category_table"
+
+@Entity(
+    tableName = categoryEntityTableName
+)
 @Parcelize
-data class Category(
+data class CategoryEntity(
     @PrimaryKey
     val uid: String,
     val name: String,

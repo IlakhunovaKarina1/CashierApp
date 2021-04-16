@@ -16,6 +16,11 @@
         android:theme="@style/Theme.Cashier">
 
         <provider
+            android:name="androidx.work.impl.WorkManagerInitializer"
+            android:authorities="${applicationId}.workmanager-init"
+            tools:node="remove" />
+
+        <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="com.grappim.cashier.androidx-startup"
             android:exported="false"

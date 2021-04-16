@@ -18,22 +18,19 @@ import com.grappim.cashier.data.db.dao.AcceptanceDao
 import com.grappim.cashier.data.db.dao.BasketDao
 import com.grappim.cashier.data.db.dao.CategoryDao
 import com.grappim.cashier.data.db.dao.ProductsDao
-import com.grappim.cashier.data.db.entity.AcceptanceDB
-import com.grappim.cashier.data.db.entity.BasketProduct
-import com.grappim.cashier.data.db.entity.Category
-import com.grappim.cashier.data.db.entity.Product
+import com.grappim.cashier.data.db.entity.AcceptanceEntity
+import com.grappim.cashier.data.db.entity.BasketProductEntity
+import com.grappim.cashier.data.db.entity.CategoryEntity
+import com.grappim.cashier.data.db.entity.ProductEntity
+import com.grappim.cashier.data.db.entity.productEntityTableName
 import com.grappim.cashier.domain.acceptance.Acceptance
 import com.grappim.cashier.domain.acceptance.Mapper.toDomain
-import com.grappim.cashier.domain.cashier.Cashier
 import com.grappim.cashier.domain.login.LoginRequest
 import com.grappim.cashier.domain.login.LoginUseCase
-import com.grappim.cashier.domain.outlet.Mapper.toDomain
-import com.grappim.cashier.domain.outlet.Outlet
 import com.grappim.cashier.ui.acceptance.AcceptanceStatus
 import com.grappim.cashier.ui.menu.MenuItem
 import com.grappim.cashier.ui.menu.MenuItemType
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -50,33 +47,27 @@ interface GeneralRepository {
 
     suspend fun login(loginRequestData: LoginUseCase.LoginRequestData): Either<Throwable, Unit>
 
-    suspend fun getOutlets(): Either<Throwable, List<Outlet>>
-    suspend fun getCashiers(): Either<Throwable, List<Cashier>>
-
-    suspend fun getCategories(): Either<Throwable, List<Category>>
-    suspend fun getProducts(): Either<Throwable, List<Product>>
-    suspend fun getProductsByCategory(category: Category): List<Product>
+    suspend fun getCategories(): Either<Throwable, List<CategoryEntity>>
+    suspend fun getProducts(): Either<Throwable, List<ProductEntity>>
+    suspend fun getProductsByCategory(categoryEntity: CategoryEntity): List<ProductEntity>
 
     suspend fun clearBasket()
-    suspend fun addBasketProduct(product: Product)
-    suspend fun removeBasketProduct(product: Product)
-    fun getAllBasketProducts(): Flow<List<BasketProduct>>
+    suspend fun addBasketProduct(productEntity: ProductEntity)
+    suspend fun removeBasketProduct(productEntity: ProductEntity)
+    fun getAllBasketProducts(): Flow<List<BasketProductEntity>>
 
     fun getMenuItems(): Flow<List<MenuItem>>
 
     fun getAcceptanceListPaging(): Flow<PagingData<Acceptance>>
 
-    suspend fun saveCashier(cashier: Cashier)
-    suspend fun saveOutlet(outlet: Outlet)
-
-    suspend fun searchProducts(query: String): List<Product>
+    suspend fun searchProducts(query: String): List<ProductEntity>
 
     suspend fun prePopulateDb()
 
     fun getProductsByQuery(
-        category: Category?,
+        categoryEntity: CategoryEntity?,
         query: String
-    ): Flow<List<Product>>
+    ): Flow<List<ProductEntity>>
 
 }
 
@@ -103,50 +94,37 @@ class GeneralRepositoryImpl @Inject constructor(
             generalStorage.setAuthToken(it.token)
         }
 
-    override suspend fun getOutlets(): Either<Throwable, List<Outlet>> =
-        apiCall {
-            val merchantId = generalStorage.getMerchantId()
-            cashierApi.getStocks(merchantId)
-        }.map {
-            withContext(Dispatchers.IO) {
-                it.stocks.toDomain()
-            }
-        }
-
-    override suspend fun getCashiers(): Either<Throwable, List<Cashier>> =
-        Either.Right(getCashierList())
-
-    override suspend fun getCategories(): Either<Throwable, List<Category>> =
+    override suspend fun getCategories(): Either<Throwable, List<CategoryEntity>> =
         Either.Right(getCategoryList())
 
-    override suspend fun getProducts(): Either<Throwable, List<Product>> =
+    override suspend fun getProducts(): Either<Throwable, List<ProductEntity>> =
         Either.Right(getProductList())
 
-    override suspend fun getProductsByCategory(category: Category): List<Product> =
+    override suspend fun getProductsByCategory(categoryEntity: CategoryEntity): List<ProductEntity> =
         withContext(Dispatchers.IO) {
-            if (category.isDefault) {
+            if (categoryEntity.isDefault) {
                 productsDao.getAllProducts()
             } else {
-                productsDao.searchProductsByCategoryId(category.uid)
+                productsDao.searchProductsByCategoryId(categoryEntity.uid)
             }
         }
 
     override suspend fun clearBasket() =
         basketDao.clearBasket()
 
-    override suspend fun addBasketProduct(product: Product) {
-        basketDao.insertOrUpdate(product.toBasketProduct())
+    override suspend fun addBasketProduct(productEntity: ProductEntity) {
+        basketDao.insertOrUpdate(productEntity.toBasketProduct())
     }
 
-    override suspend fun removeBasketProduct(product: Product) {
-        if (product.basketCount <= bigDecimalZero()) {
-            basketDao.removeProductByUid(product.uid)
+    override suspend fun removeBasketProduct(productEntity: ProductEntity) {
+        if (productEntity.basketCount <= bigDecimalZero()) {
+            basketDao.removeProductByUid(productEntity.id)
         } else {
-            basketDao.updateBasketProduct(product.toBasketProduct())
+            basketDao.updateBasketProduct(productEntity.toBasketProduct())
         }
     }
 
-    override fun getAllBasketProducts(): Flow<List<BasketProduct>> =
+    override fun getAllBasketProducts(): Flow<List<BasketProductEntity>> =
         basketDao.getAllBasketProducts()
 
     override fun getMenuItems(): Flow<List<MenuItem>> = flow {
@@ -191,19 +169,13 @@ class GeneralRepositoryImpl @Inject constructor(
         AcceptanceStatus.STANDARD
     ).random()
 
-    override suspend fun saveCashier(cashier: Cashier) = withContext(Dispatchers.IO) {
-        generalStorage.setCashierInfo(cashier)
-        delay(100)
-    }
-
-    override suspend fun saveOutlet(outlet: Outlet) = withContext(Dispatchers.IO) {
-        generalStorage.setOutletInfo(outlet)
-    }
-
-    override fun getProductsByQuery(category: Category?, query: String): Flow<List<Product>> {
-        val roomQuery = StringBuilder("SELECT * FROM product ")
+    override fun getProductsByQuery(
+        categoryEntity: CategoryEntity?,
+        query: String
+    ): Flow<List<ProductEntity>> {
+        val roomQuery = StringBuilder("SELECT * FROM $productEntityTableName ")
             .append(
-                if (query.isNotBlank() || (category != null && !category.isDefault)
+                if (query.isNotBlank() || (categoryEntity != null && !categoryEntity.isDefault)
                 ) {
                     "WHERE "
                 } else {
@@ -218,7 +190,7 @@ class GeneralRepositoryImpl @Inject constructor(
                 }
             )
             .append(
-                if (category == null || category.isDefault) {
+                if (categoryEntity == null || categoryEntity.isDefault) {
                     ""
                 } else {
                     val andQuery = if (query.isBlank()) {
@@ -226,7 +198,7 @@ class GeneralRepositoryImpl @Inject constructor(
                     } else {
                         "AND "
                     }
-                    "${andQuery}categoryId = ${category.uid}"
+                    "${andQuery}categoryId = ${categoryEntity.uid}"
                 }
             )
         return productsDao.getProductsFlow(
@@ -234,20 +206,20 @@ class GeneralRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun searchProducts(query: String): List<Product> =
+    override suspend fun searchProducts(query: String): List<ProductEntity> =
         withContext(Dispatchers.IO) {
             val products = productsDao.searchProducts(query.getStringForDbQuery())
 
-            val productsUids = products.map { it.uid }
+            val productsUids = products.map { it.id }
             val storedBasketProducts = basketDao.getProductsByUids(productsUids)
 
             return@withContext if (storedBasketProducts.isEmpty()) {
                 products
             } else {
-                val resultList: List<Product> = products
+                val resultList: List<ProductEntity> = products
                 resultList.forEach { product ->
                     storedBasketProducts.forEach { storedProduct ->
-                        if (storedProduct.uid == product.uid) {
+                        if (storedProduct.id == product.id) {
                             product.basketCount = storedProduct.basketCount
                         }
                     }
@@ -257,24 +229,25 @@ class GeneralRepositoryImpl @Inject constructor(
         }
 
     override suspend fun prePopulateDb() = withContext(Dispatchers.IO) {
-        val products = mutableListOf<Product>()
+        val products = mutableListOf<ProductEntity>()
         (0..20).forEach {
             products.add(
-                Product(
-                    uid = "$it",
+                ProductEntity(
+                    id = it.toLong(),
                     name = "Product $it",
                     imageUrl = "",
                     price = BigDecimal("${Random.nextInt(50, 400)}"),
                     stockCount = BigDecimal("${Random.nextInt(0, 10)}"),
-                    categoryId = Random.nextInt(2, 8).toString()
+                    categoryId = Random.nextInt(2, 8).toString(),
+                    barcode = "barcode $it"
                 )
             )
         }
         productsDao.insert(products)
 
-        val categories = mutableListOf<Category>()
+        val categories = mutableListOf<CategoryEntity>()
         categories.add(
-            Category(
+            CategoryEntity(
                 uid = "0",
                 name = "All",
                 isDefault = true
@@ -282,7 +255,7 @@ class GeneralRepositoryImpl @Inject constructor(
         )
         (1..11).forEach {
             categories.add(
-                Category(
+                CategoryEntity(
                     uid = "$it",
                     name = "Category $it"
                 )
@@ -290,12 +263,12 @@ class GeneralRepositoryImpl @Inject constructor(
         }
         categoryDao.insert(categories)
 
-        val list = mutableListOf<AcceptanceDB>()
+        val list = mutableListOf<AcceptanceEntity>()
         (0..20).forEach {
             val randomDateInstant = getRandomDate()
             val dateString = randomDateInstant.atOffset(DateTimeUtils.getZoneOffset(false))
             list.add(
-                AcceptanceDB(
+                AcceptanceEntity(
                     id = "$it",
                     vendorName = "Vendor Name $it",
                     date = DateTimeUtils.getDateTimePatternStandard().format(dateString),
@@ -318,29 +291,21 @@ class GeneralRepositoryImpl @Inject constructor(
         return Instant.ofEpochMilli(randomTime)
     }
 
-    private fun getCashierList(): List<Cashier> {
-        val cashiers = mutableListOf<Cashier>()
-        (0..10).forEach {
-            cashiers.add(Cashier(id = "$it", name = "Cashier $it"))
-        }
-        return cashiers.toList()
-    }
+    private suspend fun getCategoryList(): List<CategoryEntity> = categoryDao.getAllCategories()
 
-    private suspend fun getCategoryList(): List<Category> = categoryDao.getAllCategories()
-
-    private suspend fun getProductList(): List<Product> = withContext(Dispatchers.IO) {
+    private suspend fun getProductList(): List<ProductEntity> = withContext(Dispatchers.IO) {
         val products = productsDao.getAllProducts()
 
-        val productsUids = products.map { it.uid }
+        val productsUids = products.map { it.id }
         val storedBasketProducts = basketDao.getProductsByUids(productsUids)
 
         return@withContext if (storedBasketProducts.isEmpty()) {
             products
         } else {
-            val resultList: List<Product> = products
+            val resultList: List<ProductEntity> = products
             resultList.forEach { product ->
                 storedBasketProducts.forEach { storedProduct ->
-                    if (storedProduct.uid == product.uid) {
+                    if (storedProduct.id == product.id) {
                         product.basketCount = storedProduct.basketCount
                     }
                 }
@@ -349,15 +314,16 @@ class GeneralRepositoryImpl @Inject constructor(
         }
     }
 
-    fun Product.toBasketProduct(): BasketProduct =
-        BasketProduct(
-            uid = this.uid,
+    fun ProductEntity.toBasketProduct(): BasketProductEntity =
+        BasketProductEntity(
+            id = this.id,
             name = this.name,
             basketCount = this.basketCount,
             imageUrl = this.imageUrl,
             price = this.price,
             categoryId = this.categoryId,
-            stockCount = this.stockCount
+            stockCount = this.stockCount,
+            barcode = this.barcode
         )
 
 }

@@ -9,8 +9,8 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.tabs.TabLayout
 import com.grappim.cashier.R
 import com.grappim.cashier.core.extensions.setSafeOnClickListener
-import com.grappim.cashier.data.db.entity.Category
-import com.grappim.cashier.data.db.entity.Product
+import com.grappim.cashier.data.db.entity.CategoryEntity
+import com.grappim.cashier.data.db.entity.ProductEntity
 import com.grappim.cashier.databinding.FragmentProductsBinding
 import com.grappim.cashier.di.modules.DecimalFormatSimple
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,7 +53,7 @@ class ProductsFragment : Fragment(R.layout.fragment_products),
             recyclerProducts.adapter = ScaleInAnimationAdapter(productsAdapter)
             tabsCategories.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab?) {
-                    viewModel.setCategory(tab?.tag as Category)
+                    viewModel.setCategory(tab?.tag as CategoryEntity)
                 }
 
                 override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -90,7 +90,7 @@ class ProductsFragment : Fragment(R.layout.fragment_products),
         }
     }
 
-    override fun onProductClick(product: Product) {
+    override fun onProductClick(productEntity: ProductEntity) {
     }
 
 }
