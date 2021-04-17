@@ -7,6 +7,7 @@ import androidx.paging.map
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.grappim.cashier.R
 import com.grappim.cashier.api.CashierApi
+import com.grappim.cashier.core.executor.CoroutineContextProvider
 import com.grappim.cashier.core.extensions.bigDecimalZero
 import com.grappim.cashier.core.extensions.getEpochMilli
 import com.grappim.cashier.core.extensions.getStringForDbQuery
@@ -51,7 +52,8 @@ class GeneralRepositoryImpl @Inject constructor(
     private val basketDao: BasketDao,
     private val productsDao: ProductsDao,
     private val categoryDao: CategoryDao,
-    private val acceptanceDao: AcceptanceDao
+    private val acceptanceDao: AcceptanceDao,
+    private val coroutineContextProvider: CoroutineContextProvider
 ) : GeneralRepository, BaseRepository() {
 
     override suspend fun createProduct(params: CreateProductUseCase.CreateProductParams): Either<Throwable, Unit> =
@@ -83,7 +85,7 @@ class GeneralRepositoryImpl @Inject constructor(
         Either.Right(getProductList())
 
     override suspend fun getProductsByCategory(categoryEntity: CategoryEntity): List<ProductEntity> =
-        withContext(Dispatchers.IO) {
+        withContext(coroutineContextProvider.io) {
             if (categoryEntity.isDefault) {
                 productsDao.getAllProducts()
             } else {
@@ -189,7 +191,7 @@ class GeneralRepositoryImpl @Inject constructor(
     }
 
     override suspend fun searchProducts(query: String): List<ProductEntity> =
-        withContext(Dispatchers.IO) {
+        withContext(coroutineContextProvider.io) {
             val products = productsDao.searchProducts(query.getStringForDbQuery())
 
             val productsUids = products.map { it.id }
@@ -210,7 +212,7 @@ class GeneralRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun prePopulateDb() = withContext(Dispatchers.IO) {
+    override suspend fun prePopulateDb() = withContext(coroutineContextProvider.io) {
         val products = mutableListOf<ProductEntity>()
         (0..20).forEach {
             products.add(
@@ -280,7 +282,7 @@ class GeneralRepositoryImpl @Inject constructor(
 
     private suspend fun getCategoryList(): List<CategoryEntity> = categoryDao.getAllCategories()
 
-    private suspend fun getProductList(): List<ProductEntity> = withContext(Dispatchers.IO) {
+    private suspend fun getProductList(): List<ProductEntity> = withContext(coroutineContextProvider.io) {
         val products = productsDao.getAllProducts()
 
         val productsUids = products.map { it.id }

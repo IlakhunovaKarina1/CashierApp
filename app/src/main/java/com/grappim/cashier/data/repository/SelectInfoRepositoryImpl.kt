@@ -1,6 +1,7 @@
 package com.grappim.cashier.data.repository
 
 import com.grappim.cashier.api.CashierApi
+import com.grappim.cashier.core.executor.CoroutineContextProvider
 import com.grappim.cashier.core.functional.Either
 import com.grappim.cashier.core.functional.map
 import com.grappim.cashier.core.storage.GeneralStorage
@@ -18,6 +19,7 @@ import javax.inject.Singleton
 class SelectInfoRepositoryImpl @Inject constructor(
     private val cashierApi: CashierApi,
     private val generalStorage: GeneralStorage,
+    private val coroutineContextProvider: CoroutineContextProvider
 ) : BaseRepository(), SelectInfoRepository {
 
     override suspend fun saveCashier(cashier: Cashier) = withContext(Dispatchers.IO) {
@@ -33,7 +35,7 @@ class SelectInfoRepositoryImpl @Inject constructor(
             val merchantId = generalStorage.getMerchantId()
             cashierApi.getStocks(merchantId)
         }.map {
-            withContext(Dispatchers.IO) {
+            withContext(coroutineContextProvider.io) {
                 it.stocks.toDomain()
             }
         }
