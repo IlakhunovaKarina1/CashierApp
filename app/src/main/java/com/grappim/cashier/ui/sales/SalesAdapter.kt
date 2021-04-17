@@ -20,7 +20,7 @@ import java.text.DecimalFormat
 
 class SalesAdapter(
     private val dfSimple: DecimalFormat,
-    private val clickListener: BasketProductClickListener
+    private val clickListener: SalesItemClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val productEntities: MutableList<ProductEntity> = mutableListOf()
@@ -73,6 +73,8 @@ class SalesAdapter(
     private fun onBasketClick(productEntity: ProductEntity, position: Int) {
         if (productEntity.basketCount <= bigDecimalZero()) {
             addProduct(productEntity, position)
+        } else {
+            removeProduct(productEntity, position)
         }
     }
 
@@ -84,14 +86,18 @@ class SalesAdapter(
 
     private fun minusProduct(productEntity: ProductEntity, position: Int) {
         if (productEntity.basketCount <= bigDecimalOne()) {
-            productEntity.basketCount = bigDecimalZero()
-            clickListener.removeProduct(productEntity)
-            notifyItemChanged(position, productEntity)
+            removeProduct(productEntity, position)
         } else {
             productEntity.basketCount = productEntity.basketCount - bigDecimalOne()
             clickListener.removeProduct(productEntity)
             notifyItemChanged(position, productEntity)
         }
+    }
+
+    private fun removeProduct(productEntity: ProductEntity, position: Int) {
+        productEntity.basketCount = bigDecimalZero()
+        clickListener.removeProduct(productEntity)
+        notifyItemChanged(position, productEntity)
     }
 
     override fun getItemCount(): Int = productEntities.size

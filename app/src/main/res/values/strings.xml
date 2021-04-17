@@ -16,6 +16,7 @@
     <string name="title_menu">Menu</string>
     <string name="title_phone_number">Phone number</string>
     <string name="title_password">Password</string>
+    <string name="title_checkout_selection">Checkout selection</string>
 
     <string name="auth_number_hint">Enter your phone number and password to sign in into your account</string>
 

@@ -12,9 +12,7 @@ object ProductEntityMapper {
             name = this.name,
             basketCount = this.basketCount,
             sellingPrice = this.sellingPrice,
-            categoryId = this.categoryId,
             amount = this.amount,
-            barcode = this.barcode
         )
 
     fun ProductEntity.toDTO(): ProductDTO =

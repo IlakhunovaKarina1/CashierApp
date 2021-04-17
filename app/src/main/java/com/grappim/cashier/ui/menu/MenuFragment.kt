@@ -35,7 +35,7 @@ class MenuFragment : Fragment(R.layout.fragment_menu), MenuItemClickListener {
         with(viewBinding) {
             recyclerMenu.adapter = menuItemsAdapter
             buttonBack.setSafeOnClickListener {
-                requireActivity().onBackPressed()
+                findNavController().popBackStack()
             }
             textCashier.text = generalStorage.getCashierName()
         }

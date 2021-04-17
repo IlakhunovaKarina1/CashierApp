@@ -5,6 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.grappim.cashier.R
 import com.grappim.cashier.core.extensions.setSafeOnClickListener
@@ -20,7 +21,7 @@ import java.text.DecimalFormat
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SalesFragment : Fragment(R.layout.fragment_sales), BasketProductClickListener {
+class SalesFragment : Fragment(R.layout.fragment_sales), SalesItemClickListener {
 
     @Inject
     @DecimalFormatSimple
@@ -41,7 +42,7 @@ class SalesFragment : Fragment(R.layout.fragment_sales), BasketProductClickListe
     private fun initViews() {
         with(viewBinding) {
             buttonMenu.setSafeOnClickListener {
-                requireActivity().onBackPressed()
+                findNavController().popBackStack()
             }
             recyclerProducts.adapter = ScaleInAnimationAdapter(salesAdapter)
             buttonBasket.setSafeOnClickListener {

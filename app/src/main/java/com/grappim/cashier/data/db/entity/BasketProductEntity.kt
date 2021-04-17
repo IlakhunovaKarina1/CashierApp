@@ -16,10 +16,7 @@ data class BasketProductEntity(
     @PrimaryKey
     val id: Long,
     val name: String,
-    val barcode: String,
     var basketCount: BigDecimal,
     val amount: BigDecimal,
-    val sellingPrice: BigDecimal,
-
-    val categoryId: String? = null
+    val sellingPrice: BigDecimal
 ) : Parcelable

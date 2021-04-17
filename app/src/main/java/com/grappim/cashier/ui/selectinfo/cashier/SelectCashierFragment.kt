@@ -39,7 +39,7 @@ class SelectCashierFragment : Fragment(R.layout.fragment_select_stock_cashier),
 
     private fun initViews() {
         with(binding) {
-            textLabel.text = "Checkout selection"
+            textLabel.text = getString(R.string.title_checkout_selection)
             buttonNext.setSafeOnClickListener {
                 viewModel.saveCashier(cashierAdapter.getSelectedItem()!!)
                 findNavController().navigate(R.id.action_selectCashierFragment_to_menuFragment)
@@ -48,7 +48,7 @@ class SelectCashierFragment : Fragment(R.layout.fragment_select_stock_cashier),
                 viewModel.getCashiers()
             }
             buttonBack.setSafeOnClickListener {
-                requireActivity().onBackPressed()
+                findNavController().popBackStack()
             }
             recyclerItems.adapter = cashierAdapter
             recyclerItems.addItemDecoration(

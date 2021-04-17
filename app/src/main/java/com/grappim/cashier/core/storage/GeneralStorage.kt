@@ -87,5 +87,4 @@ class GeneralStorage @Inject constructor(
         sharedPreferences.getString(key, null)
             ?: throw IllegalArgumentException("no value for $key")
 
-
 }

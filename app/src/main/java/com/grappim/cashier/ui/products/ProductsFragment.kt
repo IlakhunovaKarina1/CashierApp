@@ -5,6 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.tabs.TabLayout
 import com.grappim.cashier.R
@@ -45,7 +46,7 @@ class ProductsFragment : Fragment(R.layout.fragment_products),
     private fun initViews() {
         with(binding) {
             buttonMenu.setSafeOnClickListener {
-                requireActivity().onBackPressed()
+                findNavController().popBackStack()
             }
             buttonCreateProduct.setSafeOnClickListener {
 
