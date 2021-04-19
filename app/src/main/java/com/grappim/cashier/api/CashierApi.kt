@@ -7,6 +7,7 @@ import com.grappim.cashier.data.remote.model.login.SendTokenToRefreshRequestDTO
 import com.grappim.cashier.data.remote.model.outlet.GetOutletsResponseDTO
 import com.grappim.cashier.data.remote.model.product.ProductDTO
 import com.grappim.cashier.data.remote.model.product.CreateProductRequestDTO
+import com.grappim.cashier.data.remote.model.product.GetProductsRequestDTO
 import com.grappim.cashier.data.remote.model.product.UpdateProductResponseDTO
 import com.grappim.cashier.data.remote.model.product.ProductIdResponseDTO
 import retrofit2.http.Body
@@ -57,4 +58,10 @@ interface CashierApi {
     suspend fun deleteProduct(
         @Path("productId") id: String
     ): ProductIdResponseDTO
+
+    @POST("product/filter")
+    @RequestWithAuthToken
+    suspend fun getProducts(
+        @Body getProductsRequestDTO: GetProductsRequestDTO
+    )
 }
