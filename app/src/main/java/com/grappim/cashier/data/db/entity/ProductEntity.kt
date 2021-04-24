@@ -3,10 +3,9 @@ package com.grappim.cashier.data.db.entity
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.grappim.cashier.core.annotation.LocalField
 import com.grappim.cashier.core.extensions.bigDecimalZero
 import com.grappim.cashier.core.utils.ProductUnit
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.math.BigDecimal
 
 const val productEntityTableName = "product_table"

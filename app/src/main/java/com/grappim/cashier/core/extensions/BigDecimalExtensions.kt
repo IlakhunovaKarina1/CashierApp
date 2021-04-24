@@ -18,7 +18,7 @@ fun String?.asBigDecimalOrNull(scale: Int = 3): BigDecimal? =
         null
     }
 
-fun bigDecimalZero(scale: Int = 3): BigDecimal = "0".asBigDecimal()
+fun bigDecimalZero(scale: Int = 3): BigDecimal = "0".asBigDecimal(scale)
 
 fun bigDecimalOne(scale: Int = 3): BigDecimal = "1".asBigDecimal(scale)
 

@@ -12,10 +12,10 @@ import com.grappim.cashier.core.extensions.getBlue
 import com.grappim.cashier.core.extensions.getGray
 import com.grappim.cashier.core.extensions.inflate
 import com.grappim.cashier.databinding.ItemSelectOutletTimelineBinding
-import kotlinx.android.synthetic.main.item_select_outlet_timeline.view.timeline
 
-class SelectInfoProgressAdapter() :
-    RecyclerView.Adapter<SelectInfoProgressAdapter.OutletProgressViewHolder>() {
+class SelectInfoProgressAdapter(
+
+) : RecyclerView.Adapter<SelectInfoProgressAdapter.OutletProgressViewHolder>() {
 
     private val items: MutableList<StockProgressItem> = mutableListOf()
 
@@ -23,11 +23,11 @@ class SelectInfoProgressAdapter() :
         view: View,
         viewType: Int
     ) : RecyclerView.ViewHolder(view) {
-        val timeline: TimelineView = view.timeline
-
         val viewBinding: ItemSelectOutletTimelineBinding by viewBinding(
             ItemSelectOutletTimelineBinding::bind
         )
+
+        private val timeline: TimelineView = viewBinding.timeline
 
         init {
             timeline.initLine(viewType)

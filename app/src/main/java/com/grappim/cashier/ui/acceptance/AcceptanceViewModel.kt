@@ -6,7 +6,6 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.insertSeparators
 import androidx.paging.map
-import com.grappim.cashier.core.extensions.getOffsetDateTimeFromString
 import com.grappim.cashier.core.extensions.getOffsetDateTimeWithFormatter
 import com.grappim.cashier.core.utils.DateTimeUtils
 import com.grappim.cashier.domain.acceptance.Acceptance
@@ -35,23 +34,20 @@ class AcceptanceViewModel @Inject constructor(
                     if (after == null) {
                         return@insertSeparators null
                     }
-                    val dividerDate = df.format(
+                    val afterDate = df.format(
                         after.item.date.getOffsetDateTimeWithFormatter(formatter = dtf)
                     )
                     if (before == null) {
                         return@insertSeparators PagingDataModel.Separator(
-                            dividerDate
+                            afterDate
                         )
                     }
                     val beforeDate = df.format(
                         before.item.date.getOffsetDateTimeWithFormatter(formatter = dtf)
                     )
-                    val afterDate = df.format(
-                        after.item.date.getOffsetDateTimeWithFormatter(formatter = dtf)
-                    )
 
                     if (beforeDate != afterDate) {
-                        PagingDataModel.Separator(dividerDate)
+                        PagingDataModel.Separator(afterDate)
                     } else {
                         null
                     }

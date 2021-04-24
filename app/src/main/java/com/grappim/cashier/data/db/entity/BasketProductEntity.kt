@@ -3,7 +3,7 @@ package com.grappim.cashier.data.db.entity
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.math.BigDecimal
 
 const val basketEntityTableName = "basket_table"

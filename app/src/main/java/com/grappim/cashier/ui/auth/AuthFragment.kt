@@ -24,10 +24,10 @@ import com.grappim.cashier.databinding.FragmentAuthBinding
 import com.redmadrobot.inputmask.MaskedTextChangedListener
 import com.zhuinden.livedatacombinetuplekt.combineTuple
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_auth.editPassword
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import reactivecircus.flowbinding.android.widget.textChangeEvents
+import reactivecircus.flowbinding.android.widget.textChanges
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -111,12 +111,12 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
             hideKeyboard2()
             viewModel.login(
                 mobile = viewModel.phoneNumber.value!!,
-                password = editPassword.text.toString()
+                password = binding.editPassword.text.toString()
             )
         }
 
-        binding.editPassword.textChangeEvents().onEach {
-            viewModel.onPasswordEntered(it.text.toString())
+        binding.editPassword.textChanges().onEach {
+            viewModel.onPasswordEntered(it.toString())
         }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 

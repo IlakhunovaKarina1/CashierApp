@@ -16,9 +16,8 @@ import com.grappim.cashier.databinding.FragmentProductsBinding
 import com.grappim.cashier.di.modules.DecimalFormatSimple
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
-import kotlinx.android.synthetic.main.fragment_products.tabsCategories
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import reactivecircus.flowbinding.android.widget.textChanges
 import java.text.DecimalFormat
 import javax.inject.Inject
@@ -65,29 +64,30 @@ class ProductsFragment : Fragment(R.layout.fragment_products),
 
             })
 
-            lifecycleScope.launch {
-                editSearchProducts
-                    .textChanges()
-                    .collect {
-                        viewModel.searchProducts(it.toString())
-                    }
-            }
+            editSearchProducts
+                .textChanges()
+                .onEach {
+                    viewModel.searchProducts(it.toString())
+                }.launchIn(viewLifecycleOwner.lifecycleScope)
+
         }
     }
 
     private fun observeViewModel() {
-        viewModel.categories.observe(viewLifecycleOwner) {
-            binding.tabsCategories.removeAllTabs()
-            it.forEach {
-                val tab = tabsCategories.newTab().apply {
-                    text = it.name
-                    tag = it
-                }
-                binding.tabsCategories.addTab(tab)
-            }
-        }
+        viewModel.categories.observe(viewLifecycleOwner, ::showCategories)
         viewModel.products.observe(viewLifecycleOwner) {
             productsAdapter.updateProducts(it)
+        }
+    }
+
+    private fun showCategories(categories: List<CategoryEntity>) {
+        binding.tabsCategories.removeAllTabs()
+        categories.forEach {
+            val tab = binding.tabsCategories.newTab().apply {
+                text = it.name
+                tag = it
+            }
+            binding.tabsCategories.addTab(tab)
         }
     }
 

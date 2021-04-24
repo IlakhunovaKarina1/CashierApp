@@ -14,8 +14,8 @@ import com.grappim.cashier.databinding.FragmentSalesBinding
 import com.grappim.cashier.di.modules.DecimalFormatSimple
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import reactivecircus.flowbinding.android.widget.textChanges
 import java.text.DecimalFormat
 import javax.inject.Inject
@@ -49,14 +49,12 @@ class SalesFragment : Fragment(R.layout.fragment_sales), SalesItemClickListener 
 
             }
 
-            lifecycleScope.launch {
-                viewBinding.editSearchProducts
-                    .textChanges()
-                    .collect {
-                        viewModel.searchProducts(it.toString())
-                    }
-            }
-
+            editSearchProducts
+                .textChanges()
+                .onEach {
+                    viewModel.searchProducts(it.toString())
+                }
+                .launchIn(viewLifecycleOwner.lifecycleScope)
         }
     }
 

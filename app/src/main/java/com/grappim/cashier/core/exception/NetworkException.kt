@@ -10,10 +10,6 @@ class NetworkException(
     val request: String? = ""
 ) : IOException() {
 
-    fun hasApiErrorCodes(vararg codes: String): Boolean {
-        return errorCode == ERROR_API
-    }
-
     companion object {
         const val ERROR_API = -1
         const val ERROR_NO_INTERNET = -2

@@ -11,6 +11,7 @@ import com.grappim.cashier.R
 import com.grappim.cashier.core.extensions.setSafeOnClickListener
 import com.grappim.cashier.core.functional.Resource
 import com.grappim.cashier.databinding.FragmentSelectStockCashierBinding
+import com.grappim.cashier.domain.cashier.Cashier
 import com.grappim.cashier.ui.selectinfo.stock.SelectInfoProgressAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -62,18 +63,20 @@ class SelectCashierFragment : Fragment(R.layout.fragment_select_stock_cashier),
     }
 
     private fun observeViewModel() {
-        viewModel.cashiers.observe(viewLifecycleOwner) {
-            binding.swipeRefresh.isRefreshing = it is Resource.Loading
-            when (it) {
-                is Resource.Error -> {
+        viewModel.cashiers.observe(viewLifecycleOwner, ::showCashiers)
+        selectInfoProgressAdapter.setItems(viewModel.stockProgresses)
+    }
 
-                }
-                is Resource.Success -> {
-                    cashierAdapter.addItems(it.data)
-                }
+    private fun showCashiers(data: Resource<List<Cashier>>) {
+        binding.swipeRefresh.isRefreshing = data is Resource.Loading
+        when (data) {
+            is Resource.Error -> {
+
+            }
+            is Resource.Success -> {
+                cashierAdapter.addItems(data.data)
             }
         }
-        selectInfoProgressAdapter.setItems(viewModel.stockProgresses)
     }
 
     override fun onCashierClick() {

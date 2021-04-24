@@ -18,13 +18,9 @@ import com.grappim.cashier.data.db.dao.AcceptanceDao
 import com.grappim.cashier.data.db.dao.BasketDao
 import com.grappim.cashier.data.db.dao.CategoryDao
 import com.grappim.cashier.data.db.dao.ProductsDao
-import com.grappim.cashier.data.db.entity.AcceptanceEntity
+import com.grappim.cashier.data.db.entity.*
 import com.grappim.cashier.data.db.entity.AcceptanceEntityMapper.toDomain
-import com.grappim.cashier.data.db.entity.BasketProductEntity
-import com.grappim.cashier.data.db.entity.CategoryEntity
-import com.grappim.cashier.data.db.entity.ProductEntity
 import com.grappim.cashier.data.db.entity.ProductEntityMapper.toBasketProduct
-import com.grappim.cashier.data.db.entity.productEntityTableName
 import com.grappim.cashier.data.remote.BaseRepository
 import com.grappim.cashier.data.remote.model.product.CreateProductRequestDTO
 import com.grappim.cashier.domain.acceptance.Acceptance
@@ -33,7 +29,6 @@ import com.grappim.cashier.domain.repository.GeneralRepository
 import com.grappim.cashier.ui.acceptance.AcceptanceStatus
 import com.grappim.cashier.ui.menu.MenuItem
 import com.grappim.cashier.ui.menu.MenuItemType
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -61,21 +56,23 @@ class GeneralRepositoryImpl @Inject constructor(
             val response = cashierApi.createProduct(
                 CreateProductRequestDTO(params)
             )
-            productsDao.insert(
-                ProductEntity(
-                    id = response.id,
-                    barcode = params.barcode,
-                    name = params.name,
-                    stockId = params.stockId,
-                    amount = params.amount,
-                    unit = ProductUnit.getProductUnitByValue(params.unit),
-                    purchasePrice = params.purchasePrice,
-                    sellingPrice = params.sellingPrice,
-                    merchantId = params.merchantId,
-                    createdOn = params.createdOn,
-                    updatedOn = params.updatedOn
+            withContext(coroutineContextProvider.io) {
+                productsDao.insert(
+                    ProductEntity(
+                        id = response.id,
+                        barcode = params.barcode,
+                        name = params.name,
+                        stockId = params.stockId,
+                        amount = params.amount,
+                        unit = ProductUnit.getProductUnitByValue(params.unit),
+                        purchasePrice = params.purchasePrice,
+                        sellingPrice = params.sellingPrice,
+                        merchantId = params.merchantId,
+                        createdOn = params.createdOn,
+                        updatedOn = params.updatedOn
+                    )
                 )
-            )
+            }
         }
 
     override suspend fun getCategories(): Either<Throwable, List<CategoryEntity>> =
@@ -93,20 +90,23 @@ class GeneralRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun clearBasket() =
+    override suspend fun clearBasket() = withContext(coroutineContextProvider.io) {
         basketDao.clearBasket()
-
-    override suspend fun addBasketProduct(productEntity: ProductEntity) {
-        basketDao.insertOrUpdate(productEntity.toBasketProduct())
     }
 
-    override suspend fun removeBasketProduct(productEntity: ProductEntity) {
-        if (productEntity.basketCount <= bigDecimalZero()) {
-            basketDao.removeProductByUid(productEntity.id)
-        } else {
-            basketDao.updateBasketProduct(productEntity.toBasketProduct())
+    override suspend fun addBasketProduct(productEntity: ProductEntity) =
+        withContext(coroutineContextProvider.io) {
+            basketDao.insertOrUpdate(productEntity.toBasketProduct())
         }
-    }
+
+    override suspend fun removeBasketProduct(productEntity: ProductEntity) =
+        withContext(coroutineContextProvider.io) {
+            if (productEntity.basketCount <= bigDecimalZero()) {
+                basketDao.removeProductByUid(productEntity.id)
+            } else {
+                basketDao.updateBasketProduct(productEntity.toBasketProduct())
+            }
+        }
 
     override fun getAllBasketProducts(): Flow<List<BasketProductEntity>> =
         basketDao.getAllBasketProducts()
@@ -282,25 +282,26 @@ class GeneralRepositoryImpl @Inject constructor(
 
     private suspend fun getCategoryList(): List<CategoryEntity> = categoryDao.getAllCategories()
 
-    private suspend fun getProductList(): List<ProductEntity> = withContext(coroutineContextProvider.io) {
-        val products = productsDao.getAllProducts()
+    private suspend fun getProductList(): List<ProductEntity> =
+        withContext(coroutineContextProvider.io) {
+            val products = productsDao.getAllProducts()
 
-        val productsUids = products.map { it.id }
-        val storedBasketProducts = basketDao.getProductsByUids(productsUids)
+            val productsUids = products.map { it.id }
+            val storedBasketProducts = basketDao.getProductsByUids(productsUids)
 
-        return@withContext if (storedBasketProducts.isEmpty()) {
-            products
-        } else {
-            val resultList: List<ProductEntity> = products
-            resultList.forEach { product ->
-                storedBasketProducts.forEach { storedProduct ->
-                    if (storedProduct.id == product.id) {
-                        product.basketCount = storedProduct.basketCount
+            return@withContext if (storedBasketProducts.isEmpty()) {
+                products
+            } else {
+                val resultList: List<ProductEntity> = products
+                resultList.forEach { product ->
+                    storedBasketProducts.forEach { storedProduct ->
+                        if (storedProduct.id == product.id) {
+                            product.basketCount = storedProduct.basketCount
+                        }
                     }
                 }
+                resultList
             }
-            resultList
         }
-    }
 
 }

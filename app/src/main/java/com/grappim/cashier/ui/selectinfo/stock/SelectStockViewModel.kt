@@ -5,13 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.grappim.cashier.R
-import com.grappim.cashier.domain.outlet.Stock
 import com.grappim.cashier.core.functional.Resource
 import com.grappim.cashier.core.functional.onFailure
 import com.grappim.cashier.core.functional.onSuccess
 import com.grappim.cashier.core.platform.SingleLiveEvent
 import com.grappim.cashier.domain.outlet.GetOutletsUseCase
 import com.grappim.cashier.domain.outlet.SaveStockInfoUseCase
+import com.grappim.cashier.domain.outlet.Stock
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -45,6 +45,7 @@ class SelectStockViewModel @Inject constructor(
         }
     }
 
+    @MainThread
     fun saveStock(stock: Stock) {
         viewModelScope.launch {
             saveStockInfoUseCase.invoke(stock)

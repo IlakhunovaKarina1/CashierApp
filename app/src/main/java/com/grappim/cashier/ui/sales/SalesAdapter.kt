@@ -7,13 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import coil.load
 import com.grappim.cashier.R
-import com.grappim.cashier.core.extensions.bigDecimalOne
-import com.grappim.cashier.core.extensions.bigDecimalZero
-import com.grappim.cashier.core.extensions.getBlue
-import com.grappim.cashier.core.extensions.getWhite
-import com.grappim.cashier.core.extensions.inflate
-import com.grappim.cashier.core.extensions.setSafeOnClickListener
-import com.grappim.cashier.core.extensions.setStandardSettings
+import com.grappim.cashier.core.extensions.*
 import com.grappim.cashier.data.db.entity.ProductEntity
 import com.grappim.cashier.databinding.ItemSalesProductBinding
 import java.text.DecimalFormat
@@ -21,51 +15,50 @@ import java.text.DecimalFormat
 class SalesAdapter(
     private val dfSimple: DecimalFormat,
     private val clickListener: SalesItemClickListener
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : RecyclerView.Adapter<SalesAdapter.SaleProductViewHolder>() {
 
     private val productEntities: MutableList<ProductEntity> = mutableListOf()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): SalesAdapter.SaleProductViewHolder =
         SaleProductViewHolder(parent.inflate(R.layout.item_sales_product))
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder) {
-            is SaleProductViewHolder -> {
-                with(holder) {
-                    val product = productEntities[holder.bindingAdapterPosition]
-                    binding.textName.text = product.name
-                    binding.textPrice.text = itemView.context.getString(
-                        R.string.title_price_with_currency,
-                        dfSimple.format(product.sellingPrice)
-                    )
-                    binding.textBasketCount.text = itemView.context.getString(
-                        R.string.title_basket_count,
-                        dfSimple.format(product.basketCount)
-                    )
-                    binding.imageProduct.load("") {
-                        setStandardSettings()
-                    }
-                    if (product.basketCount <= bigDecimalZero()) {
-                        binding.buttonBasket.backgroundTintList =
-                            ColorStateList.valueOf(itemView.context.getWhite())
-                        binding.buttonBasket.iconTint =
-                            ColorStateList.valueOf(itemView.context.getBlue())
-                    } else {
-                        binding.buttonBasket.backgroundTintList =
-                            ColorStateList.valueOf(itemView.context.getBlue())
-                        binding.buttonBasket.iconTint =
-                            ColorStateList.valueOf(itemView.context.getWhite())
-                    }
-                    binding.buttonBasket.setSafeOnClickListener {
-                        onBasketClick(product, holder.bindingAdapterPosition)
-                    }
-                    binding.buttonPlus.setOnClickListener {
-                        addProduct(product, holder.bindingAdapterPosition)
-                    }
-                    binding.buttonMinus.setOnClickListener {
-                        minusProduct(product, holder.bindingAdapterPosition)
-                    }
-                }
+    override fun onBindViewHolder(holder: SalesAdapter.SaleProductViewHolder, position: Int) {
+        with(holder) {
+            val product = productEntities[holder.bindingAdapterPosition]
+            binding.textName.text = product.name
+            binding.textPrice.text = itemView.context.getString(
+                R.string.title_price_with_currency,
+                dfSimple.format(product.sellingPrice)
+            )
+            binding.textBasketCount.text = itemView.context.getString(
+                R.string.title_basket_count,
+                dfSimple.format(product.basketCount)
+            )
+            binding.imageProduct.load("") {
+                setStandardSettings()
+            }
+            if (product.basketCount <= bigDecimalZero()) {
+                binding.buttonBasket.backgroundTintList =
+                    ColorStateList.valueOf(itemView.context.getWhite())
+                binding.buttonBasket.iconTint =
+                    ColorStateList.valueOf(itemView.context.getBlue())
+            } else {
+                binding.buttonBasket.backgroundTintList =
+                    ColorStateList.valueOf(itemView.context.getBlue())
+                binding.buttonBasket.iconTint =
+                    ColorStateList.valueOf(itemView.context.getWhite())
+            }
+            binding.buttonBasket.setSafeOnClickListener {
+                onBasketClick(product, holder.bindingAdapterPosition)
+            }
+            binding.buttonPlus.setOnClickListener {
+                addProduct(product, holder.bindingAdapterPosition)
+            }
+            binding.buttonMinus.setOnClickListener {
+                minusProduct(product, holder.bindingAdapterPosition)
             }
         }
     }
