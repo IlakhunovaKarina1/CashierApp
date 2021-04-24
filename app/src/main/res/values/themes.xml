@@ -1,6 +1,5 @@
 <resources>
 
-    <!--    <style name="Theme.Cashier" parent="Theme.MaterialComponents.DayNight.DarkActionBar">-->
     <style name="Theme.Cashier" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/cashier_blue</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -16,8 +15,6 @@
 
     </style>
 
-    <style name="Theme.Cashier.Splash">
-        <item name="android:windowBackground">@drawable/splash</item>
-    </style>
+    <style name="Theme.Cashier.Splash" />
 
 </resources>

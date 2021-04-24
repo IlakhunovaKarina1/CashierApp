@@ -11,12 +11,7 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.textfield.TextInputLayout
 import com.grappim.cashier.R
-import com.grappim.cashier.core.extensions.color
-import com.grappim.cashier.core.extensions.getErrorMessage
-import com.grappim.cashier.core.extensions.hideKeyboard2
-import com.grappim.cashier.core.extensions.setSafeOnClickListener
-import com.grappim.cashier.core.extensions.showToast
-import com.grappim.cashier.core.extensions.underline
+import com.grappim.cashier.core.extensions.*
 import com.grappim.cashier.core.functional.Resource
 import com.grappim.cashier.core.utils.PHONE_NUMBER_FORMAT
 import com.grappim.cashier.core.view.CashierLoaderDialog
@@ -26,7 +21,6 @@ import com.zhuinden.livedatacombinetuplekt.combineTuple
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import reactivecircus.flowbinding.android.widget.textChangeEvents
 import reactivecircus.flowbinding.android.widget.textChanges
 import timber.log.Timber
 
@@ -62,7 +56,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
                 }
 
                 binding.buttonSignIn.isEnabled = isPasswordNotBlank == true &&
-                    phoneFullyEntered == true
+                        phoneFullyEntered == true
             }
 
         viewModel.loginStatus.observe(viewLifecycleOwner) {
@@ -118,6 +112,17 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         binding.editPassword.textChanges().onEach {
             viewModel.onPasswordEntered(it.toString())
         }.launchIn(viewLifecycleOwner.lifecycleScope)
+
+        binding.imageView.setOnClickListener { v ->
+            v.animate()
+                .scaleX(1.1f)
+                .scaleY(1.1f)
+                .withEndAction {
+                    v.animate()
+                        .scaleY(1f)
+                        .scaleX(1f)
+                }
+        }
     }
 
 }
