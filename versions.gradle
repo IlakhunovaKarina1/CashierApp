@@ -10,7 +10,7 @@ ext {
             constraint         : '2.0.4',
             paging             : '3.0.0-rc01',
 
-            gradlePlugin       : '4.0.2',
+            gradlePlugin       : '4.1.0',
 
             room               : '2.3.0',
             workManager        : '2.5.0',
@@ -23,14 +23,14 @@ ext {
             kotlinSerialization: '1.0.1',
 
             retrofit           : '2.9.0',
-            okhttp             : '4.9.0',
+            okhttp             : '4.9.1',
 
             hilt               : '2.33-beta',
             hiltAndroidX       : '1.0.0-beta01',
 
             dagger2            : '2.33',
 
-            coil               : '1.1.0',
+            coil               : '1.2.0',
 
             gson               : '2.8.6',
 
