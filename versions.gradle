@@ -8,7 +8,7 @@ ext {
             core               : '1.3.2',
             appcompat          : '1.2.0',
             constraint         : '2.0.4',
-            paging             : '3.0.0-rc01',
+            paging             : '3.0.0',
 
             gradlePlugin       : '4.1.0',
 
@@ -25,10 +25,10 @@ ext {
             retrofit           : '2.9.0',
             okhttp             : '4.9.1',
 
-            hilt               : '2.33-beta',
-            hiltAndroidX       : '1.0.0-beta01',
+            hilt               : '2.35',
+            hiltAndroidX       : '1.0.0',
 
-            dagger2            : '2.33',
+            dagger2            : '2.35',
 
             coil               : '1.2.0',
 
