@@ -51,7 +51,9 @@ class GeneralRepositoryImpl @Inject constructor(
     private val coroutineContextProvider: CoroutineContextProvider
 ) : GeneralRepository, BaseRepository() {
 
-    override suspend fun createProduct(params: CreateProductUseCase.CreateProductParams): Either<Throwable, Unit> =
+    override suspend fun createProduct(
+        params: CreateProductUseCase.CreateProductParams
+    ): Either<Throwable, Unit> =
         apiCall {
             val response = cashierApi.createProduct(
                 CreateProductRequestDTO(params)
@@ -126,7 +128,7 @@ class GeneralRepositoryImpl @Inject constructor(
                 ),
                 MenuItem(
                     type = MenuItemType.ACCEPTANCE,
-                    text = R.string.tittle_acceptance,
+                    text = R.string.title_acceptance,
                     image = R.drawable.ic_store_acceptance
                 )
             )

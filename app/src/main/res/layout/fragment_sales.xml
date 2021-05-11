@@ -79,15 +79,36 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonBasket"
                 style="@style/CashierButton"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:layout_marginEnd="30dp"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="17dp"
+                android:layout_marginEnd="7dp"
                 app:icon="@drawable/ic_shopping_cart"
                 app:iconGravity="end"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/buttonScanner"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintHorizontal_weight="2"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="4" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonScanner"
+                style="@style/IconOnlyButton.Unselected"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="7dp"
+                android:layout_marginEnd="18dp"
+                app:icon="@drawable/ic_barcode"
+                app:layout_constraintBottom_toBottomOf="@+id/buttonBasket"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/buttonBasket"
+                app:layout_constraintTop_toTopOf="@+id/buttonBasket" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

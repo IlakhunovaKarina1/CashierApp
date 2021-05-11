@@ -12,11 +12,17 @@
     <string name="title_sales">Sales</string>
     <string name="title_products">Products</string>
     <string name="title_create_product">Create product</string>
-    <string name="tittle_acceptance">Acceptance</string>
+    <string name="title_acceptance">Acceptance</string>
     <string name="title_menu">Menu</string>
     <string name="title_phone_number">Phone number</string>
     <string name="title_password">Password</string>
     <string name="title_checkout_selection">Checkout selection</string>
+    <string name="title_quantity">Quantity</string>
+    <string name="title_barcode">Barcode</string>
+    <string name="title_product_name">Product name</string>
+    <string name="title_price">Price</string>
+
+    <string name="title_quantity_and_unit">%1$s %2$s</string>
 
     <string name="auth_number_hint">Enter your phone number and password to sign in into your account</string>
 
@@ -27,6 +33,8 @@
     <string name="action_create_product">Create Product</string>
     <string name="action_next">Next</string>
     <string name="action_create_acceptance">Create Acceptance</string>
+    <string name="action_generate">Generate</string>
+    <string name="action_scan">Scan</string>
 
     <string name="title_empty"></string>
 

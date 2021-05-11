@@ -42,7 +42,7 @@ interface CashierApi {
         @Path("productId") productId: String
     ): ProductDTO
 
-    @POST("product/")
+    @POST("product")
     @RequestWithAuthToken
     suspend fun createProduct(
         @Body createProduct: CreateProductRequestDTO

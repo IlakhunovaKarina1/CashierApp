@@ -45,12 +45,13 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilName"
-                style="@style/TextInputLayout.Standard"
+                style="@style/TextInputLayout.Standard1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
+                android:hint="@string/title_product_name"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -62,9 +63,177 @@
                     android:imeOptions="actionDone"
                     android:inputType="textNoSuggestions"
                     android:textColor="@color/cashier_black"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    tools:text="Product name" />
+                    android:textSize="14sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupUnits"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:layout_constraintEnd_toEndOf="@id/tilName"
+                app:layout_constraintStart_toStartOf="@id/tilName"
+                app:layout_constraintTop_toBottomOf="@id/tilName"
+                app:selectionRequired="true"
+                app:singleLine="true"
+                app:singleSelection="true" />
+
+            <TextView
+                android:id="@+id/textQuantityLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:text="@string/title_quantity"
+                android:textColor="@color/cashier_black"
+                android:textSize="17sp"
+                app:layout_constraintEnd_toEndOf="@id/tilName"
+                app:layout_constraintStart_toStartOf="@id/tilName"
+                app:layout_constraintTop_toBottomOf="@id/chipGroupUnits" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonMinus"
+                style="@style/ButtonBasket.Minus"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/tilName"
+                app:layout_constraintTop_toBottomOf="@+id/textQuantityLabel" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/textQuantity"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:backgroundTint="@color/cashier_white"
+                android:enabled="false"
+                android:gravity="center"
+                android:textAllCaps="false"
+                android:textColor="@color/cashier_gray"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:cornerRadius="0dp"
+                app:layout_constraintBottom_toBottomOf="@+id/buttonMinus"
+                app:layout_constraintEnd_toStartOf="@+id/buttonPlus"
+                app:layout_constraintStart_toEndOf="@+id/buttonMinus"
+                app:layout_constraintTop_toTopOf="@+id/buttonMinus"
+                app:strokeColor="@color/cashier_light_gray"
+                app:strokeWidth="1dp"
+                tools:text="1 pc" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonPlus"
+                style="@style/ButtonBasket.Plus"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="@+id/tilName"
+                app:layout_constraintTop_toTopOf="@+id/buttonMinus" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilBarcode"
+                style="@style/TextInputLayout.Standard1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="@string/title_barcode"
+                app:layout_constraintEnd_toEndOf="@+id/tilName"
+                app:layout_constraintStart_toStartOf="@id/tilName"
+                app:layout_constraintTop_toBottomOf="@+id/buttonMinus">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editBarcode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
+                    android:inputType="textNoSuggestions"
+                    android:textColor="@color/cashier_black"
+                    android:textSize="14sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonScan"
+                style="@style/IconOnlyButton.Unselected"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginTop="15dp"
+                app:icon="@drawable/ic_barcode"
+                app:layout_constraintStart_toStartOf="@id/tilBarcode"
+                app:layout_constraintTop_toBottomOf="@id/tilBarcode" />
+
+            <TextView
+                android:id="@+id/textPriceLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:text="@string/title_price"
+                android:textColor="@color/cashier_black"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tilBarcode"
+                app:layout_constraintStart_toStartOf="@+id/tilBarcode"
+                app:layout_constraintTop_toBottomOf="@id/buttonScan" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilCostPrice"
+                style="@style/TextInputLayout.Standard1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Cost Price"
+                app:layout_constraintEnd_toEndOf="@+id/textPriceLabel"
+                app:layout_constraintStart_toStartOf="@id/textPriceLabel"
+                app:layout_constraintTop_toBottomOf="@+id/textPriceLabel">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editCostPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/cashier_black"
+                    android:textSize="14sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilExtraPrice"
+                style="@style/TextInputLayout.Standard1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Extra Price, %"
+                app:layout_constraintEnd_toEndOf="@+id/tilCostPrice"
+                app:layout_constraintStart_toStartOf="@id/tilCostPrice"
+                app:layout_constraintTop_toBottomOf="@+id/tilCostPrice">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editExtraPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/cashier_black"
+                    android:textSize="14sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilSalesPrice"
+                style="@style/TextInputLayout.Standard1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Sales price"
+                app:layout_constraintEnd_toEndOf="@+id/tilExtraPrice"
+                app:layout_constraintStart_toStartOf="@id/tilExtraPrice"
+                app:layout_constraintTop_toBottomOf="@+id/tilExtraPrice">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editSalesPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/cashier_black"
+                    android:textSize="14sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

@@ -88,6 +88,9 @@ dependencies {
 
     implementation 'com.github.Zhuinden:livedata-combinetuple-kt:1.2.1'
 
+    implementation('com.journeyapps:zxing-android-embedded:3.6.0') { transitive = false }
+    implementation 'com.google.zxing:core:3.3.0'
+
     implementation "io.github.reactivecircus.flowbinding:flowbinding-android:${versions.flowbinding}"
     implementation "io.github.reactivecircus.flowbinding:flowbinding-material:${versions.flowbinding}"
 

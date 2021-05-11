@@ -48,7 +48,7 @@ class ProductsFragment : Fragment(R.layout.fragment_products),
                 findNavController().popBackStack()
             }
             buttonCreateProduct.setSafeOnClickListener {
-
+                findNavController().navigate(ProductsFragmentDirections.actionProductsToCreateProduct())
             }
             recyclerProducts.adapter = ScaleInAnimationAdapter(productsAdapter)
             tabsCategories.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {

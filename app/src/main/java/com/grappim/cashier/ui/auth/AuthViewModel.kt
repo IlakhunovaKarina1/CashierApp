@@ -26,6 +26,10 @@ class AuthViewModel @Inject constructor(
 
     init {
         prePopulateDb()
+        login(
+            "7023335353",
+            "qwe"
+        )
     }
 
     private val _password = MutableLiveData<String>()

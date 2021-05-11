@@ -2,6 +2,7 @@ package com.grappim.cashier.ui.sales
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -12,6 +13,7 @@ import com.grappim.cashier.core.extensions.setSafeOnClickListener
 import com.grappim.cashier.data.db.entity.ProductEntity
 import com.grappim.cashier.databinding.FragmentSalesBinding
 import com.grappim.cashier.di.modules.DecimalFormatSimple
+import com.grappim.cashier.ui.scanner.ScanType
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import kotlinx.coroutines.flow.launchIn
@@ -47,6 +49,9 @@ class SalesFragment : Fragment(R.layout.fragment_sales), SalesItemClickListener 
             recyclerProducts.adapter = ScaleInAnimationAdapter(salesAdapter)
             buttonBasket.setSafeOnClickListener {
 
+            }
+            buttonScanner.setSafeOnClickListener {
+                findNavController().navigate(SalesFragmentDirections.actionSalesFragmentToScannerFragment())
             }
 
             editSearchProducts

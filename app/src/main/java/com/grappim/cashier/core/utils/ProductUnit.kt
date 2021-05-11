@@ -1,10 +1,10 @@
 package com.grappim.cashier.core.utils
 
 enum class ProductUnit(val value: String, val title: String) {
+    PIECE("pc", "шт"),
     KG("kg", "кг"),
-    PIECE("piece", "шт"),
     GRAM("g", "г"),
-    LITRE("litre", "л"),
+    LITRE("l", "л"),
     METER("m", "м"),
     METER_2("m2", "м.кв"),
     METER_3("m3", "м.куб");

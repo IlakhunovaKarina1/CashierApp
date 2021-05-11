@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="TextInputLayout.Standard" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="android:textSize">15sp</item>
 
@@ -8,6 +9,15 @@
         <item name="helperTextEnabled">false</item>
 
         <item name="boxBackgroundColor">@color/cashier_white</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="boxStrokeWidthFocused">0dp</item>
+        <item name="boxStrokeColor">@color/cashier_white</item>
+    </style>
+
+    <style name="TextInputLayout.Standard1" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:textSize">15sp</item>
+
+<!--        <item name="boxBackgroundColor">@color/cashier_white</item>-->
         <item name="boxStrokeWidth">0dp</item>
         <item name="boxStrokeWidthFocused">0dp</item>
         <item name="boxStrokeColor">@color/cashier_white</item>
@@ -55,14 +65,25 @@
         <item name="cornerRadius">25dp</item>
     </style>
 
+    <style name="CashierButton.Unselected" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/cashier_white</item>
+        <item name="android:textColor">@color/cashier_blue</item>
+    </style>
+
     <style name="IconOnlyButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="iconPadding">0dp</item>
-        <item name="backgroundTint">@color/cashier_blue</item>
-        <item name="iconTint">@color/cashier_white</item>
         <item name="iconGravity">textStart</item>
         <item name="strokeWidth">1dp</item>
         <item name="strokeColor">@color/cashier_blue</item>
         <item name="cornerRadius">25dp</item>
+
+        <item name="backgroundTint">@color/cashier_blue</item>
+        <item name="iconTint">@color/cashier_white</item>
+    </style>
+
+    <style name="IconOnlyButton.Unselected">
+        <item name="backgroundTint">@color/cashier_white</item>
+        <item name="iconTint">@color/cashier_blue</item>
     </style>
 
     <style name="ButtonBasket" parent="Widget.MaterialComponents.Button">
@@ -121,5 +142,11 @@
         <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:backgroundDimAmount">0.2</item>
+    </style>
+
+    <style name="Chip.Unit" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/chip_unit_background</item>
+        <item name="android:textColor">@color/chip_unit_text</item>
+        <item name="android:textSize">14sp</item>
     </style>
 </resources>

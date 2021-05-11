@@ -7,7 +7,13 @@ import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import coil.load
 import com.grappim.cashier.R
-import com.grappim.cashier.core.extensions.*
+import com.grappim.cashier.core.extensions.bigDecimalOne
+import com.grappim.cashier.core.extensions.bigDecimalZero
+import com.grappim.cashier.core.extensions.getBlue
+import com.grappim.cashier.core.extensions.getWhite
+import com.grappim.cashier.core.extensions.inflate
+import com.grappim.cashier.core.extensions.setSafeOnClickListener
+import com.grappim.cashier.core.extensions.setStandardSettings
 import com.grappim.cashier.data.db.entity.ProductEntity
 import com.grappim.cashier.databinding.ItemSalesProductBinding
 import java.text.DecimalFormat

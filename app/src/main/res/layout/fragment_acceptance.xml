@@ -19,7 +19,7 @@
         android:id="@+id/textLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/tittle_acceptance"
+        android:text="@string/title_acceptance"
         android:textColor="@color/cashier_black"
         android:textSize="17sp"
         app:layout_constraintBottom_toBottomOf="@+id/buttonMenu"
