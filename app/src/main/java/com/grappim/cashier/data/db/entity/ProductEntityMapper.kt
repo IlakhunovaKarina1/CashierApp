@@ -15,6 +15,7 @@ object ProductEntityMapper {
             amount = this.amount,
         )
 
+
     fun ProductEntity.toDTO(): ProductDTO =
         ProductDTO(
             id = this.id,
@@ -27,7 +28,8 @@ object ProductEntityMapper {
             sellingPrice = this.sellingPrice,
             merchantId = this.merchantId,
             createdOn = this.createdOn,
-            updatedOn = this.updatedOn
+            updatedOn = this.updatedOn,
+            category = this.categoryId ?: ""
         )
 
     fun ProductDTO.toEntity(): ProductEntity =

@@ -40,4 +40,10 @@ interface BasketDao {
     @Query("SELECT * FROM $basketEntityTableName")
     fun getAllBasketProducts(): Flow<List<BasketProductEntity>>
 
+    @Query("SELECT * FROM $basketEntityTableName")
+    suspend fun getBasketProducts(): List<BasketProductEntity>
+
+    @Query("DELETE FROM $basketEntityTableName")
+    suspend fun deleteBagProducts()
+
 }

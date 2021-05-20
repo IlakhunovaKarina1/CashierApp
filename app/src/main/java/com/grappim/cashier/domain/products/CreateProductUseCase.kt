@@ -3,6 +3,7 @@ package com.grappim.cashier.domain.products
 import com.google.gson.annotations.SerializedName
 import com.grappim.cashier.core.functional.Either
 import com.grappim.cashier.core.storage.GeneralStorage
+import com.grappim.cashier.core.utils.DateTimeUtils
 import com.grappim.cashier.core.utils.ProductUnit
 import com.grappim.cashier.data.db.entity.ProductEntity
 import com.grappim.cashier.data.db.entity.ProductEntityMapper.toDTO
@@ -33,8 +34,8 @@ class CreateProductUseCase @Inject constructor(
             sellingPrice = sellingPrice,
             amount = amount,
             barcode = barcode,
-            createdOn = "0001-01-01T00:00:00Z",
-            updatedOn = "2021-05-10T18:55:01.244424Z"
+            createdOn = DateTimeUtils.getNowFullDate(),
+            updatedOn = DateTimeUtils.getNowFullDate()
         )
         return generalRepository.createProduct(params)
     }

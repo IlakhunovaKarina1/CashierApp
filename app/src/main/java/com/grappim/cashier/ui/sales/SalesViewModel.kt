@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.grappim.cashier.core.functional.onFailure
 import com.grappim.cashier.core.functional.onSuccess
 import com.grappim.cashier.data.db.entity.ProductEntity
+import com.grappim.cashier.domain.products.GetBagProductsUseCase
 import com.grappim.cashier.domain.products.GetProductsUseCase
 import com.grappim.cashier.domain.sales.AddProductToBasketUseCase
 import com.grappim.cashier.domain.sales.GetAllBasketProductsUseCase

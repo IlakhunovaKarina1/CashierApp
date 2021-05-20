@@ -35,7 +35,7 @@
 
     <fragment
         android:id="@+id/selectCashierFragment"
-        android:name="com.grappim.cashier.ui.selectinfo.cashier.SelectCashierFragment"
+        android:name="com.grappim.cashier.ui.selectinfo.cashbox.SelectCashierFragment"
         tools:layout="@layout/fragment_select_stock_cashier">
         <action
             android:id="@+id/action_selectCashierFragment_to_menuFragment"
@@ -91,7 +91,9 @@
             app:enterAnim="@anim/enter_from_right"
             app:exitAnim="@anim/exit_to_left"
             app:popEnterAnim="@anim/pop_enter_from_left"
-            app:popExitAnim="@anim/pop_exit_to_right" />
+            app:popExitAnim="@anim/pop_exit_to_right"
+            app:popUpTo="@id/salesFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -139,7 +141,29 @@
                 android:defaultValue="SINGLE"
                 app:argType="com.grappim.cashier.ui.scanner.ScanType" />
         </action>
+
+        <action
+            android:id="@+id/action_salesFragment_to_bagFragment"
+            app:destination="@id/bagFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/bagFragment"
+        android:name="com.grappim.cashier.ui.bag.BagFragment"
+        tools:layout="@layout/fragment_bag">
+        <action
+            android:id="@+id/action_bagFragment_to_paymentMethod"
+            app:destination="@id/paymentMethodFragment" />
+        <action
+            android:id="@+id/action_bagFragment_to_scannerFragment"
+            app:destination="@id/scannerFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/paymentMethodFragment"
+        android:name="com.grappim.cashier.ui.paymentmethod.PaymentMethodFragment"
+        android:label="fragment_payment_method"
+        tools:layout="@layout/fragment_payment_method"/>
 
     <fragment
         android:id="@+id/acceptanceFragment"

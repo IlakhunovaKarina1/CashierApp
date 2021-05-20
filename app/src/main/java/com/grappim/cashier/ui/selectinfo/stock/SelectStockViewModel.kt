@@ -9,6 +9,7 @@ import com.grappim.cashier.core.functional.Resource
 import com.grappim.cashier.core.functional.onFailure
 import com.grappim.cashier.core.functional.onSuccess
 import com.grappim.cashier.core.platform.SingleLiveEvent
+import com.grappim.cashier.data.workers.WorkerHelper
 import com.grappim.cashier.domain.outlet.GetOutletsUseCase
 import com.grappim.cashier.domain.outlet.SaveStockInfoUseCase
 import com.grappim.cashier.domain.outlet.Stock
@@ -19,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SelectStockViewModel @Inject constructor(
     private val getOutletsUseCase: GetOutletsUseCase,
-    private val saveStockInfoUseCase: SaveStockInfoUseCase
+    private val saveStockInfoUseCase: SaveStockInfoUseCase,
+    private val workerHelper: WorkerHelper
 ) : ViewModel() {
 
     private val _stocks: SingleLiveEvent<Resource<List<Stock>>> = SingleLiveEvent()
@@ -49,6 +51,7 @@ class SelectStockViewModel @Inject constructor(
     fun saveStock(stock: Stock) {
         viewModelScope.launch {
             saveStockInfoUseCase.invoke(stock)
+            workerHelper.startMainWorkers()
         }
     }
 

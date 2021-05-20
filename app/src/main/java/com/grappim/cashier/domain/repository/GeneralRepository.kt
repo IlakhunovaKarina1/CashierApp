@@ -8,11 +8,12 @@ import com.grappim.cashier.data.db.entity.ProductEntity
 import com.grappim.cashier.domain.acceptance.Acceptance
 import com.grappim.cashier.domain.products.CreateProductUseCase
 import com.grappim.cashier.ui.menu.MenuItem
+import com.grappim.cashier.ui.paymentmethod.PaymentMethod
 import kotlinx.coroutines.flow.Flow
 
 interface GeneralRepository {
 
-    suspend fun createProduct(params:CreateProductUseCase.CreateProductParams): Either<Throwable, Unit>
+    suspend fun createProduct(params: CreateProductUseCase.CreateProductParams): Either<Throwable, Unit>
 
     suspend fun getCategories(): Either<Throwable, List<CategoryEntity>>
     suspend fun getProducts(): Either<Throwable, List<ProductEntity>>
@@ -35,5 +36,11 @@ interface GeneralRepository {
         categoryEntity: CategoryEntity?,
         query: String
     ): Flow<List<ProductEntity>>
+
+    suspend fun getBagProducts(): List<ProductEntity>
+
+    suspend fun deleteBagProducts()
+
+    suspend fun makePayment(paymentMethod: PaymentMethod)
 
 }

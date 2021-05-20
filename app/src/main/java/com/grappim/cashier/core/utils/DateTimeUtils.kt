@@ -9,8 +9,16 @@ object DateTimeUtils {
 
     private const val DATE_PATTERN_STANDARD = "dd.MM.yyyy"
 
+    private const val DATE_TIME_PATTERN_FULL = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS'Z'"
+
     fun getDateTimePatternStandard(): DateTimeFormatter =
         DateTimeFormatter.ofPattern(DATE_TIME_PATTERN_STANDARD)
+
+    fun getDateTimeFormatterForFull(): DateTimeFormatter =
+        DateTimeFormatter.ofPattern(DATE_TIME_PATTERN_FULL)
+
+    fun getNowFullDate(): String =
+        getDateTimeFormatterForFull().format(getNowOffsetDateTime(true))
 
     fun getDatePatternStandard(): DateTimeFormatter =
         DateTimeFormatter.ofPattern(DATE_PATTERN_STANDARD)

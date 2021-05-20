@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.children
 import androidx.core.view.get
+import androidx.core.widget.doAfterTextChanged
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -81,7 +83,6 @@ class CreateProductFragment : Fragment(R.layout.fragment_create_product) {
                     .joinToString {
                         (it as Chip).text.toString()
                     }
-                Timber.tag("test").d("${ProductUnit.getProductUnitByValue(selectedChip)}")
                 viewModel.setUnit(ProductUnit.getProductUnitByValue(selectedChip))
             }
 
@@ -97,6 +98,22 @@ class CreateProductFragment : Fragment(R.layout.fragment_create_product) {
             }
 
             chipGroupUnits.check(chipGroupUnits[0].id)
+
+            editSalesPrice.doAfterTextChanged {
+                if (editSalesPrice.isFocused) {
+                    viewModel.onSalesPriceChanged(it.toString())
+                }
+            }
+            editCostPrice.doAfterTextChanged {
+                if (editCostPrice.isFocused) {
+                    viewModel.onCostPriceChanged(it.toString())
+                }
+            }
+            editExtraPrice.doAfterTextChanged {
+                if (editExtraPrice.isFocused) {
+                    viewModel.onExtraPriceChanged(it.toString())
+                }
+            }
         }
     }
 
@@ -113,12 +130,26 @@ class CreateProductFragment : Fragment(R.layout.fragment_create_product) {
             }
 
         }
+
+        viewModel.sellingPrice.observe(viewLifecycleOwner) {
+            if (!viewBinding.editSalesPrice.isFocused) {
+                viewBinding.editSalesPrice.setText(it)
+            }
+        }
+        viewModel.purchasePrice.observe(viewLifecycleOwner) {
+            if (!viewBinding.editCostPrice.isFocused) {
+                viewBinding.editCostPrice.setText(it)
+            }
+        }
+        viewModel.markup.observe(viewLifecycleOwner) {
+            if (!viewBinding.editExtraPrice.isFocused) {
+                viewBinding.editExtraPrice.setText(it)
+            }
+        }
         combineTupleNonNull(
             viewModel.quantity,
             viewModel.unit
         ).observe(viewLifecycleOwner) { (quantity: String, unit: ProductUnit) ->
-            Timber.tag("test").d("productUnit: $unit")
-            Timber.tag("test").d("quantity: $quantity")
             viewBinding.textQuantity.text = getString(
                 R.string.title_quantity_and_unit,
                 quantity,

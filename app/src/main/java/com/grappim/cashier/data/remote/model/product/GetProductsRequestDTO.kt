@@ -9,5 +9,5 @@ data class GetProductsRequestDTO(
     val merchantId: String,
     @SerializedName("stock_id")
     val stockId: String,
-    val name: String
+    val name: String? = null
 )

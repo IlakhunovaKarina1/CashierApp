@@ -11,6 +11,14 @@ import com.grappim.cashier.data.remote.model.product.GetProductsRequestDTO
 import com.grappim.cashier.data.remote.model.product.UpdateProductResponseDTO
 import com.grappim.cashier.data.remote.model.product.ProductIdResponseDTO
 import com.grappim.cashier.data.remote.model.cashbox.GetCashBoxListRequestDTO
+import com.grappim.cashier.data.remote.model.cashbox.GetCashBoxListResponseDTO
+import com.grappim.cashier.data.remote.model.category.CategoryDTO
+import com.grappim.cashier.data.remote.model.category.CreateCategoryRequestDTO
+import com.grappim.cashier.data.remote.model.category.CreateCategoryResponseDTO
+import com.grappim.cashier.data.remote.model.category.FilterCategoriesRequestDTO
+import com.grappim.cashier.data.remote.model.category.FilterCategoriesResponseDTO
+import com.grappim.cashier.data.remote.model.category.UpdateCategoryRequestDTO
+import com.grappim.cashier.data.remote.model.product.GetProductsResponseDTO
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -64,11 +72,41 @@ interface CashierApi {
     @RequestWithAuthToken
     suspend fun getProducts(
         @Body getProductsRequestDTO: GetProductsRequestDTO
-    )
+    ): GetProductsResponseDTO
 
     @POST("cashbox/list")
     @RequestWithAuthToken
     suspend fun getCashBoxList(
         @Body getCashBoxListRequestDTO: GetCashBoxListRequestDTO
-    )
+    ): GetCashBoxListResponseDTO
+
+    @GET("category/{categoryId}")
+    @RequestWithAuthToken
+    suspend fun getCategoryById(
+        @Path("categoryId") categoryId: String
+    ): CategoryDTO
+
+    @POST("category")
+    @RequestWithAuthToken
+    suspend fun createCategory(
+        @Body createCategoryRequestDTO: CreateCategoryRequestDTO
+    ): CreateCategoryResponseDTO
+
+    @PUT("category")
+    @RequestWithAuthToken
+    suspend fun updateCategory(
+        @Body updateCategoryRequestDTO: UpdateCategoryRequestDTO
+    ): CreateCategoryResponseDTO
+
+    @POST("category/filter")
+    @RequestWithAuthToken
+    suspend fun filterCategories(
+        @Body filterCategoriesRequestDTO: FilterCategoriesRequestDTO
+    ): FilterCategoriesResponseDTO
+
+    @DELETE("category/{categoryId}")
+    @RequestWithAuthToken
+    suspend fun deleteCategoryById(
+        @Path("categoryId") categoryId: String
+    ): CreateCategoryResponseDTO
 }

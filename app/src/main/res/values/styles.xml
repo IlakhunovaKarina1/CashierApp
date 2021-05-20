@@ -14,13 +14,10 @@
         <item name="boxStrokeColor">@color/cashier_white</item>
     </style>
 
-    <style name="TextInputLayout.Standard1" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+    <style name="TextInputLayout.Standard1" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
         <item name="android:textSize">15sp</item>
 
-<!--        <item name="boxBackgroundColor">@color/cashier_white</item>-->
-        <item name="boxStrokeWidth">0dp</item>
-        <item name="boxStrokeWidthFocused">0dp</item>
-        <item name="boxStrokeColor">@color/cashier_white</item>
+        <item name="boxBackgroundColor">@color/cashier_white</item>
     </style>
 
     <style name="ButtonBack" parent="Widget.MaterialComponents.Button.TextButton.Icon">
@@ -79,6 +76,12 @@
 
         <item name="backgroundTint">@color/cashier_blue</item>
         <item name="iconTint">@color/cashier_white</item>
+    </style>
+
+    <style name="IconOnlyButton1" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="iconPadding">0dp</item>
+        <item name="iconGravity">textStart</item>
+        <item name="strokeWidth">0dp</item>
     </style>
 
     <style name="IconOnlyButton.Unselected">

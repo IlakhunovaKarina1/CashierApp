@@ -1,4 +1,4 @@
-package com.grappim.cashier.ui.selectinfo.cashier
+package com.grappim.cashier.ui.selectinfo.cashbox
 
 import android.os.Bundle
 import android.view.View
@@ -8,10 +8,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.grappim.cashier.R
+import com.grappim.cashier.core.extensions.getErrorMessage
 import com.grappim.cashier.core.extensions.setSafeOnClickListener
+import com.grappim.cashier.core.extensions.showToast
 import com.grappim.cashier.core.functional.Resource
 import com.grappim.cashier.databinding.FragmentSelectStockCashierBinding
-import com.grappim.cashier.domain.cashier.Cashier
+import com.grappim.cashier.domain.cashbox.CashBox
 import com.grappim.cashier.ui.selectinfo.stock.SelectInfoProgressAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -42,11 +44,11 @@ class SelectCashierFragment : Fragment(R.layout.fragment_select_stock_cashier),
         with(binding) {
             textLabel.text = getString(R.string.title_checkout_selection)
             buttonNext.setSafeOnClickListener {
-                viewModel.saveCashier(cashierAdapter.getSelectedItem()!!)
+                viewModel.saveCashBox(cashierAdapter.getSelectedItem()!!)
                 findNavController().navigate(R.id.action_selectCashierFragment_to_menuFragment)
             }
             swipeRefresh.setOnRefreshListener {
-                viewModel.getCashiers()
+                viewModel.getCashBoxes()
             }
             buttonBack.setSafeOnClickListener {
                 findNavController().popBackStack()
@@ -63,15 +65,15 @@ class SelectCashierFragment : Fragment(R.layout.fragment_select_stock_cashier),
     }
 
     private fun observeViewModel() {
-        viewModel.cashiers.observe(viewLifecycleOwner, ::showCashiers)
+        viewModel.cashBoxes.observe(viewLifecycleOwner, ::showCashBoxes)
         selectInfoProgressAdapter.setItems(viewModel.stockProgresses)
     }
 
-    private fun showCashiers(data: Resource<List<Cashier>>) {
+    private fun showCashBoxes(data: Resource<List<CashBox>>) {
         binding.swipeRefresh.isRefreshing = data is Resource.Loading
         when (data) {
             is Resource.Error -> {
-
+                showToast(getErrorMessage(data.exception))
             }
             is Resource.Success -> {
                 cashierAdapter.addItems(data.data)

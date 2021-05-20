@@ -1,4 +1,4 @@
-package com.grappim.cashier.ui.selectinfo.cashier
+package com.grappim.cashier.ui.selectinfo.cashbox
 
 import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
@@ -10,7 +10,8 @@ import com.grappim.cashier.core.functional.Resource
 import com.grappim.cashier.core.functional.onFailure
 import com.grappim.cashier.core.functional.onSuccess
 import com.grappim.cashier.core.platform.SingleLiveEvent
-import com.grappim.cashier.domain.cashier.GetCashiersUseCase
+import com.grappim.cashier.domain.cashbox.CashBox
+import com.grappim.cashier.domain.cashier.GetCashBoxesUseCase
 import com.grappim.cashier.domain.cashier.SaveCashierUseCase
 import com.grappim.cashier.ui.selectinfo.stock.StockProgressItem
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,35 +20,35 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SelectCashierViewModel @Inject constructor(
-    private val getCashiersUseCase: GetCashiersUseCase,
+    private val getCashBoxesUseCase: GetCashBoxesUseCase,
     private val saveCashierUseCase: SaveCashierUseCase
 ) : ViewModel() {
 
-    private val _cashiers: SingleLiveEvent<Resource<List<Cashier>>> = SingleLiveEvent()
-    val cashiers: LiveData<Resource<List<Cashier>>>
-        get() = _cashiers
+    private val _cashBoxes: SingleLiveEvent<Resource<List<CashBox>>> = SingleLiveEvent()
+    val cashBoxes: LiveData<Resource<List<CashBox>>>
+        get() = _cashBoxes
 
     val stockProgresses: List<StockProgressItem> = getOutletProgressItems()
 
     init {
-        getCashiers()
+        getCashBoxes()
     }
 
-    fun saveCashier(cashier: Cashier) {
+    fun saveCashBox(cashBox: CashBox) {
         viewModelScope.launch {
-            saveCashierUseCase.invoke(cashier)
+            saveCashierUseCase.invoke(cashBox)
         }
     }
 
     @MainThread
-    fun getCashiers() {
+    fun getCashBoxes() {
         viewModelScope.launch {
-            _cashiers.value = Resource.Loading
-            getCashiersUseCase.invoke()
+            _cashBoxes.value = Resource.Loading
+            getCashBoxesUseCase.invoke()
                 .onFailure {
-                    _cashiers.value = Resource.Error(it)
+                    _cashBoxes.value = Resource.Error(it)
                 }.onSuccess {
-                    _cashiers.value = Resource.Success(it)
+                    _cashBoxes.value = Resource.Success(it)
                 }
         }
     }

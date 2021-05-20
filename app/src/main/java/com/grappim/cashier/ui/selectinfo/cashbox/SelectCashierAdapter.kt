@@ -1,4 +1,4 @@
-package com.grappim.cashier.ui.selectinfo.cashier
+package com.grappim.cashier.ui.selectinfo.cashbox
 
 import android.view.View
 import android.view.ViewGroup
@@ -8,13 +8,14 @@ import com.grappim.cashier.R
 import com.grappim.cashier.core.extensions.inflate
 import com.grappim.cashier.core.extensions.showOrGone
 import com.grappim.cashier.databinding.ItemSelectInfoBinding
+import com.grappim.cashier.domain.cashbox.CashBox
 import com.grappim.cashier.domain.cashier.Cashier
 
 class SelectCashierAdapter(
     private val listener: CashierListClickListener
 ) : RecyclerView.Adapter<SelectCashierAdapter.SelectInfoViewHolder>() {
 
-    private val items = mutableListOf<Cashier>()
+    private val items = mutableListOf<CashBox>()
     private var selectedItem: Int = -1
 
     override fun onCreateViewHolder(
@@ -50,13 +51,13 @@ class SelectCashierAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    fun addItems(newList: List<Cashier>) {
+    fun addItems(newList: List<CashBox>) {
         items.clear()
         items.addAll(newList)
         notifyDataSetChanged()
     }
 
-    fun getSelectedItem(): Cashier? = try {
+    fun getSelectedItem(): CashBox? = try {
         items[selectedItem]
     } catch (e: Exception) {
         null

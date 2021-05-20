@@ -12,6 +12,7 @@ import com.grappim.cashier.core.extensions.bigDecimalZero
 import com.grappim.cashier.core.extensions.getEpochMilli
 import com.grappim.cashier.core.extensions.getStringForDbQuery
 import com.grappim.cashier.core.functional.Either
+import com.grappim.cashier.core.storage.GeneralStorage
 import com.grappim.cashier.core.utils.DateTimeUtils
 import com.grappim.cashier.core.utils.ProductUnit
 import com.grappim.cashier.data.db.dao.AcceptanceDao
@@ -29,6 +30,7 @@ import com.grappim.cashier.domain.repository.GeneralRepository
 import com.grappim.cashier.ui.acceptance.AcceptanceStatus
 import com.grappim.cashier.ui.menu.MenuItem
 import com.grappim.cashier.ui.menu.MenuItemType
+import com.grappim.cashier.ui.paymentmethod.PaymentMethod
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -48,6 +50,7 @@ class GeneralRepositoryImpl @Inject constructor(
     private val productsDao: ProductsDao,
     private val categoryDao: CategoryDao,
     private val acceptanceDao: AcceptanceDao,
+    private val generalStorage: GeneralStorage,
     private val coroutineContextProvider: CoroutineContextProvider
 ) : GeneralRepository, BaseRepository() {
 
@@ -78,7 +81,20 @@ class GeneralRepositoryImpl @Inject constructor(
         }
 
     override suspend fun getCategories(): Either<Throwable, List<CategoryEntity>> =
-        Either.Right(getCategoryList())
+        withContext(coroutineContextProvider.io) {
+            return@withContext try {
+                val categories = categoryDao.getAllCategories().toMutableList()
+                categories.add(
+                    0,
+                    CategoryEntity(
+                        "All"
+                    )
+                )
+                Either.Right(categories)
+            } catch (e: Throwable) {
+                Either.Right(listOf())
+            }
+        }
 
     override suspend fun getProducts(): Either<Throwable, List<ProductEntity>> =
         Either.Right(getProductList())
@@ -88,7 +104,7 @@ class GeneralRepositoryImpl @Inject constructor(
             if (categoryEntity.isDefault) {
                 productsDao.getAllProducts()
             } else {
-                productsDao.searchProductsByCategoryId(categoryEntity.uid)
+                productsDao.searchProductsByCategoryId(categoryEntity.id)
             }
         }
 
@@ -160,31 +176,19 @@ class GeneralRepositoryImpl @Inject constructor(
         query: String
     ): Flow<List<ProductEntity>> {
         val roomQuery = StringBuilder("SELECT * FROM $productEntityTableName ")
-            .append(
-                if (query.isNotBlank() || (categoryEntity != null && !categoryEntity.isDefault)
-                ) {
-                    "WHERE "
-                } else {
-                    ""
-                }
-            )
-            .append(
-                if (query.isNotBlank()) {
-                    "name LIKE '${query.getStringForDbQuery()}' "
-                } else {
-                    ""
-                }
-            )
+            .append("WHERE merchantId=${generalStorage.getMerchantId()} ")
             .append(
                 if (categoryEntity == null || categoryEntity.isDefault) {
                     ""
                 } else {
-                    val andQuery = if (query.isBlank()) {
-                        ""
-                    } else {
-                        "AND "
-                    }
-                    "${andQuery}categoryId = ${categoryEntity.uid}"
+                    "AND categoryId = ${categoryEntity.id}"
+                }
+            )
+            .append(
+                if (query.isNotBlank()) {
+                    "AND name LIKE '${query.getStringForDbQuery()}' "
+                } else {
+                    ""
                 }
             )
         return productsDao.getProductsFlow(
@@ -215,45 +219,6 @@ class GeneralRepositoryImpl @Inject constructor(
         }
 
     override suspend fun prePopulateDb() = withContext(coroutineContextProvider.io) {
-        val products = mutableListOf<ProductEntity>()
-        (0..20).forEach {
-            products.add(
-                ProductEntity(
-                    id = it.toLong(),
-                    barcode = "barcode $it",
-                    name = "Product $it",
-                    sellingPrice = BigDecimal("${Random.nextInt(50, 400)}"),
-                    purchasePrice = BigDecimal("${Random.nextInt(0, 10)}"),
-                    amount = BigDecimal("${Random.nextInt(0, 10)}"),
-                    merchantId = "",
-                    stockId = "",
-                    unit = ProductUnit.PIECE,
-                    createdOn = "",
-                    updatedOn = "",
-                    categoryId = Random.nextInt(2, 8).toString(),
-                )
-            )
-        }
-        productsDao.insert(products)
-
-        val categories = mutableListOf<CategoryEntity>()
-        categories.add(
-            CategoryEntity(
-                uid = "0",
-                name = "All",
-                isDefault = true
-            )
-        )
-        (1..11).forEach {
-            categories.add(
-                CategoryEntity(
-                    uid = "$it",
-                    name = "Category $it"
-                )
-            )
-        }
-        categoryDao.insert(categories)
-
         val list = mutableListOf<AcceptanceEntity>()
         (0..20).forEach {
             val randomDateInstant = getRandomDate()
@@ -283,6 +248,32 @@ class GeneralRepositoryImpl @Inject constructor(
     }
 
     private suspend fun getCategoryList(): List<CategoryEntity> = categoryDao.getAllCategories()
+
+    override suspend fun getBagProducts(): List<ProductEntity> =
+        withContext(coroutineContextProvider.io) {
+            val basketProducts = basketDao.getBasketProducts()
+            val products = productsDao.getAllProducts()
+            val result = mutableListOf<ProductEntity>()
+            basketProducts.forEach { basketProduct ->
+                products.forEach { product ->
+                    if (basketProduct.id == product.id) {
+                        result.add(product.apply {
+                            basketCount = basketProduct.basketCount
+                        })
+                    }
+                }
+            }
+            return@withContext result
+        }
+
+    override suspend fun deleteBagProducts() = withContext(coroutineContextProvider.io) {
+        basketDao.deleteBagProducts()
+    }
+
+    override suspend fun makePayment(paymentMethod: PaymentMethod) =
+        withContext(coroutineContextProvider.io) {
+
+        }
 
     private suspend fun getProductList(): List<ProductEntity> =
         withContext(coroutineContextProvider.io) {

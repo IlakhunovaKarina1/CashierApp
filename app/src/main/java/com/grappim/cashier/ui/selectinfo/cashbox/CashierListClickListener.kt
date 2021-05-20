@@ -1,4 +1,4 @@
-package com.grappim.cashier.ui.selectinfo.cashier
+package com.grappim.cashier.ui.selectinfo.cashbox
 
 interface CashierListClickListener {
 

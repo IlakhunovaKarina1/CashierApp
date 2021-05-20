@@ -1,6 +1,7 @@
 package com.grappim.cashier.core.storage
 
 import android.content.Context
+import com.grappim.cashier.domain.cashbox.CashBox
 import com.grappim.cashier.domain.cashier.Cashier
 import com.grappim.cashier.domain.outlet.Stock
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -35,10 +36,10 @@ class GeneralStorage @Inject constructor(
 
     private val editor = sharedPreferences.edit()
 
-    fun setCashierInfo(cashier: Cashier) {
+    fun setCashierInfo(cashBox: CashBox) {
         editor
-            .putString(CASHIER_ID, cashier.id)
-            .putString(CASHIER_NAME, cashier.name)
+            .putString(CASHIER_ID, cashBox.cashBoxId)
+            .putString(CASHIER_NAME, cashBox.name)
             .apply()
     }
 

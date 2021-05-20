@@ -1,6 +1,7 @@
 package com.grappim.cashier.data.db.entity
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.grappim.cashier.core.extensions.bigDecimalZero
@@ -27,7 +28,8 @@ data class ProductEntity(
     val createdOn: String,
     val updatedOn: String,
 
-    val categoryId: String? = null,
+    @ColumnInfo(defaultValue = "")
+    val categoryId: String = "",
 
     var basketCount: BigDecimal = bigDecimalZero()
 ) : Parcelable

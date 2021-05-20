@@ -2,10 +2,9 @@ package com.grappim.cashier.ui.sales
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.os.bundleOf
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.grappim.cashier.R
@@ -13,12 +12,8 @@ import com.grappim.cashier.core.extensions.setSafeOnClickListener
 import com.grappim.cashier.data.db.entity.ProductEntity
 import com.grappim.cashier.databinding.FragmentSalesBinding
 import com.grappim.cashier.di.modules.DecimalFormatSimple
-import com.grappim.cashier.ui.scanner.ScanType
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import reactivecircus.flowbinding.android.widget.textChanges
 import java.text.DecimalFormat
 import javax.inject.Inject
 
@@ -48,18 +43,15 @@ class SalesFragment : Fragment(R.layout.fragment_sales), SalesItemClickListener 
             }
             recyclerProducts.adapter = ScaleInAnimationAdapter(salesAdapter)
             buttonBasket.setSafeOnClickListener {
-
+                findNavController().navigate(SalesFragmentDirections.actionSalesFragmentToBagFragment())
             }
             buttonScanner.setSafeOnClickListener {
                 findNavController().navigate(SalesFragmentDirections.actionSalesFragmentToScannerFragment())
             }
 
-            editSearchProducts
-                .textChanges()
-                .onEach {
-                    viewModel.searchProducts(it.toString())
-                }
-                .launchIn(viewLifecycleOwner.lifecycleScope)
+            editSearchProducts.doOnTextChanged { text, _, _, _ ->
+                viewModel.searchProducts(text.toString())
+            }
         }
     }
 

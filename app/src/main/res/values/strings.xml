@@ -21,6 +21,13 @@
     <string name="title_barcode">Barcode</string>
     <string name="title_product_name">Product name</string>
     <string name="title_price">Price</string>
+    <string name="title_price1">Price:</string>
+    <string name="title_bag">Bag</string>
+    <string name="title_payment_method">Payment method</string>
+    <string name="title_item1">Item:</string>
+    <string name="title_all">All</string>
+    <string name="title_cash_payment">Cash payment</string>
+    <string name="title_card_payment">Payment by card</string>
 
     <string name="title_quantity_and_unit">%1$s %2$s</string>
 
@@ -35,6 +42,7 @@
     <string name="action_create_acceptance">Create Acceptance</string>
     <string name="action_generate">Generate</string>
     <string name="action_scan">Scan</string>
+    <string name="action_pay">Pay</string>
 
     <string name="title_empty"></string>
 

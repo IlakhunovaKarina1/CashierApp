@@ -10,6 +10,7 @@ import com.grappim.cashier.core.extensions.bigDecimalOne
 import com.grappim.cashier.core.functional.Resource
 import com.grappim.cashier.core.functional.onFailure
 import com.grappim.cashier.core.functional.onSuccess
+import com.grappim.cashier.core.utils.PriceCalculationsUtils
 import com.grappim.cashier.core.utils.ProductUnit
 import com.grappim.cashier.di.modules.DecimalFormatSimple
 import com.grappim.cashier.domain.products.CreateProductUseCase
@@ -22,6 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateProductViewModel @Inject constructor(
     private val createProductUseCase: CreateProductUseCase,
+    private val priceCalculationsUtils: PriceCalculationsUtils,
     @DecimalFormatSimple private val dfSimple: DecimalFormat
 ) : ViewModel() {
 
@@ -41,6 +43,18 @@ class CreateProductViewModel @Inject constructor(
     val createProduct: LiveData<Resource<Unit>>
         get() = _createProduct
 
+    private val _sellingPrice = MutableLiveData<String>("0")
+    val sellingPrice: LiveData<String>
+        get() = _sellingPrice
+
+    private val _purchasePrice = MutableLiveData<String>("0")
+    val purchasePrice: LiveData<String>
+        get() = _purchasePrice
+
+    private val _markup = MutableLiveData<String>("0")
+    val markup: LiveData<String>
+        get() = _markup
+
     fun setUnit(unit: ProductUnit) {
         _unit.value = unit
     }
@@ -55,6 +69,37 @@ class CreateProductViewModel @Inject constructor(
     fun plusQuantity() {
         val quantityToChange = _quantity.value!!.asBigDecimal()
         _quantity.value = dfSimple.format(quantityToChange + bigDecimalOne())
+    }
+
+    @MainThread
+    fun onSalesPriceChanged(salesPrice: String) {
+        _sellingPrice.value = dfSimple.format(salesPrice.asBigDecimal())
+        priceCalculationsUtils.calculateOnChangingSellingPrice(
+            _sellingPrice.value!!.asBigDecimal(),
+            _purchasePrice.value!!.asBigDecimal()
+        ) { markup ->
+            _markup.value = dfSimple.format(markup)
+        }
+    }
+
+    @MainThread
+    fun onCostPriceChanged(costPrice: String) {
+        _purchasePrice.value = dfSimple.format(costPrice.asBigDecimal())
+        val newSellingPrice = priceCalculationsUtils.calculateOnChangingMarkup(
+            _purchasePrice.value!!.asBigDecimal(),
+            _markup.value!!.asBigDecimal()
+        )
+        _sellingPrice.value = dfSimple.format(newSellingPrice)
+    }
+
+    @MainThread
+    fun onExtraPriceChanged(extraPrice: String) {
+        _markup.value = dfSimple.format(extraPrice.asBigDecimal())
+        val newSellingPrice = priceCalculationsUtils.calculateOnChangingMarkup(
+            _purchasePrice.value!!.asBigDecimal(),
+            _markup.value!!.asBigDecimal()
+        )
+        _sellingPrice.value = dfSimple.format(newSellingPrice)
     }
 
     @MainThread

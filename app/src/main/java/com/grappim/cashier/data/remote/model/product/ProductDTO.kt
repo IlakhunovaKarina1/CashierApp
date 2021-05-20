@@ -20,5 +20,6 @@ data class ProductDTO(
     @SerializedName("created_on")
     val createdOn: String,
     @SerializedName("updated_on")
-    val updatedOn: String
+    val updatedOn: String,
+    val category:String
 )

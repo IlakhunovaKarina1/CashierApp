@@ -6,8 +6,11 @@ import com.grappim.cashier.core.functional.Either
 import com.grappim.cashier.core.functional.map
 import com.grappim.cashier.core.storage.GeneralStorage
 import com.grappim.cashier.data.remote.BaseRepository
+import com.grappim.cashier.data.remote.model.cashbox.CashBoxMapper.toDomain
+import com.grappim.cashier.data.remote.model.cashbox.GetCashBoxListRequestDTO
 import com.grappim.cashier.domain.cashier.Cashier
 import com.grappim.cashier.data.remote.model.outlet.OutletMapper.toDomain
+import com.grappim.cashier.domain.cashbox.CashBox
 import com.grappim.cashier.domain.outlet.Stock
 import com.grappim.cashier.domain.repository.SelectInfoRepository
 import kotlinx.coroutines.Dispatchers
@@ -22,8 +25,8 @@ class SelectInfoRepositoryImpl @Inject constructor(
     private val coroutineContextProvider: CoroutineContextProvider
 ) : BaseRepository(), SelectInfoRepository {
 
-    override suspend fun saveCashier(cashier: Cashier) = withContext(Dispatchers.IO) {
-        generalStorage.setCashierInfo(cashier)
+    override suspend fun saveCashBox(cashBox: CashBox) = withContext(Dispatchers.IO) {
+        generalStorage.setCashierInfo(cashBox)
     }
 
     override suspend fun saveStock(stock: Stock) = withContext(Dispatchers.IO) {
@@ -40,15 +43,18 @@ class SelectInfoRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun getCashiers(): Either<Throwable, List<Cashier>> =
-        Either.Right(getCashierList())
-
-    private fun getCashierList(): List<Cashier> {
-        val cashiers = mutableListOf<Cashier>()
-        (0..10).forEach {
-            cashiers.add(Cashier(id = "$it", name = "Cashier $it"))
+    override suspend fun getCashBoxes(): Either<Throwable, List<CashBox>> =
+        apiCall {
+            cashierApi.getCashBoxList(
+                getCashBoxListRequestDTO = GetCashBoxListRequestDTO(
+                    merchantId = generalStorage.getMerchantId(),
+                    stockId = generalStorage.getStockId()
+                )
+            )
+        }.map {
+            withContext(coroutineContextProvider.io) {
+                it.cashBoxes?.toDomain() ?: listOf()
+            }
         }
-        return cashiers.toList()
-    }
 
 }
