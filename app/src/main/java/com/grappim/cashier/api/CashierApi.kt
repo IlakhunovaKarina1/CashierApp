@@ -19,6 +19,7 @@ import com.grappim.cashier.data.remote.model.category.FilterCategoriesRequestDTO
 import com.grappim.cashier.data.remote.model.category.FilterCategoriesResponseDTO
 import com.grappim.cashier.data.remote.model.category.UpdateCategoryRequestDTO
 import com.grappim.cashier.data.remote.model.order.CreateOrderRequestDTO
+import com.grappim.cashier.data.remote.model.order.CreateOrderResponseDTO
 import com.grappim.cashier.data.remote.model.product.GetProductsResponseDTO
 import com.grappim.cashier.data.remote.model.product.UpdateProductRequestDTO
 import retrofit2.http.Body
@@ -118,7 +119,7 @@ interface CashierApi {
 
     @POST("order/create")
     @RequestWithAuthToken
-    fun createOrder(
+    suspend fun createOrder(
         @Body createOrderRequestDTO: CreateOrderRequestDTO
-    )
+    ): CreateOrderResponseDTO
 }

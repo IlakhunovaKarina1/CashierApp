@@ -16,7 +16,8 @@ class UpdateWaybillProductUseCase @Inject constructor(
         purchasePrice: BigDecimal,
         sellingPrice: BigDecimal,
         amount: BigDecimal,
-        productId: Int
+        productId: Long,
+        id: Long
     ): Either<Throwable, Unit> {
         val params = UpdateWaybillProductParams(
             waybillId = waybillId,
@@ -25,7 +26,8 @@ class UpdateWaybillProductUseCase @Inject constructor(
             purchasePrice = purchasePrice,
             sellingPrice = sellingPrice,
             amount = amount,
-            productId = productId
+            productId = productId,
+            id = id
         )
         return waybillRepository.updateWaybillProduct(params)
     }
@@ -37,6 +39,7 @@ class UpdateWaybillProductUseCase @Inject constructor(
         val purchasePrice: BigDecimal,
         val sellingPrice: BigDecimal,
         val amount: BigDecimal,
-        val productId: Int
+        val productId: Long,
+        val id: Long
     )
 }

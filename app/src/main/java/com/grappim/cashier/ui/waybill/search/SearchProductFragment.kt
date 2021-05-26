@@ -66,6 +66,7 @@ class SearchProductFragment : Fragment(R.layout.fragment_search_product),
             productsAdapter.updateProducts(it)
         }
         viewModel.product.observe(viewLifecycleOwner) {
+            loader.showOrHide(it is Resource.Loading)
             when (it) {
                 is Resource.Success -> {
                     findNavController().navigate(

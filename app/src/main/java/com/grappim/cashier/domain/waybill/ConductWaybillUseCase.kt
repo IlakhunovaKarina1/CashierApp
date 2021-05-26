@@ -9,7 +9,7 @@ class ConductWaybillUseCase @Inject constructor(
 ) {
 
     suspend operator fun invoke(
-        waybillId: Int
+        waybill: Waybill
     ): Either<Throwable, Waybill> =
-        waybillRepository.conductWaybill(waybillId)
+        waybillRepository.conductWaybill(waybill)
 }

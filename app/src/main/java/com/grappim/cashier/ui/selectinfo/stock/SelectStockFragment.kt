@@ -3,6 +3,7 @@ package com.grappim.cashier.ui.selectinfo.stock
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -13,6 +14,7 @@ import com.grappim.cashier.core.extensions.setSafeOnClickListener
 import com.grappim.cashier.core.extensions.showToast
 import com.grappim.cashier.core.functional.Resource
 import com.grappim.cashier.databinding.FragmentSelectStockCashierBinding
+import com.grappim.cashier.ui.root.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,13 +25,14 @@ class SelectStockFragment : Fragment(R.layout.fragment_select_stock_cashier),
         SelectStockAdapter(this)
     }
     private val binding: FragmentSelectStockCashierBinding by viewBinding(
-            FragmentSelectStockCashierBinding ::bind
+        FragmentSelectStockCashierBinding::bind
     )
     private val selectInfoProgressAdapter: SelectInfoProgressAdapter by lazy {
         SelectInfoProgressAdapter()
     }
 
     private val viewModel: SelectStockViewModel by viewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -42,6 +45,7 @@ class SelectStockFragment : Fragment(R.layout.fragment_select_stock_cashier),
         with(binding) {
             buttonNext.setSafeOnClickListener {
                 viewModel.saveStock(stockAdapter.getSelectedItem()!!)
+                mainViewModel.startSync()
                 findNavController().navigate(R.id.action_selectOutletFragment_to_selectCashierFragment)
             }
             swipeRefresh.setOnRefreshListener {

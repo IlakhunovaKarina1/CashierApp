@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.grappim.cashier.core.functional.Resource
 import com.grappim.cashier.core.functional.onFailure
 import com.grappim.cashier.core.functional.onSuccess
+import com.grappim.cashier.core.platform.SingleLiveEvent
 import com.grappim.cashier.data.db.entity.ProductEntity
 import com.grappim.cashier.domain.products.GetProductByBarcodeUseCase
 import com.grappim.cashier.domain.waybill.GetWaybillProductByBarcodeUseCase
@@ -21,11 +22,11 @@ class WaybillScannerViewModel @Inject constructor(
     private val getProductByBarcodeUseCase: GetProductByBarcodeUseCase
 ) : ViewModel() {
 
-    private val _waybillProduct = MutableLiveData<Resource<WaybillProduct>>()
+    private val _waybillProduct = SingleLiveEvent<Resource<WaybillProduct>>()
     val waybillProduct: LiveData<Resource<WaybillProduct>>
         get() = _waybillProduct
 
-    private val _product = MutableLiveData<Resource<ProductEntity>>()
+    private val _product = SingleLiveEvent<Resource<ProductEntity>>()
     val product: LiveData<Resource<ProductEntity>>
         get() = _product
 

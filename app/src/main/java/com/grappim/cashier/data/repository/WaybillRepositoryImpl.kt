@@ -14,20 +14,13 @@ import com.grappim.cashier.data.db.entity.ProductEntity
 import com.grappim.cashier.data.paging.GetWaybillPagingSource
 import com.grappim.cashier.data.paging.GetWaybillProductsPagingSource
 import com.grappim.cashier.data.remote.BaseRepository
-import com.grappim.cashier.data.remote.model.waybill.CreateWaybillProductRequestDTO
-import com.grappim.cashier.data.remote.model.waybill.CreateWaybillRequestDTO
-import com.grappim.cashier.data.remote.model.waybill.GetWaybillByBarcodeRequestDTO
-import com.grappim.cashier.data.remote.model.waybill.PartialWaybill
-import com.grappim.cashier.data.remote.model.waybill.PartialWaybillProductDTO
+import com.grappim.cashier.data.remote.model.waybill.*
+import com.grappim.cashier.data.remote.model.waybill.WaybillMapper.toDTO
 import com.grappim.cashier.data.remote.model.waybill.WaybillMapper.toDomain
 import com.grappim.cashier.di.modules.QualifierWaybillApi
 import com.grappim.cashier.domain.products.GetProductByBarcodeUseCase
 import com.grappim.cashier.domain.repository.WaybillRepository
-import com.grappim.cashier.domain.waybill.CreateWaybillProductUseCase
-import com.grappim.cashier.domain.waybill.GetWaybillProductByBarcodeUseCase
-import com.grappim.cashier.domain.waybill.UpdateWaybillProductUseCase
-import com.grappim.cashier.domain.waybill.Waybill
-import com.grappim.cashier.domain.waybill.WaybillProduct
+import com.grappim.cashier.domain.waybill.*
 import com.grappim.cashier.ui.waybill.WaybillStatus
 import com.grappim.cashier.ui.waybill.WaybillType
 import kotlinx.coroutines.flow.Flow
@@ -63,7 +56,8 @@ class WaybillRepositoryImpl @Inject constructor(
                         name = params.name,
                         purchasePrice = params.purchasePrice,
                         sellingPrice = params.sellingPrice,
-                        waybillId = params.waybillId
+                        waybillId = params.waybillId,
+                        productId = params.productId
                     )
                 )
             )
@@ -112,29 +106,48 @@ class WaybillRepositoryImpl @Inject constructor(
                     purchasePrice = params.purchasePrice,
                     sellingPrice = params.sellingPrice,
                     waybillId = params.waybillId,
-                    id = params.productId
+                    productId = params.productId,
+                    id = params.id
                 )
             )
         )
     }
 
-    override suspend fun conductWaybill(waybillId: Int): Either<Throwable, Waybill> =
+    override suspend fun conductWaybill(
+        waybill: Waybill
+    ): Either<Throwable, Waybill> =
         apiCall {
-            waybillApi.conductWaybill(waybillId)
+            updateWaybill(waybill.toDTO())
+
+            waybillApi.conductWaybill(waybill.id)
         }.map {
             withContext(coroutineContextProvider.io) {
                 it.waybill.toDomain()
             }
         }
 
-    override suspend fun rollbackWaybill(waybillId: Int): Either<Throwable, Waybill> =
+    override suspend fun rollbackWaybill(
+        waybill: Waybill
+    ): Either<Throwable, Waybill> =
         apiCall {
-            waybillApi.rollbackWaybill(waybillId)
+            updateWaybill(waybill.toDTO())
+
+            waybillApi.rollbackWaybill(waybill.id)
         }.map {
             withContext(coroutineContextProvider.io) {
                 it.waybill.toDomain()
             }
         }
+
+    override suspend fun updateWaybill(
+        waybill: WaybillDTO
+    ): Either<Throwable, Unit> = apiCall {
+        waybillApi.updateWaybill(
+            UpdateWaybillRequestDTO(
+                waybill
+            )
+        )
+    }
 
     override fun getAcceptanceListPaging(): Flow<PagingData<Waybill>> =
         Pager(

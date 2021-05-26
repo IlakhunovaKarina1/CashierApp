@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.grappim.cashier.domain.waybill.Waybill
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,8 +24,11 @@ class WaybillSharedViewModel @Inject constructor(
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        Timber.d("cashier asd ${this::class.java.simpleName} onCleared")
+    fun setComment(comment: String) {
+        _waybill.value = _waybill.value!!.copy(comment = comment)
+    }
+
+    fun setReservedTime(time: String) {
+        _waybill.value = _waybill.value!!.copy(reservedTime = time)
     }
 }

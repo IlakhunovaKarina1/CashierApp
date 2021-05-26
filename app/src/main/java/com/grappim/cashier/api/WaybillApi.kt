@@ -12,6 +12,8 @@ import com.grappim.cashier.data.remote.model.waybill.GetWaybillByIdResponseDTO
 import com.grappim.cashier.data.remote.model.waybill.GetWaybillProductResponseDTO
 import com.grappim.cashier.data.remote.model.waybill.WaybillProductsRequestDTO
 import com.grappim.cashier.data.remote.model.waybill.WaybillProductsResponseDTO
+import com.grappim.cashier.domain.waybill.UpdateWaybillRequestDTO
+import com.grappim.cashier.domain.waybill.Waybill
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -44,6 +46,12 @@ interface WaybillApi {
     suspend fun deleteWaybill(
         @Path("waybillId") waybillId: String
     )
+
+    @PUT("waybill/update")
+    @RequestWithAuthToken
+    suspend fun updateWaybill(
+        @Body waybill: UpdateWaybillRequestDTO
+    ): GetWaybillByIdResponseDTO
 
     @POST("waybill/filter")
     @RequestWithAuthToken

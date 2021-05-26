@@ -51,7 +51,7 @@ class SelectStockViewModel @Inject constructor(
     fun saveStock(stock: Stock) {
         viewModelScope.launch {
             saveStockInfoUseCase.invoke(stock)
-            workerHelper.startMainWorkers()
+//            workerHelper.startMainWorkers()
         }
     }
 

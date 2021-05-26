@@ -8,10 +8,10 @@ data class WaybillProductDTO(
     val barcode: String,
     @SerializedName("created_on")
     val createdOn: String,
-    val id: Int,
+    val id: Long,
     val name: String,
     @SerializedName("product_id")
-    val productId: Int,
+    val productId: Long,
     @SerializedName("purchase_price")
     val purchasePrice: BigDecimal,
     @SerializedName("selling_price")
@@ -23,7 +23,7 @@ data class WaybillProductDTO(
 )
 
 data class PartialWaybillProductDTO(
-    val id: Int? = null,
+    val id: Long? = null,
     val amount: BigDecimal,
     val barcode: String,
     val name: String,
@@ -32,5 +32,7 @@ data class PartialWaybillProductDTO(
     @SerializedName("selling_price")
     val sellingPrice: BigDecimal,
     @SerializedName("waybill_id")
-    val waybillId: Int
+    val waybillId: Int,
+    @SerializedName("product_id")
+    val productId: Long
 )

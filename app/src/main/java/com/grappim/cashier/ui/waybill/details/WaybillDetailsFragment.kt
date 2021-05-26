@@ -5,6 +5,7 @@ import android.app.TimePickerDialog
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -103,7 +104,10 @@ class WaybillDetailsFragment : Fragment(R.layout.fragment_waybill_details) {
             recyclerProducts.adapter = ScaleInAnimationAdapter(waybillProductsAdapter)
 
             buttonAction.setSafeOnClickListener {
-                viewModel.updateWaybill()
+                viewModel.updateWaybill(waybill)
+            }
+            editComment.doAfterTextChanged {
+                sharedViewModel.setComment(it.toString())
             }
             when (waybill.status) {
                 WaybillStatus.ACTIVE -> {
@@ -133,7 +137,7 @@ class WaybillDetailsFragment : Fragment(R.layout.fragment_waybill_details) {
                 val fullDateTime = "$fullDate $fullTime"
                 val parsedDt = fullDateTime.getOffsetDateTimeWithFormatter(false, dtf)
                 val parsedDtToUtc = parsedDt.toUtc()
-                viewModel.setReservedDate(dtfFull.format(parsedDtToUtc))
+                sharedViewModel.setReservedTime(dtfFull.format(parsedDtToUtc))
             }, lHour, lMinute, true
         )
 
@@ -160,15 +164,17 @@ class WaybillDetailsFragment : Fragment(R.layout.fragment_waybill_details) {
     }
 
     private fun observeViewModel() {
-        viewModel.setWaybill(waybill)
-        viewModel.waybill.observe(viewLifecycleOwner) {
+        sharedViewModel.waybill.observe(viewLifecycleOwner) {
             it.reservedTime?.let { reservedTime ->
                 viewBinding.editDate.setText(dtf.format(reservedTime.getOffsetDateTimeFromString()))
             }
         }
         viewModel.setWaybillId(waybill.id)
         waybill.reservedTime?.let {
-            viewModel.setReservedDate(it)
+            sharedViewModel.setReservedTime(it)
+        }
+        waybill.comment.let {
+            viewBinding.editComment.setText(it)
         }
 
         lifecycleScope.launchWhenCreated {

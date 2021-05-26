@@ -33,10 +33,6 @@ class WaybillDetailsViewModel @Inject constructor(
 
     private val _waybillId = MutableLiveData<Int>()
 
-    private val _waybill = SingleLiveEvent<Waybill>()
-    val waybill: LiveData<Waybill>
-        get() = _waybill
-
     private val _waybillUpdate = MutableLiveData<Resource<Waybill>>()
     val waybillUpdate: LiveData<Resource<Waybill>>
         get() = _waybillUpdate
@@ -52,20 +48,12 @@ class WaybillDetailsViewModel @Inject constructor(
         _waybillId.value = waybillId
     }
 
-    fun setWaybill(waybill: Waybill) {
-        _waybill.value = waybill
-    }
-
-    fun setReservedDate(date: String) {
-        _waybill.value = _waybill.value?.copy(reservedTime = date)
-    }
-
-    fun updateWaybill() {
+    fun updateWaybill(waybill: Waybill) {
         _waybillUpdate.value = Resource.Loading
-        when (_waybill.value!!.status) {
+        when (waybill.status) {
             WaybillStatus.DRAFT -> {
                 viewModelScope.launch {
-                    conductWaybillUseCase.invoke(_waybillId.value!!)
+                    conductWaybillUseCase.invoke(waybill)
                         .onSuccess {
                             _waybillUpdate.value = Resource.Success(it)
                         }.onFailure {
@@ -75,7 +63,7 @@ class WaybillDetailsViewModel @Inject constructor(
             }
             WaybillStatus.ACTIVE -> {
                 viewModelScope.launch {
-                    rollbackWaybillUseCase.invoke(_waybillId.value!!)
+                    rollbackWaybillUseCase.invoke(waybill)
                         .onSuccess {
                             _waybillUpdate.value = Resource.Success(it)
                         }.onFailure {

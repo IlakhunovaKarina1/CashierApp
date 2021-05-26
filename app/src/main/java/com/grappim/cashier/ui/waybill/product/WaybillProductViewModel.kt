@@ -31,7 +31,8 @@ class WaybillProductViewModel @Inject constructor(
         purchasePrice: BigDecimal,
         sellingPrice: BigDecimal,
         amount: BigDecimal,
-        productId: Int
+        productId: Long,
+        id: Long
     ) {
         viewModelScope.launch {
             _productCreated.value = Resource.Loading
@@ -42,7 +43,8 @@ class WaybillProductViewModel @Inject constructor(
                 purchasePrice = purchasePrice,
                 sellingPrice = sellingPrice,
                 amount = amount,
-                productId = productId
+                productId = productId,
+                id = id
             ).onSuccess {
                 _productCreated.value = Resource.Success(it)
             }
@@ -58,7 +60,8 @@ class WaybillProductViewModel @Inject constructor(
         name: String,
         purchasePrice: BigDecimal,
         sellingPrice: BigDecimal,
-        amount: BigDecimal
+        amount: BigDecimal,
+        productId: Long
     ) {
         viewModelScope.launch {
             _productCreated.value = Resource.Loading
@@ -68,7 +71,8 @@ class WaybillProductViewModel @Inject constructor(
                 name = name,
                 purchasePrice = purchasePrice,
                 sellingPrice = sellingPrice,
-                amount = amount
+                amount = amount,
+                productId = productId
             ).onFailure {
                 _productCreated.value = Resource.Error(it)
             }.onSuccess {

@@ -3,6 +3,7 @@ package com.grappim.cashier.domain.repository
 import androidx.paging.PagingData
 import com.grappim.cashier.core.functional.Either
 import com.grappim.cashier.data.db.entity.ProductEntity
+import com.grappim.cashier.data.remote.model.waybill.WaybillDTO
 import com.grappim.cashier.domain.products.GetProductByBarcodeUseCase
 import com.grappim.cashier.domain.waybill.CreateWaybillProductUseCase
 import com.grappim.cashier.domain.waybill.GetWaybillProductByBarcodeUseCase
@@ -38,11 +39,15 @@ interface WaybillRepository {
     ): Either<Throwable, Unit>
 
     suspend fun conductWaybill(
-        waybillId: Int
+        waybill: Waybill
     ): Either<Throwable, Waybill>
 
     suspend fun rollbackWaybill(
-        waybillId: Int
+        waybill: Waybill
     ): Either<Throwable, Waybill>
+
+    suspend fun updateWaybill(
+        waybill: WaybillDTO
+    ): Either<Throwable, Unit>
 
 }

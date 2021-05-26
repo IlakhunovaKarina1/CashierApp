@@ -9,7 +9,7 @@ class RollbackWaybillUseCase @Inject constructor(
 ) {
 
     suspend operator fun invoke(
-        waybillId: Int
+        waybill: Waybill
     ): Either<Throwable, Waybill> =
-        waybillRepository.rollbackWaybill(waybillId)
+        waybillRepository.rollbackWaybill(waybill)
 }

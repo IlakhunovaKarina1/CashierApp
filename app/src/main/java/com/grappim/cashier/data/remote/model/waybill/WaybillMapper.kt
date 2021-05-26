@@ -22,6 +22,21 @@ object WaybillMapper {
             comment = comment
         )
 
+    fun Waybill.toDTO(): WaybillDTO =
+        WaybillDTO(
+            createdOn = createdOn,
+            id = id,
+            merchantId = merchantId,
+            number = number,
+            status = status.value,
+            stockId = stockId,
+            totalCost = totalCost,
+            type = type.value,
+            updatedOn = updatedOn,
+            reservedTime = reservedTime,
+            comment = comment
+        )
+
     fun WaybillProductDTO.toDomain(): WaybillProduct =
         WaybillProduct(
             amount = amount,

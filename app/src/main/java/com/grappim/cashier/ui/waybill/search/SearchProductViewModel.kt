@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.grappim.cashier.core.functional.Resource
 import com.grappim.cashier.core.functional.onFailure
 import com.grappim.cashier.core.functional.onSuccess
+import com.grappim.cashier.core.platform.SingleLiveEvent
 import com.grappim.cashier.data.db.entity.ProductEntity
 import com.grappim.cashier.domain.products.GetProductByBarcodeUseCase
 import com.grappim.cashier.domain.products.GetProductsUseCase
@@ -29,15 +30,15 @@ class SearchProductViewModel @Inject constructor(
         getProducts()
     }
 
-    private val _waybillProduct = MutableLiveData<Resource<WaybillProduct>>()
+    private val _waybillProduct = SingleLiveEvent<Resource<WaybillProduct>>()
     val waybillProduct: LiveData<Resource<WaybillProduct>>
         get() = _waybillProduct
 
-    private val _products: MutableLiveData<List<ProductEntity>> = MutableLiveData()
+    private val _products: SingleLiveEvent<List<ProductEntity>> = SingleLiveEvent()
     val products: LiveData<List<ProductEntity>>
         get() = _products
 
-    private val _product = MutableLiveData<Resource<ProductEntity>>()
+    private val _product = SingleLiveEvent<Resource<ProductEntity>>()
     val product: LiveData<Resource<ProductEntity>>
         get() = _product
 

@@ -68,7 +68,8 @@ class WaybillProductFragment : Fragment(R.layout.fragment_waybill_product) {
                         purchasePrice = editPurchasePrice.text.toString().asBigDecimal(),
                         sellingPrice = editSellingPrice.text.toString().asBigDecimal(),
                         amount = editAmount.text.toString().asBigDecimal(),
-                        productId = waybillProduct!!.id
+                        productId = waybillProduct!!.productId,
+                        id = waybillProduct!!.id
                     )
                 } else {
                     viewModel.createWaybillProduct(
@@ -77,7 +78,8 @@ class WaybillProductFragment : Fragment(R.layout.fragment_waybill_product) {
                         name = editName.text.toString(),
                         purchasePrice = editPurchasePrice.text.toString().asBigDecimal(),
                         sellingPrice = editSellingPrice.text.toString().asBigDecimal(),
-                        amount = editAmount.text.toString().asBigDecimal()
+                        amount = editAmount.text.toString().asBigDecimal(),
+                        productId = product?.id!!
                     )
                 }
             }
@@ -87,12 +89,14 @@ class WaybillProductFragment : Fragment(R.layout.fragment_waybill_product) {
                 editName.setText(it.name)
                 editPurchasePrice.setText(dfSimple.format(it.purchasePrice))
                 editSellingPrice.setText(dfSimple.format(it.sellingPrice))
+                editAmount.setText("1")
             }
             waybillProduct?.let {
                 editBarcode.setText(it.barcode)
                 editName.setText(it.name)
                 editPurchasePrice.setText(dfSimple.format(it.purchasePrice))
                 editSellingPrice.setText(dfSimple.format(it.sellingPrice))
+                editAmount.setText(dfSimple.format(it.amount))
                 buttonAddProduct.text = getString(
                     R.string.action_update_product
                 )
@@ -102,6 +106,7 @@ class WaybillProductFragment : Fragment(R.layout.fragment_waybill_product) {
                 editName.setText(getString(R.string.title_new_product))
                 editPurchasePrice.setText(dfSimple.format(bigDecimalZero()))
                 editSellingPrice.setText(dfSimple.format(bigDecimalZero()))
+                editAmount.setText("1")
                 buttonAddProduct.text = getString(R.string.action_add_product)
             }
         }
