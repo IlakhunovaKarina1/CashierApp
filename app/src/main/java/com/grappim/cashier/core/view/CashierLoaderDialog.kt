@@ -9,7 +9,7 @@ import com.mikhaellopez.circularprogressbar.CircularProgressBar
 
 class CashierLoaderDialog(
     context: Context,
-    cancelable: Boolean = false
+    cancelable: Boolean = true
 ) {
     private var dialog: Dialog = Dialog(context, R.style.Dialog_Transparent)
     private var progressBar: CircularProgressBar

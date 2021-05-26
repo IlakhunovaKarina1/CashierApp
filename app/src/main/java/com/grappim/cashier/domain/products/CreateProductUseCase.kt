@@ -5,6 +5,7 @@ import com.grappim.cashier.core.functional.Either
 import com.grappim.cashier.core.storage.GeneralStorage
 import com.grappim.cashier.core.utils.DateTimeUtils
 import com.grappim.cashier.core.utils.ProductUnit
+import com.grappim.cashier.data.db.entity.CategoryEntity
 import com.grappim.cashier.data.db.entity.ProductEntity
 import com.grappim.cashier.data.db.entity.ProductEntityMapper.toDTO
 import com.grappim.cashier.data.remote.model.product.CreateProductRequestDTO
@@ -24,6 +25,7 @@ class CreateProductUseCase @Inject constructor(
         purchasePrice: BigDecimal,
         amount: BigDecimal,
         unit: ProductUnit,
+        categoryEntity: CategoryEntity?
     ): Either<Throwable, Unit> {
         val params = CreateProductParams(
             name = name,
@@ -35,7 +37,9 @@ class CreateProductUseCase @Inject constructor(
             amount = amount,
             barcode = barcode,
             createdOn = DateTimeUtils.getNowFullDate(),
-            updatedOn = DateTimeUtils.getNowFullDate()
+            updatedOn = DateTimeUtils.getNowFullDate(),
+            categoryId = categoryEntity?.id ?: 0,
+            categoryName = categoryEntity?.name ?: ""
         )
         return generalRepository.createProduct(params)
     }
@@ -57,5 +61,9 @@ class CreateProductUseCase @Inject constructor(
         val createdOn: String,
         @SerializedName("updated_on")
         val updatedOn: String,
+        @SerializedName("category")
+        val categoryName:String,
+        @SerializedName("category_id")
+        val categoryId:Int
     )
 }

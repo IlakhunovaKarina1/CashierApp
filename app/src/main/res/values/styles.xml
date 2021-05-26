@@ -20,6 +20,13 @@
         <item name="boxBackgroundColor">@color/cashier_white</item>
     </style>
 
+    <style name="TextInputLayout.DropDownMenu" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
+        <item name="android:textSize">15sp</item>
+        <item name="boxBackgroundColor">@color/cashier_white</item>
+    </style>
+
+
+
     <style name="ButtonBack" parent="Widget.MaterialComponents.Button.TextButton.Icon">
         <item name="iconTint">@color/cashier_blue</item>
         <item name="icon">@drawable/ic_arrow_back_ios_24</item>
@@ -138,6 +145,8 @@
         <item name="cornerSizeTopRight">15dp</item>
     </style>
 
+
+
     <style name="Dialog" parent="Theme.MaterialComponents.Light.Dialog" />
 
     <style name="Dialog.Transparent">
@@ -150,6 +159,26 @@
     <style name="Chip.Unit" parent="Widget.MaterialComponents.Chip.Choice">
         <item name="chipBackgroundColor">@color/chip_unit_background</item>
         <item name="android:textColor">@color/chip_unit_text</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+
+
+    <style name="CashierText">
+        <item name="android:textColor">@color/cashier_black</item>
+    </style>
+    <style name="CashierText.Label">
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="CashierText.Label.Small">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="CashierText.Heading1">
+        <item name="android:textSize">22sp</item>
+    </style>
+    <style name="CashierText.Input">
         <item name="android:textSize">14sp</item>
     </style>
 </resources>

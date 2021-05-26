@@ -12,6 +12,7 @@ import com.grappim.cashier.data.remote.model.category.CategoryMapper.toDomain
 import com.grappim.cashier.data.remote.model.category.FilterCategoriesRequestDTO
 import com.grappim.cashier.data.remote.model.product.GetProductsRequestDTO
 import com.grappim.cashier.data.remote.model.product.ProductsMapper.toDomain
+import com.grappim.cashier.di.modules.QualifierCashierApi
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.withContext
@@ -21,7 +22,7 @@ import timber.log.Timber
 class CategoriesWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParameters: WorkerParameters,
-    private val cashierApi: CashierApi,
+    @QualifierCashierApi private val cashierApi: CashierApi,
     private val generalStorage: GeneralStorage,
     private val categoryDao: CategoryDao,
     private val coroutineContextProvider: CoroutineContextProvider

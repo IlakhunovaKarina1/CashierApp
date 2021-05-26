@@ -26,6 +26,7 @@ object ProductsMapper {
             merchantId = this.merchantId,
             createdOn = this.createdOn,
             updatedOn = this.updatedOn,
-            categoryId = this.category
+            categoryId = this.categoryId,
+            categoryName = this.category
         )
 }

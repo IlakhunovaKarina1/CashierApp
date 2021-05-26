@@ -28,8 +28,10 @@ data class ProductEntity(
     val createdOn: String,
     val updatedOn: String,
 
+    @ColumnInfo(defaultValue = "0")
+    val categoryId: Int,
     @ColumnInfo(defaultValue = "")
-    val categoryId: String = "",
+    val categoryName: String,
 
     var basketCount: BigDecimal = bigDecimalZero()
 ) : Parcelable

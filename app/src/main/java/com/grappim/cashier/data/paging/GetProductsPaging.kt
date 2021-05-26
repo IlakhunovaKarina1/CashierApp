@@ -7,6 +7,7 @@ import com.grappim.cashier.core.executor.CoroutineContextProvider
 import com.grappim.cashier.core.storage.GeneralStorage
 import com.grappim.cashier.data.db.entity.ProductEntity
 import com.grappim.cashier.data.remote.model.product.GetProductsRequestDTO
+import com.grappim.cashier.di.modules.QualifierCashierApi
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -17,7 +18,7 @@ import javax.inject.Inject
 class GetProductsPaging @AssistedInject constructor(
     @Assisted private val productFilter: ProductFilter,
     private val coroutineContextProvider: CoroutineContextProvider,
-    private val cashierApi: CashierApi,
+    @QualifierCashierApi private val cashierApi: CashierApi,
     private val generalStorage: GeneralStorage,
 ) : PagingSource<Long, ProductEntity>() {
 

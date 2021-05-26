@@ -10,6 +10,7 @@ import com.grappim.cashier.data.remote.model.cashbox.CashBoxMapper.toDomain
 import com.grappim.cashier.data.remote.model.cashbox.GetCashBoxListRequestDTO
 import com.grappim.cashier.domain.cashier.Cashier
 import com.grappim.cashier.data.remote.model.outlet.OutletMapper.toDomain
+import com.grappim.cashier.di.modules.QualifierCashierApi
 import com.grappim.cashier.domain.cashbox.CashBox
 import com.grappim.cashier.domain.outlet.Stock
 import com.grappim.cashier.domain.repository.SelectInfoRepository
@@ -20,23 +21,22 @@ import javax.inject.Singleton
 
 @Singleton
 class SelectInfoRepositoryImpl @Inject constructor(
-    private val cashierApi: CashierApi,
+    @QualifierCashierApi private val cashierApi: CashierApi,
     private val generalStorage: GeneralStorage,
     private val coroutineContextProvider: CoroutineContextProvider
 ) : BaseRepository(), SelectInfoRepository {
 
-    override suspend fun saveCashBox(cashBox: CashBox) = withContext(Dispatchers.IO) {
+    override suspend fun saveCashBox(cashBox: CashBox) = withContext(coroutineContextProvider.io) {
         generalStorage.setCashierInfo(cashBox)
     }
 
-    override suspend fun saveStock(stock: Stock) = withContext(Dispatchers.IO) {
+    override suspend fun saveStock(stock: Stock) = withContext(coroutineContextProvider.io) {
         generalStorage.setStockInfo(stock)
     }
 
     override suspend fun getStocks(): Either<Throwable, List<Stock>> =
         apiCall {
-            val merchantId = generalStorage.getMerchantId()
-            cashierApi.getStocks(merchantId)
+            cashierApi.getStocks(generalStorage.getMerchantId())
         }.map {
             withContext(coroutineContextProvider.io) {
                 it.stocks.toDomain()

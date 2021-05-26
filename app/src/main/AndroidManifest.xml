@@ -16,7 +16,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Cashier">
+        android:theme="@style/Theme.Cashier"
+        tools:ignore="LockedOrientationActivity">
 
         <provider
             android:name="androidx.work.impl.WorkManagerInitializer"
@@ -25,13 +26,14 @@
 
         <provider
             android:name="androidx.startup.InitializationProvider"
-            android:authorities="com.grappim.cashier.androidx-startup"
+            android:authorities="${applicationId}.androidx-startup"
             android:exported="false"
             tools:node="merge">
 
             <meta-data
                 android:name="com.grappim.cashier.core.utils.TimberInitializer"
                 android:value="androidx.startup" />
+
         </provider>
 
         <activity

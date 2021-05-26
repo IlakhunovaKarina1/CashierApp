@@ -11,7 +11,7 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/textVendor"
+            android:id="@+id/textNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -31,19 +31,18 @@
             android:textColor="@color/cashier_gray"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/textVendor"
-            app:layout_constraintTop_toBottomOf="@+id/textVendor"
+            app:layout_constraintStart_toStartOf="@+id/textNumber"
+            app:layout_constraintTop_toBottomOf="@+id/textNumber"
             tools:text="24.03.2021 20:20" />
 
         <TextView
-            android:id="@+id/textPaidSum"
+            android:id="@+id/textTotalCost"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="9dp"
-            android:layout_marginEnd="4dp"
             android:textColor="@color/cashier_blue"
             android:textSize="16sp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline4"
+            app:layout_constraintEnd_toStartOf="@+id/guideline5"
             app:layout_constraintStart_toEndOf="@+id/textDateTime"
             app:layout_constraintTop_toTopOf="@+id/textDateTime"
             tools:text="265 T" />
@@ -64,19 +63,8 @@
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline5"
-            app:layout_constraintTop_toTopOf="@+id/textVendor"
+            app:layout_constraintTop_toTopOf="@+id/textNumber"
             tools:text="TextView" />
-
-        <TextView
-            android:id="@+id/textToPay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:textColor="@color/cashier_red"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="@+id/guideline4"
-            app:layout_constraintTop_toTopOf="@+id/textDateTime"
-            tools:text="- 100 T" />
 
         <View
             android:layout_width="0dp"
@@ -84,14 +72,8 @@
             android:background="@color/cashier_light_gray"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/textStatus"
-            app:layout_constraintStart_toStartOf="@+id/textVendor" />
+            app:layout_constraintStart_toStartOf="@+id/textNumber" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.5" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline5"

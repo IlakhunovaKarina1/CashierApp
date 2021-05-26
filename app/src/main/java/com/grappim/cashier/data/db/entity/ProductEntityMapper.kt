@@ -1,7 +1,6 @@
 package com.grappim.cashier.data.db.entity
 
 import com.grappim.cashier.core.utils.ProductUnit
-import com.grappim.cashier.data.db.entity.ProductEntityMapper.toDTO
 import com.grappim.cashier.data.remote.model.product.ProductDTO
 
 object ProductEntityMapper {
@@ -13,6 +12,7 @@ object ProductEntityMapper {
             basketCount = this.basketCount,
             sellingPrice = this.sellingPrice,
             amount = this.amount,
+            purchasePrice = this.purchasePrice
         )
 
 
@@ -29,7 +29,8 @@ object ProductEntityMapper {
             merchantId = this.merchantId,
             createdOn = this.createdOn,
             updatedOn = this.updatedOn,
-            category = this.categoryId ?: ""
+            categoryId = this.categoryId,
+            category = this.categoryName
         )
 
     fun ProductDTO.toEntity(): ProductEntity =
@@ -44,7 +45,9 @@ object ProductEntityMapper {
             sellingPrice = this.sellingPrice,
             merchantId = this.merchantId,
             createdOn = this.createdOn,
-            updatedOn = this.updatedOn
+            updatedOn = this.updatedOn,
+            categoryName = this.category,
+            categoryId = this.categoryId
         )
 
 }

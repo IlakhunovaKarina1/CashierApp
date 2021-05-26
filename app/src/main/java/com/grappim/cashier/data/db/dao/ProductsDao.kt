@@ -23,7 +23,10 @@ interface ProductsDao : BaseDao<ProductEntity> {
     suspend fun searchProducts(query: String): List<ProductEntity>
 
     @Query("SELECT * FROM $productEntityTableName WHERE categoryId=:categoryId")
-    suspend fun searchProductsByCategoryId(categoryId: Long): List<ProductEntity>
+    suspend fun searchProductsByCategoryId(categoryId: Int): List<ProductEntity>
+
+    @Query("SELECT * FROM $productEntityTableName WHERE barcode=:barcode")
+    suspend fun getProductByBarcode(barcode: String): ProductEntity?
 
     @RawQuery(observedEntities = [ProductEntity::class])
     fun getProductsFlow(query: SimpleSQLiteQuery): Flow<List<ProductEntity>>

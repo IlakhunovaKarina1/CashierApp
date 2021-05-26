@@ -47,7 +47,7 @@ class ProductsFragment : Fragment(R.layout.fragment_products),
             buttonMenu.setSafeOnClickListener {
                 findNavController().popBackStack()
             }
-            buttonCreateProduct.setSafeOnClickListener {
+            buttonEditCreateProduct.setSafeOnClickListener {
                 findNavController().navigate(ProductsFragmentDirections.actionProductsToCreateProduct())
             }
             recyclerProducts.adapter = ScaleInAnimationAdapter(productsAdapter)
@@ -92,6 +92,9 @@ class ProductsFragment : Fragment(R.layout.fragment_products),
     }
 
     override fun onProductClick(productEntity: ProductEntity) {
+        findNavController().navigate(
+            ProductsFragmentDirections.actionProductsToEditProduct(product = productEntity)
+        )
     }
 
 }

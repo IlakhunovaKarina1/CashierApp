@@ -16,6 +16,7 @@ import com.grappim.cashier.R
 import com.grappim.cashier.core.delegate.lazyArg
 import com.grappim.cashier.core.extensions.showToast
 import com.grappim.cashier.databinding.FragmentScannerBinding
+import com.grappim.cashier.ui.products.create.CreateEditFlow
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
 import dagger.hilt.android.AndroidEntryPoint
@@ -119,7 +120,9 @@ class ScannerFragment : Fragment(R.layout.fragment_scanner) {
 
     private fun handleSingleScan(result: String) {
         Timber.tag("cashier").d("scanned barcode $result")
-        findNavController().navigate(ScannerFragmentDirections.actionScannerToCreateProduct(result))
+        findNavController().navigate(
+            ScannerFragmentDirections.actionScannerToCreateProduct(result)
+        )
     }
 }
 

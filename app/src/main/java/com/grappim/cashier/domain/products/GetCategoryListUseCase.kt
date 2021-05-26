@@ -9,6 +9,8 @@ class GetCategoryListUseCase @Inject constructor(
     private val generalRepository: GeneralRepository
 ) {
 
-    suspend operator fun invoke(): Either<Throwable, List<CategoryEntity>> =
-        generalRepository.getCategories()
+    suspend operator fun invoke(
+        sendDefaultCategory: Boolean = true
+    ): Either<Throwable, List<CategoryEntity>> =
+        generalRepository.getCategories(sendDefaultCategory)
 }

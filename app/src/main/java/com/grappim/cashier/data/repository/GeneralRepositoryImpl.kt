@@ -1,33 +1,34 @@
 package com.grappim.cashier.data.repository
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.map
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.grappim.cashier.R
 import com.grappim.cashier.api.CashierApi
 import com.grappim.cashier.core.executor.CoroutineContextProvider
 import com.grappim.cashier.core.extensions.bigDecimalZero
-import com.grappim.cashier.core.extensions.getEpochMilli
 import com.grappim.cashier.core.extensions.getStringForDbQuery
 import com.grappim.cashier.core.functional.Either
+import com.grappim.cashier.core.functional.map
 import com.grappim.cashier.core.storage.GeneralStorage
 import com.grappim.cashier.core.utils.DateTimeUtils
 import com.grappim.cashier.core.utils.ProductUnit
-import com.grappim.cashier.data.db.dao.AcceptanceDao
 import com.grappim.cashier.data.db.dao.BasketDao
 import com.grappim.cashier.data.db.dao.CategoryDao
 import com.grappim.cashier.data.db.dao.ProductsDao
 import com.grappim.cashier.data.db.entity.*
-import com.grappim.cashier.data.db.entity.AcceptanceEntityMapper.toDomain
 import com.grappim.cashier.data.db.entity.ProductEntityMapper.toBasketProduct
 import com.grappim.cashier.data.remote.BaseRepository
+import com.grappim.cashier.data.remote.model.order.CreateOrderDTO
+import com.grappim.cashier.data.remote.model.order.CreateOrderRequestDTO
+import com.grappim.cashier.data.remote.model.order.OrderDTO
+import com.grappim.cashier.data.remote.model.order.OrderItemDTO
 import com.grappim.cashier.data.remote.model.product.CreateProductRequestDTO
-import com.grappim.cashier.domain.acceptance.Acceptance
+import com.grappim.cashier.data.remote.model.product.ProductDTO
+import com.grappim.cashier.data.remote.model.product.ProductsMapper.toDomain
+import com.grappim.cashier.data.remote.model.product.UpdateProductRequestDTO
+import com.grappim.cashier.di.modules.QualifierCashierApi
 import com.grappim.cashier.domain.products.CreateProductUseCase
+import com.grappim.cashier.domain.products.EditProductUseCase
 import com.grappim.cashier.domain.repository.GeneralRepository
-import com.grappim.cashier.ui.acceptance.AcceptanceStatus
 import com.grappim.cashier.ui.menu.MenuItem
 import com.grappim.cashier.ui.menu.MenuItemType
 import com.grappim.cashier.ui.paymentmethod.PaymentMethod
@@ -35,21 +36,16 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import java.math.BigDecimal
-import java.time.Instant
 import java.util.*
-import java.util.concurrent.ThreadLocalRandom
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.random.Random
 
 @Singleton
 class GeneralRepositoryImpl @Inject constructor(
-    private val cashierApi: CashierApi,
+    @QualifierCashierApi private val cashierApi: CashierApi,
     private val basketDao: BasketDao,
     private val productsDao: ProductsDao,
     private val categoryDao: CategoryDao,
-    private val acceptanceDao: AcceptanceDao,
     private val generalStorage: GeneralStorage,
     private val coroutineContextProvider: CoroutineContextProvider
 ) : GeneralRepository, BaseRepository() {
@@ -74,22 +70,62 @@ class GeneralRepositoryImpl @Inject constructor(
                         sellingPrice = params.sellingPrice,
                         merchantId = params.merchantId,
                         createdOn = params.createdOn,
-                        updatedOn = params.updatedOn
+                        updatedOn = params.updatedOn,
+                        categoryId = 0,
+                        categoryName = ""
                     )
                 )
             }
         }
 
-    override suspend fun getCategories(): Either<Throwable, List<CategoryEntity>> =
+    override suspend fun updateProduct(
+        params: EditProductUseCase.UpdateProductParams
+    ): Either<Throwable, Unit> =
+        apiCall {
+            val productDTO = ProductDTO(
+                id = params.productEntity.id,
+                barcode = params.barcode,
+                name = params.name,
+                stockId = params.productEntity.stockId,
+                amount = params.amount,
+                unit = params.unit.value,
+                purchasePrice = params.purchasePrice,
+                sellingPrice = params.sellingPrice,
+                merchantId = params.productEntity.merchantId,
+                createdOn = params.productEntity.createdOn,
+                updatedOn = DateTimeUtils.getNowFullDate(),
+                categoryId = params.categoryEntity?.id ?: 0,
+                category = params.categoryEntity?.name ?: ""
+            )
+            val response = cashierApi.updateProduct(
+                UpdateProductRequestDTO(productDTO)
+            )
+
+            withContext(coroutineContextProvider.io) {
+                productsDao.update(
+                    response.product.toDomain()
+                )
+            }
+        }
+
+    override suspend fun getCategories(
+        sendDefaultCategory: Boolean
+    ): Either<Throwable, List<CategoryEntity>> =
         withContext(coroutineContextProvider.io) {
             return@withContext try {
                 val categories = categoryDao.getAllCategories().toMutableList()
-                categories.add(
-                    0,
-                    CategoryEntity(
-                        "All"
+                if (sendDefaultCategory) {
+                    categories.add(
+                        0,
+                        CategoryEntity(
+                            id = -1,
+                            name = "All",
+                            merchantId = "",
+                            stockId = "",
+                            isDefault = true
+                        )
                     )
-                )
+                }
                 Either.Right(categories)
             } catch (e: Throwable) {
                 Either.Right(listOf())
@@ -151,26 +187,6 @@ class GeneralRepositoryImpl @Inject constructor(
         )
     }
 
-    override fun getAcceptanceListPaging(): Flow<PagingData<Acceptance>> =
-        Pager(
-            config = PagingConfig(
-                pageSize = 30,
-                enablePlaceholders = false,
-                initialLoadSize = 10
-            )
-        ) {
-            acceptanceDao.getAcceptanceListPaging()
-        }.flow.map {
-            it.map { acceptanceDb ->
-                acceptanceDb.toDomain()
-            }
-        }
-
-    private fun getRandomAcceptanceStatus(): AcceptanceStatus = listOf(
-        AcceptanceStatus.PAID,
-        AcceptanceStatus.STANDARD
-    ).random()
-
     override fun getProductsByQuery(
         categoryEntity: CategoryEntity?,
         query: String
@@ -181,7 +197,7 @@ class GeneralRepositoryImpl @Inject constructor(
                 if (categoryEntity == null || categoryEntity.isDefault) {
                     ""
                 } else {
-                    "AND categoryId = ${categoryEntity.id}"
+                    "AND categoryId = ${categoryEntity.id} "
                 }
             )
             .append(
@@ -219,35 +235,7 @@ class GeneralRepositoryImpl @Inject constructor(
         }
 
     override suspend fun prePopulateDb() = withContext(coroutineContextProvider.io) {
-        val list = mutableListOf<AcceptanceEntity>()
-        (0..20).forEach {
-            val randomDateInstant = getRandomDate()
-            val dateString = randomDateInstant.atOffset(DateTimeUtils.getZoneOffset(false))
-            list.add(
-                AcceptanceEntity(
-                    id = "$it",
-                    vendorName = "Vendor Name $it",
-                    date = DateTimeUtils.getDateTimePatternStandard().format(dateString),
-                    dateMillis = randomDateInstant.toEpochMilli(),
-                    status = getRandomAcceptanceStatus(),
-                    toPay = BigDecimal("${Random.nextInt(50, 400)}"),
-                    paidSum = BigDecimal("${Random.nextInt(50, 400)}")
-                )
-            )
-        }
-        acceptanceDao.insert(list)
     }
-
-    private fun getRandomDate(): Instant {
-        val start: Long = DateTimeUtils.getNowOffsetDateTime().minusWeeks(1).getEpochMilli()
-        val end: Long = DateTimeUtils.getNowOffsetDateTime().getEpochMilli()
-        val randomTime: Long = ThreadLocalRandom
-            .current()
-            .nextLong(start, end)
-        return Instant.ofEpochMilli(randomTime)
-    }
-
-    private suspend fun getCategoryList(): List<CategoryEntity> = categoryDao.getAllCategories()
 
     override suspend fun getBagProducts(): List<ProductEntity> =
         withContext(coroutineContextProvider.io) {
@@ -270,9 +258,39 @@ class GeneralRepositoryImpl @Inject constructor(
         basketDao.deleteBagProducts()
     }
 
-    override suspend fun makePayment(paymentMethod: PaymentMethod) =
-        withContext(coroutineContextProvider.io) {
+    override suspend fun makePayment(
+        paymentMethod: PaymentMethod
+    ): Either<Throwable, Unit> =
+        apiCall {
+            val totalSum = basketDao.getBasketProducts().map {
+                it.sellingPrice * it.basketCount
+            }.sumOf {
+                it
+            }
 
+            val orderItems = basketDao.getBasketProducts().map {
+                OrderItemDTO(
+                    productId = it.id,
+                    amount = it.basketCount,
+                    sellingPrice = it.sellingPrice,
+                    purchasePrice = it.purchasePrice
+                )
+            }
+
+            cashierApi.createOrder(
+                CreateOrderRequestDTO(
+                    order = CreateOrderDTO(
+                        merchantId = generalStorage.getMerchantId(),
+                        stockId = generalStorage.getStockId(),
+                        cashBoxId = generalStorage.getCashierId(),
+                        totalSum = totalSum,
+                        payType = paymentMethod.type.name,
+                        orderItems = orderItems
+                    )
+                )
+            )
+        }.map {
+            basketDao.deleteBagProducts()
         }
 
     private suspend fun getProductList(): List<ProductEntity> =

@@ -6,6 +6,7 @@ import com.grappim.cashier.core.functional.map
 import com.grappim.cashier.core.storage.GeneralStorage
 import com.grappim.cashier.data.remote.BaseRepository
 import com.grappim.cashier.data.remote.model.login.LoginRequestDTO
+import com.grappim.cashier.di.modules.QualifierCashierApi
 import com.grappim.cashier.domain.login.LoginUseCase
 import com.grappim.cashier.domain.repository.AuthRepository
 import javax.inject.Inject
@@ -13,7 +14,7 @@ import javax.inject.Singleton
 
 @Singleton
 class AuthRepositoryImpl @Inject constructor(
-    private val cashierApi: CashierApi,
+    @QualifierCashierApi private val cashierApi: CashierApi,
     private val generalStorage: GeneralStorage,
 ) : BaseRepository(), AuthRepository {
 

@@ -13,17 +13,9 @@ const val categoryEntityTableName = "category_table"
 @Parcelize
 data class CategoryEntity(
     @PrimaryKey
-    val id: Long,
+    val id: Int,
     val name: String,
     val merchantId: String,
     val stockId: String,
     val isDefault: Boolean = false
-) : Parcelable {
-    constructor(name: String) : this(
-        id = -1,
-        name = name,
-        merchantId = "",
-        stockId = "",
-        isDefault = true
-    )
-}
+) : Parcelable

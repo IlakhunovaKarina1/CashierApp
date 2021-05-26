@@ -18,7 +18,9 @@ import com.grappim.cashier.data.remote.model.category.CreateCategoryResponseDTO
 import com.grappim.cashier.data.remote.model.category.FilterCategoriesRequestDTO
 import com.grappim.cashier.data.remote.model.category.FilterCategoriesResponseDTO
 import com.grappim.cashier.data.remote.model.category.UpdateCategoryRequestDTO
+import com.grappim.cashier.data.remote.model.order.CreateOrderRequestDTO
 import com.grappim.cashier.data.remote.model.product.GetProductsResponseDTO
+import com.grappim.cashier.data.remote.model.product.UpdateProductRequestDTO
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -56,10 +58,10 @@ interface CashierApi {
         @Body createProduct: CreateProductRequestDTO
     ): ProductIdResponseDTO
 
-    @PUT("product/")
+    @PUT("product")
     @RequestWithAuthToken
     suspend fun updateProduct(
-        @Body product: ProductDTO
+        @Body product: UpdateProductRequestDTO
     ): UpdateProductResponseDTO
 
     @DELETE("product/{productId}")
@@ -109,4 +111,14 @@ interface CashierApi {
     suspend fun deleteCategoryById(
         @Path("categoryId") categoryId: String
     ): CreateCategoryResponseDTO
+
+    @POST("product/sync")
+    @RequestWithAuthToken
+    suspend fun productsSync()
+
+    @POST("order/create")
+    @RequestWithAuthToken
+    fun createOrder(
+        @Body createOrderRequestDTO: CreateOrderRequestDTO
+    )
 }

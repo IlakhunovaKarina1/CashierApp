@@ -13,6 +13,7 @@ import androidx.work.WorkerParameters
 import com.grappim.cashier.api.CashierApi
 import com.grappim.cashier.core.storage.GeneralStorage
 import com.grappim.cashier.data.remote.model.login.SendTokenToRefreshRequestDTO
+import com.grappim.cashier.di.modules.QualifierCashierApi
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +27,7 @@ private const val UNIQUE_SEND_REFRESH_TOKEN_WORKER = "unique_send_refresh_token_
 class SendTokenRefreshWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParameters: WorkerParameters,
-    private val cashierApi: CashierApi,
+    @QualifierCashierApi private val cashierApi: CashierApi,
     private val generalStorage: GeneralStorage
 ) : CoroutineWorker(context, workerParameters) {
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
