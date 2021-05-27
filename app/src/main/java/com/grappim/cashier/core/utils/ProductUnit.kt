@@ -22,7 +22,7 @@ enum class ProductUnit(
                 METER.value -> METER
                 METER_2.value -> METER_2
                 METER_3.value -> METER_3
-                else -> throw IllegalArgumentException("unit is null")
+                else -> PIECE
             }
     }
 }
