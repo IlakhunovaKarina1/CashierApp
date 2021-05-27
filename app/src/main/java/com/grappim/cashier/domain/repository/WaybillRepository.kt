@@ -24,7 +24,7 @@ interface WaybillRepository {
 
     suspend fun createWaybillProduct(
         params: CreateWaybillProductUseCase.CreateWaybillProductParams
-    ): Either<Throwable, Unit>
+    ): Either<Throwable, BigDecimal>
 
     suspend fun getWaybillProductByBarcode(
         params: GetWaybillProductByBarcodeUseCase.GetWaybillProductByBarcodeParams
@@ -36,7 +36,7 @@ interface WaybillRepository {
 
     suspend fun updateWaybillProduct(
         params: UpdateWaybillProductUseCase.UpdateWaybillProductParams
-    ): Either<Throwable, Unit>
+    ): Either<Throwable, BigDecimal>
 
     suspend fun conductWaybill(
         waybill: Waybill

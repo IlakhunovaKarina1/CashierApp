@@ -273,7 +273,8 @@ class GeneralRepositoryImpl @Inject constructor(
                     productId = it.id,
                     amount = it.basketCount,
                     sellingPrice = it.sellingPrice,
-                    purchasePrice = it.purchasePrice
+                    purchasePrice = it.purchasePrice,
+                    barcode = it.barcode
                 )
             }
 

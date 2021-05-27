@@ -2,6 +2,7 @@ package com.grappim.cashier.ui.waybill.product
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -19,6 +20,7 @@ import com.grappim.cashier.data.db.entity.ProductEntity
 import com.grappim.cashier.databinding.FragmentWaybillProductBinding
 import com.grappim.cashier.di.modules.DecimalFormatSimple
 import com.grappim.cashier.domain.waybill.WaybillProduct
+import com.grappim.cashier.ui.waybill.details.WaybillDetailsFragment
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.DecimalFormat
 import javax.inject.Inject
@@ -119,7 +121,10 @@ class WaybillProductFragment : Fragment(R.layout.fragment_waybill_product) {
                 is Resource.Success -> {
                     findNavController()
                         .navigate(
-                            WaybillProductFragmentDirections.actionWaybillProductToWaybillDetails()
+                            R.id.action_waybillProduct_to_waybillDetails,
+                            bundleOf(
+                                WaybillDetailsFragment.ARG_TOTAL_COST to it.data
+                            )
                         )
                 }
                 is Resource.Error -> {

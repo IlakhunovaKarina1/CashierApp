@@ -17,7 +17,7 @@ class CreateWaybillProductUseCase @Inject constructor(
         sellingPrice: BigDecimal,
         amount: BigDecimal,
         productId: Long
-    ): Either<Throwable, Unit> {
+    ): Either<Throwable, BigDecimal> {
         val params = CreateWaybillProductParams(
             waybillId = waybillId,
             barcode = barcode,

@@ -19,5 +19,6 @@ data class BasketProductEntity(
     var basketCount: BigDecimal,
     val amount: BigDecimal,
     val sellingPrice: BigDecimal,
-    val purchasePrice: BigDecimal
+    val purchasePrice: BigDecimal,
+    val barcode: String
 ) : Parcelable

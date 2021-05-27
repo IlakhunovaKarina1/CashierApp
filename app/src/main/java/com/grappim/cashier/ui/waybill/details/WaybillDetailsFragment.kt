@@ -11,15 +11,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
+import androidx.paging.LoadState
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.grappim.cashier.R
-import com.grappim.cashier.core.extensions.getErrorMessage
-import com.grappim.cashier.core.extensions.getOffsetDateTimeFromString
-import com.grappim.cashier.core.extensions.getOffsetDateTimeWithFormatter
-import com.grappim.cashier.core.extensions.padWithZeros
-import com.grappim.cashier.core.extensions.setSafeOnClickListener
-import com.grappim.cashier.core.extensions.showToast
-import com.grappim.cashier.core.extensions.toUtc
+import com.grappim.cashier.core.delegate.lazyArg
+import com.grappim.cashier.core.extensions.*
 import com.grappim.cashier.core.functional.Resource
 import com.grappim.cashier.core.utils.DateTimeUtils
 import com.grappim.cashier.core.view.CashierLoaderDialog
@@ -33,6 +29,7 @@ import com.grappim.cashier.ui.waybill.product.WaybillProductFragment
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import kotlinx.coroutines.flow.collectLatest
+import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -47,7 +44,7 @@ class WaybillDetailsFragment : Fragment(R.layout.fragment_waybill_details) {
     lateinit var dfSimple: DecimalFormat
 
     companion object {
-        const val ARG_WAYBILL = "arg_waybill"
+        const val ARG_TOTAL_COST = "arg_total_cost"
     }
 
     private val dtfFull: DateTimeFormatter = DateTimeUtils.getDateTimeFormatterForFull()
@@ -71,6 +68,7 @@ class WaybillDetailsFragment : Fragment(R.layout.fragment_waybill_details) {
     private val loader: CashierLoaderDialog by lazy {
         CashierLoaderDialog(requireContext())
     }
+    private val totalCost: BigDecimal? by lazyArg(ARG_TOTAL_COST)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -104,10 +102,13 @@ class WaybillDetailsFragment : Fragment(R.layout.fragment_waybill_details) {
             recyclerProducts.adapter = ScaleInAnimationAdapter(waybillProductsAdapter)
 
             buttonAction.setSafeOnClickListener {
-                viewModel.updateWaybill(waybill)
+                viewModel.updateWaybill(sharedViewModel.waybill.value!!)
             }
             editComment.doAfterTextChanged {
                 sharedViewModel.setComment(it.toString())
+            }
+            swipeRefresh.setOnRefreshListener {
+                waybillProductsAdapter.refresh()
             }
             when (waybill.status) {
                 WaybillStatus.ACTIVE -> {
@@ -164,9 +165,17 @@ class WaybillDetailsFragment : Fragment(R.layout.fragment_waybill_details) {
     }
 
     private fun observeViewModel() {
+        lifecycleScope.launchWhenCreated {
+            waybillProductsAdapter.loadStateFlow.collectLatest {
+                viewBinding.swipeRefresh.isRefreshing = it.refresh is LoadState.Loading
+            }
+        }
         sharedViewModel.waybill.observe(viewLifecycleOwner) {
             it.reservedTime?.let { reservedTime ->
                 viewBinding.editDate.setText(dtf.format(reservedTime.getOffsetDateTimeFromString()))
+            }
+            it.totalCost.let { totalCost ->
+                viewBinding.textPrice.text = dfSimple.format(totalCost)
             }
         }
         viewModel.setWaybillId(waybill.id)
@@ -176,6 +185,7 @@ class WaybillDetailsFragment : Fragment(R.layout.fragment_waybill_details) {
         waybill.comment.let {
             viewBinding.editComment.setText(it)
         }
+        sharedViewModel.setTotalCost(totalCost ?: bigDecimalZero())
 
         lifecycleScope.launchWhenCreated {
             waybillProductsAdapter.addLoadStateListener {

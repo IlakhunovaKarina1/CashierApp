@@ -20,8 +20,8 @@ class WaybillProductViewModel @Inject constructor(
     private val updateWaybillProductUseCase: UpdateWaybillProductUseCase
 ) : ViewModel() {
 
-    private val _productCreated = MutableLiveData<Resource<Unit>>()
-    val productCreated: LiveData<Resource<Unit>>
+    private val _productCreated = MutableLiveData<Resource<BigDecimal>>()
+    val productCreated: LiveData<Resource<BigDecimal>>
         get() = _productCreated
 
     fun updateWaybillProduct(
@@ -47,10 +47,9 @@ class WaybillProductViewModel @Inject constructor(
                 id = id
             ).onSuccess {
                 _productCreated.value = Resource.Success(it)
+            }.onFailure {
+                _productCreated.value = Resource.Error(it)
             }
-                .onFailure {
-                    _productCreated.value = Resource.Error(it)
-                }
         }
     }
 

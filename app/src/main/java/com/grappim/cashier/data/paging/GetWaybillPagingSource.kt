@@ -7,15 +7,13 @@ import com.grappim.cashier.core.executor.CoroutineContextProvider
 import com.grappim.cashier.core.storage.GeneralStorage
 import com.grappim.cashier.data.remote.model.waybill.FilterWaybillsRequestDTO
 import com.grappim.cashier.data.remote.model.waybill.WaybillDTO
-import com.grappim.cashier.di.modules.QualifierWaybillApi
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import javax.inject.Inject
 
-class GetWaybillPagingSource @Inject constructor(
+class GetWaybillPagingSource(
     private val coroutineContextProvider: CoroutineContextProvider,
     private val generalStorage: GeneralStorage,
-    @QualifierWaybillApi private val waybillApi: WaybillApi
+    private val waybillApi: WaybillApi
 ) : PagingSource<Int, WaybillDTO>() {
     override fun getRefreshKey(state: PagingState<Int, WaybillDTO>): Int? = null
 

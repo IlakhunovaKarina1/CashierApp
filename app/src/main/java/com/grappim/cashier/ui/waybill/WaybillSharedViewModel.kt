@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.grappim.cashier.domain.waybill.Waybill
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,5 +31,9 @@ class WaybillSharedViewModel @Inject constructor(
 
     fun setReservedTime(time: String) {
         _waybill.value = _waybill.value!!.copy(reservedTime = time)
+    }
+
+    fun setTotalCost(totalCost: BigDecimal) {
+        _waybill.value = _waybill.value!!.copy(totalCost = totalCost)
     }
 }

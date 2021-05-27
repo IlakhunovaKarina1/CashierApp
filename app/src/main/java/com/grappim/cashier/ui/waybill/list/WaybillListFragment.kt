@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
+import androidx.paging.LoadState
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.grappim.cashier.R
 import com.grappim.cashier.core.extensions.getErrorMessage
@@ -59,10 +60,18 @@ class WaybillListFragment : Fragment(R.layout.fragment_waybill_list), WaybillLis
             buttonCreateAcceptance.setSafeOnClickListener {
                 viewModel.createWaybill()
             }
+            swipeRefresh.setOnRefreshListener {
+                waybillListPagingAdapter.refresh()
+            }
         }
     }
 
     private fun observeViewModel() {
+        lifecycleScope.launchWhenCreated {
+            waybillListPagingAdapter.loadStateFlow.collectLatest {
+                viewBinding.swipeRefresh.isRefreshing = it.refresh is LoadState.Loading
+            }
+        }
         lifecycleScope.launchWhenCreated {
             viewModel.acceptances.collectLatest {
                 waybillListPagingAdapter.submitData(it)
@@ -85,10 +94,7 @@ class WaybillListFragment : Fragment(R.layout.fragment_waybill_list), WaybillLis
         sharedViewModel.setCurrentWaybill(waybill)
         findNavController()
             .navigate(
-                R.id.action_waybill_to_waybillDetails,
-                bundleOf(
-                    WaybillDetailsFragment.ARG_WAYBILL to waybill
-                )
+                R.id.action_waybill_to_waybillDetails
             )
     }
 }

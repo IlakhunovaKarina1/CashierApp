@@ -69,7 +69,7 @@ interface WaybillApi {
     @RequestWithAuthToken
     suspend fun updateWaybillProduct(
         @Body createWaybillProductRequestDTO: CreateWaybillProductRequestDTO
-    )
+    ): CreateWaybillProductResponseDTO
 
     @DELETE("waybill/product/{productId}")
     @RequestWithAuthToken

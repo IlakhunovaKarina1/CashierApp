@@ -26,6 +26,7 @@ import com.grappim.cashier.ui.waybill.WaybillType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -33,7 +34,6 @@ import javax.inject.Singleton
 class WaybillRepositoryImpl @Inject constructor(
     private val coroutineContextProvider: CoroutineContextProvider,
     @QualifierWaybillApi private val waybillApi: WaybillApi,
-    private val getWaybillPagingSource: GetWaybillPagingSource,
     private val generalStorage: GeneralStorage,
     private val productsDao: ProductsDao
 ) : BaseRepository(), WaybillRepository {
@@ -46,7 +46,7 @@ class WaybillRepositoryImpl @Inject constructor(
 
     override suspend fun createWaybillProduct(
         params: CreateWaybillProductUseCase.CreateWaybillProductParams
-    ): Either<Throwable, Unit> =
+    ): Either<Throwable, BigDecimal> =
         apiCall {
             waybillApi.createWaybillProduct(
                 CreateWaybillProductRequestDTO(
@@ -61,6 +61,8 @@ class WaybillRepositoryImpl @Inject constructor(
                     )
                 )
             )
+        }.map {
+            it.totalCost
         }
 
     override suspend fun getWaybillProductByBarcode(
@@ -96,22 +98,25 @@ class WaybillRepositoryImpl @Inject constructor(
 
     override suspend fun updateWaybillProduct(
         params: UpdateWaybillProductUseCase.UpdateWaybillProductParams
-    ): Either<Throwable, Unit> = apiCall {
-        waybillApi.updateWaybillProduct(
-            CreateWaybillProductRequestDTO(
-                product = PartialWaybillProductDTO(
-                    amount = params.amount,
-                    barcode = params.barcode,
-                    name = params.name,
-                    purchasePrice = params.purchasePrice,
-                    sellingPrice = params.sellingPrice,
-                    waybillId = params.waybillId,
-                    productId = params.productId,
-                    id = params.id
+    ): Either<Throwable, BigDecimal> =
+        apiCall {
+            waybillApi.updateWaybillProduct(
+                CreateWaybillProductRequestDTO(
+                    product = PartialWaybillProductDTO(
+                        amount = params.amount,
+                        barcode = params.barcode,
+                        name = params.name,
+                        purchasePrice = params.purchasePrice,
+                        sellingPrice = params.sellingPrice,
+                        waybillId = params.waybillId,
+                        productId = params.productId,
+                        id = params.id
+                    )
                 )
             )
-        )
-    }
+        }.map {
+            it.totalCost
+        }
 
     override suspend fun conductWaybill(
         waybill: Waybill
@@ -153,7 +158,11 @@ class WaybillRepositoryImpl @Inject constructor(
         Pager(
             config = pagingConfig
         ) {
-            getWaybillPagingSource
+            GetWaybillPagingSource(
+                coroutineContextProvider = coroutineContextProvider,
+                generalStorage = generalStorage,
+                waybillApi = waybillApi
+            )
         }.flow
             .map {
                 it.map { waybillsDTO ->

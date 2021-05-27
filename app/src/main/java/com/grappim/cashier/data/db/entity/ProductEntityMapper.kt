@@ -12,7 +12,8 @@ object ProductEntityMapper {
             basketCount = this.basketCount,
             sellingPrice = this.sellingPrice,
             amount = this.amount,
-            purchasePrice = this.purchasePrice
+            purchasePrice = this.purchasePrice,
+            barcode = this.barcode
         )
 
 
