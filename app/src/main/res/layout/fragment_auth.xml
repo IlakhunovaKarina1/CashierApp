@@ -94,7 +94,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:layout_marginBottom="12dp"
                 app:endIconMode="password_toggle"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/tilPhoneNumber"
                 app:layout_constraintStart_toStartOf="@+id/tilPhoneNumber"
                 app:layout_constraintTop_toBottomOf="@+id/tilPhoneNumber"
@@ -114,22 +116,22 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonForgotPassword"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginBottom="16dp"
-                android:gravity="center"
-                android:text="@string/auth_forgot_password"
-                android:textColor="@color/cashier_blue"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/tilPassword"
-                app:layout_constraintStart_toStartOf="@+id/tilPassword"
-                app:layout_constraintTop_toBottomOf="@+id/tilPassword" />
+            <!--            <com.google.android.material.button.MaterialButton-->
+            <!--                android:id="@+id/buttonForgotPassword"-->
+            <!--                style="@style/Widget.MaterialComponents.Button.TextButton"-->
+            <!--                android:layout_width="0dp"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginStart="32dp"-->
+            <!--                android:layout_marginTop="12dp"-->
+            <!--                android:layout_marginEnd="32dp"-->
+            <!--                android:layout_marginBottom="16dp"-->
+            <!--                android:gravity="center"-->
+            <!--                android:text="@string/auth_forgot_password"-->
+            <!--                android:textColor="@color/cashier_blue"-->
+            <!--                app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--                app:layout_constraintEnd_toEndOf="@+id/tilPassword"-->
+            <!--                app:layout_constraintStart_toStartOf="@+id/tilPassword"-->
+            <!--                app:layout_constraintTop_toBottomOf="@+id/tilPassword" />-->
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

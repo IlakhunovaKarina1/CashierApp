@@ -96,10 +96,10 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         )
             .color(ContextCompat.getColor(requireContext(), R.color.cashier_blue))
             .underline()
-        binding.buttonForgotPassword.text = textForForgotPass
-        binding.buttonForgotPassword.setSafeOnClickListener {
-
-        }
+//        binding.buttonForgotPassword.text = textForForgotPass
+//        binding.buttonForgotPassword.setSafeOnClickListener {
+//
+//        }
 
         binding.buttonSignIn.setSafeOnClickListener {
             hideKeyboard2()

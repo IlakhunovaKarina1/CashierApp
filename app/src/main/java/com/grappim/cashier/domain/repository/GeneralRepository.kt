@@ -35,7 +35,7 @@ interface GeneralRepository {
 
     suspend fun searchProducts(query: String): List<ProductEntity>
 
-    suspend fun prePopulateDb()
+    suspend fun clearData()
 
     fun getProductsByQuery(
         categoryEntity: CategoryEntity?,

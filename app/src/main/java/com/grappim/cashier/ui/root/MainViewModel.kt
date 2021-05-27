@@ -34,4 +34,10 @@ class MainViewModel @Inject constructor(
             }
         }
     }
+
+    fun stopSync() {
+        viewModelScope.launch {
+            sync.cancel()
+        }
+    }
 }

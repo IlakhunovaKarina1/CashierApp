@@ -25,7 +25,7 @@ class AuthViewModel @Inject constructor(
 ) : ViewModel() {
 
     init {
-        prePopulateDb()
+        clearData()
 //        login(
 //            "7023335353",
 //            "qwe"
@@ -81,9 +81,9 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    private fun prePopulateDb() {
+    private fun clearData() {
         viewModelScope.launch {
-            generalRepository.prePopulateDb()
+            generalRepository.clearData()
         }
     }
 

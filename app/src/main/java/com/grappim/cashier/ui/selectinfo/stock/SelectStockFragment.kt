@@ -45,6 +45,7 @@ class SelectStockFragment : Fragment(R.layout.fragment_select_stock_cashier),
         with(binding) {
             buttonNext.setSafeOnClickListener {
                 viewModel.saveStock(stockAdapter.getSelectedItem()!!)
+                mainViewModel.stopSync()
                 mainViewModel.startSync()
                 findNavController().navigate(R.id.action_selectOutletFragment_to_selectCashierFragment)
             }

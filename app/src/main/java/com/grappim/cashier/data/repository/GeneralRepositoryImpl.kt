@@ -234,7 +234,11 @@ class GeneralRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun prePopulateDb() = withContext(coroutineContextProvider.io) {
+    override suspend fun clearData() = withContext(coroutineContextProvider.io) {
+        generalStorage.clearData()
+        basketDao.clearBasket()
+        productsDao.clearProducts()
+        categoryDao.clearCategories()
     }
 
     override suspend fun getBagProducts(): List<ProductEntity> =
@@ -273,8 +277,8 @@ class GeneralRepositoryImpl @Inject constructor(
                     productId = it.id,
                     amount = it.basketCount,
                     sellingPrice = it.sellingPrice,
-                    purchasePrice = it.purchasePrice,
-                    barcode = it.barcode
+                    purchasePrice = it.purchasePrice
+//                    barcode = it.barcode
                 )
             }
 
